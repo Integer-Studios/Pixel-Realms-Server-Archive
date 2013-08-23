@@ -37,6 +37,7 @@ public class PacketUpdatePiece extends Packet {
 		if (piece instanceof PieceBuilding) {
 
 			output.writeBoolean(true);
+			output.writeInt(((PieceBuilding) piece).building.worldID);
 			output.writeInt(((PieceBuilding) piece).building.id);
 
 		} else {

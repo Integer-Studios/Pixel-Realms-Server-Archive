@@ -30,7 +30,7 @@ public class Building {
 	
 	static {
 		
-		info.add(new BuildingInfo(0, 5, 5).setInterior(6, 6).setDoor(new BuildingDoor(0F, 0F, 0, 0)));
+		info.add(new BuildingInfo(0, 4, 3).setInterior(6, 6).setDoor(new BuildingDoor(0F, 0F, 0, 0, 0)));
 		
 	}
 	

@@ -26,6 +26,7 @@ public class PacketLoadInterior extends Packet {
 
 		InteriorWorld w = InteriorWorldManager.interiors.get(worldID);
 		
+		output.writeInt(worldID);
 		output.writeInt(w.c);
 		output.writeInt(w.tiles.size());
 		
