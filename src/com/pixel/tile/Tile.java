@@ -6,19 +6,20 @@ import com.pixel.world.WorldServer;
 
 public class Tile {
 	
-	public Tile(int x, int y, int i) {
+	public Tile(int x, int y, int i, int m) {
 		id = i;
 		posX = x;
 		posY = y;
+		metadata = m;
 		WorldServer.propagateTile(this);
 			
 	}
 	
-	public Tile(int x, int y, int i, boolean propagate) {
+	public Tile(int x, int y, int i, int m, boolean propagate) {
 		id = i;
 		posX = x;
 		posY = y;
-		
+		metadata = m;
 		if (propagate)
 			WorldServer.propagateTile(this);
 			
@@ -47,7 +48,8 @@ public class Tile {
 				new TileInfo(), //water flat 3
 				new TileRounded(0), //water rounded 4
 				new TileInfo(), //cobble flat 3
-				new TileRounded(0) //cobble rounded 4
+				new TileRounded(0), //cobble rounded 4
+				new TileInfo() //hill 5
 		};
 		
 	}
@@ -55,5 +57,6 @@ public class Tile {
 	public int id;
 	public int posX;
 	public int posY;
+	public int metadata = -1;
 	public static TileInfo[] info;
 }

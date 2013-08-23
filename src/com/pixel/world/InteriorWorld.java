@@ -31,7 +31,7 @@ public class InteriorWorld {
 			
 			for (int y = 0; y < height; y ++) {
 				
-				tiles.put((y * (width * height)) + x, new Tile(x, y, id, false));
+				tiles.put((y * (width * height)) + x, new Tile(x, y, id, -1, false));
 				
 			}
 			

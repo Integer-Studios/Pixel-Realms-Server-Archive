@@ -34,7 +34,7 @@ public class WorldSaveThread implements Runnable {
 		for (int x = 0; x < WorldServer.tiles.size(); x ++) {
 
 			Tile t = WorldServer.tiles.get(x);
-			tileSave.add(new Integer[]{t.id, t.posX, t.posY, 1});
+			tileSave.add(new Integer[]{t.id, t.posX, t.posY, t.metadata, 1});
 			
 		}
 		
