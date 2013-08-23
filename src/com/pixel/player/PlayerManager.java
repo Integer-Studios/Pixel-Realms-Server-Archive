@@ -212,23 +212,20 @@ public class PlayerManager {
 			PlayerInventory i = inventories.get(userID);
 			ArrayList<Integer[]> inv = new ArrayList<Integer[]>();
 
-			for (int y = 0; y < i.hotbar.content.size(); y ++) {
+			for (InventoryContent c : i.hotbar.content.values()) {
 
-				InventoryContent c = i.hotbar.content.get(y);
 				inv.add(new Integer[]{c.x, c.y, c.itemstack.item.id, c.itemstack.metadata, c.itemstack.size, 0});
 
 			}
 
-			for (int y = 0; y < i.inventoryLeft.content.size(); y ++) {
+			for (InventoryContent c : i.inventoryLeft.content.values()) {
 
-				InventoryContent c = i.inventoryLeft.content.get(y);
 				inv.add(new Integer[]{c.x, c.y, c.itemstack.item.id, c.itemstack.metadata, c.itemstack.size, 1});
 
 			}
 
-			for (int y = 0; y < i.inventoryRight.content.size(); y ++) {
+			for (InventoryContent c : i.inventoryRight.content.values()) {
 
-				InventoryContent c = i.inventoryRight.content.get(y);
 				inv.add(new Integer[]{c.x, c.y, c.itemstack.item.id, c.itemstack.metadata, c.itemstack.size, 2});
 
 			}
