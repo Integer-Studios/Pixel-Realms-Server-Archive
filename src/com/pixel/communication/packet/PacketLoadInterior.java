@@ -35,6 +35,7 @@ public class PacketLoadInterior extends Packet {
 			output.writeInt(t.id);
 			output.writeInt(t.posX);
 			output.writeInt(t.posY);
+			output.writeInt(t.metadata);
 
 		}
 		
