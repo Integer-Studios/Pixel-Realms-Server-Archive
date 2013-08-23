@@ -10,6 +10,7 @@ import com.pixel.communication.CommunicationServlet;
 import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
 import com.pixel.world.WorldComponent;
+import com.pixel.world.WorldServer;
 
 public class PacketWorldData extends Packet {
 
@@ -32,6 +33,7 @@ public class PacketWorldData extends Packet {
 		ArrayList<WorldComponent> loadEntities = components.get(2);
 		ArrayList<WorldComponent> loadPlayers = components.get(3);
 
+		output.writeInt(WorldServer.c);
 		output.writeInt(loadTiles.size());
 		
 		for (int x = 0; x < loadTiles.size(); x ++) {
@@ -54,6 +56,7 @@ public class PacketWorldData extends Packet {
 			if (loadPieces.get(x).buildingID != -1) {
 				
 				output.writeBoolean(true);
+				output.writeInt(loadPieces.get(x).worldID);
 				output.writeInt(loadPieces.get(x).buildingID);
 				
 			} else {
@@ -85,8 +88,6 @@ public class PacketWorldData extends Packet {
 			output.writeFloat(loadPlayers.get(x).posY);
 			
 		}
-		
-		PlayerManager.inventories.get(userID).sendInventory();
 		
 	}
 

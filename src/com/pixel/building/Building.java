@@ -2,17 +2,19 @@ package com.pixel.building;
 
 import java.util.ArrayList;
 
-import com.pixel.tile.Tile;
+import com.pixel.world.InteriorWorld;
+import com.pixel.world.InteriorWorldManager;
 
 public class Building {
 
 	public static ArrayList<BuildingInfo> info = new ArrayList<BuildingInfo>();
-	public Tile[] tiles;
 
+	public int worldID;
 	public int id, x, y, width, height;
+	public InteriorWorld interior;
 	public BuildingDoor door;
 	
-	public Building(int id, int x, int y) {
+	public Building(int x, int y, int id) {
 		
 		this.id = id;
 		this.x = x;
@@ -21,7 +23,8 @@ public class Building {
 		this.width = info.get(id).width;
 		this.height = info.get(id).height;
 		this.door = info.get(id).door;
-		this.tiles = info.get(id).tiles;
+		this.interior = info.get(id).interior;
+		this.worldID = InteriorWorldManager.addWorld(this.interior);
 
 	}
 	

@@ -7,7 +7,7 @@ public class PieceBuilding extends Piece {
 	public Building building;
 	
 	public PieceBuilding(int x, int y, int i) {
-		super(x, y, 17);
+		super(x, y, 17, true);
 		
 		this.building = new Building(x, y, i);
 		

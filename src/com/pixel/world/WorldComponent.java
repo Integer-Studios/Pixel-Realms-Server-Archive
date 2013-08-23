@@ -17,6 +17,7 @@ public class WorldComponent {
 	public int userID;
 	public int id, serverID;
 	public int buildingID;
+	public int worldID;
 	public int damage, metadata;
 	
 	public Tile tile;
@@ -53,6 +54,7 @@ public class WorldComponent {
 		this.id = piece.id;
 		if (piece instanceof PieceBuilding) {
 
+			this.worldID = ((PieceBuilding) piece).building.worldID;
 			this.buildingID = ((PieceBuilding) piece).building.id;
 
 		}

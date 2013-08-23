@@ -47,9 +47,11 @@ public class PacketUpdateWorld extends Packet {
 			output.writeInt((int) loadPieces.get(x).posY);
 			output.writeInt((int) loadPieces.get(x).damage);
 			output.writeInt((int) loadPieces.get(x).metadata);
+			
 			if (loadPieces.get(x).buildingID != -1) {
 				
 				output.writeBoolean(true);
+				output.writeInt(loadPieces.get(x).worldID);
 				output.writeInt(loadPieces.get(x).buildingID);
 				
 			} else {

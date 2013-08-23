@@ -8,6 +8,7 @@ import java.awt.Color;
 
 import com.pixel.admin.PixelLogger;
 import com.pixel.admin.PixelLogger.PixelColor;
+import com.pixel.admin.StatisticsThread;
 import com.pixel.chat.ChatMessage;
 import com.pixel.communication.CommunicationServer;
 import com.pixel.communication.CommunicationServlet;
@@ -23,6 +24,7 @@ import com.pixel.inventory.InventoryContent;
 import com.pixel.item.Item;
 import com.pixel.item.ItemStack;
 import com.pixel.start.PixelRealmsServer;
+import com.pixel.util.CoordinateKey;
 import com.pixel.util.FileItem;
 import com.pixel.util.Toolkit;
 
@@ -31,12 +33,14 @@ public class PlayerManager {
 	public static ConcurrentHashMap<Integer, EntityPlayer> players = new ConcurrentHashMap<Integer, EntityPlayer>();
 	public static HashMap<Integer, PlayerInventory> inventories = new HashMap<Integer, PlayerInventory>();
 	public static ConcurrentHashMap<Integer, Float[]> playersData = new ConcurrentHashMap<Integer, Float[]>();
+	public static ConcurrentHashMap<Integer, Long> playersLoginTime = new ConcurrentHashMap<Integer, Long>();
 
 	public static void playerLogin(PacketLogin packet) {
 		
 		CommunicationServlet.setUserID(packet.servletLogin, packet.userID);
 		EntityPlayer player = new EntityPlayer(packet.username, packet.userID);
 		player.setSession(packet.session);
+		new StatisticsThread(packet.userID, packet.username, 0).start();
 
 		if (!playersData.containsKey(player.userID)) {
 			
@@ -74,6 +78,7 @@ public class PlayerManager {
 			player.setEnergy(100F);
 			
 		}
+		PlayerManager.inventories.get(player.userID).sendInventory();
 
 		players.put(player.userID, player);
 		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(packet.userID), new PacketUpdatePlayer(PlayerManager.getPlayer(packet.userID).username, PlayerManager.getPlayer(packet.userID).posX, PlayerManager.getPlayer(packet.userID).posY, PlayerManager.getPlayer(packet.userID).health, PlayerManager.getPlayer(packet.userID).satisfaction, PlayerManager.getPlayer(packet.userID).energy, packet.userID, PlayerManager.getPlayer(packet.userID).selectedItem));
@@ -89,6 +94,8 @@ public class PlayerManager {
 		
 		EntityPlayer p = players.get(userID);
 
+		new StatisticsThread(userID, p.username, 1).start();
+		
 		if (p != null) {
 
 			Float[] playerData = new Float[]{p.posX, p.posY, p.health, p.satisfaction, p.energy};
@@ -163,9 +170,9 @@ public class PlayerManager {
 
 			@SuppressWarnings("unchecked")
 			ArrayList<Integer[]> inv = (ArrayList<Integer[]>) k.load("inventories/" + userID + ".inv");
-			ArrayList<InventoryContent> hotbar = new ArrayList<InventoryContent>();
-			ArrayList<InventoryContent> inventoryLeft = new ArrayList<InventoryContent>();
-			ArrayList<InventoryContent> inventoryRight = new ArrayList<InventoryContent>();
+			ConcurrentHashMap<CoordinateKey, InventoryContent> hotbar = new ConcurrentHashMap<CoordinateKey, InventoryContent>();
+			ConcurrentHashMap<CoordinateKey, InventoryContent> inventoryLeft = new ConcurrentHashMap<CoordinateKey, InventoryContent>();
+			ConcurrentHashMap<CoordinateKey, InventoryContent> inventoryRight = new ConcurrentHashMap<CoordinateKey, InventoryContent>();
 
 			for (int x = 0; x < inv.size(); x ++) {
 
@@ -174,11 +181,11 @@ public class PlayerManager {
 				ItemStack stack = new ItemStack(item, c[4]);
 				stack.metadata = c[3];
 				if (c[5] == 0)
-					hotbar.add(new InventoryContent(c[0], c[1], stack));
+					hotbar.put(new CoordinateKey(c[0], c[1]), new InventoryContent(c[0], c[1], stack));
 				else if (c[5] == 1)
-					inventoryLeft.add(new InventoryContent(c[0], c[1], stack));
-				else if (c[5] == 1)
-					inventoryRight.add(new InventoryContent(c[0], c[1], stack));
+					inventoryLeft.put(new CoordinateKey(c[0], c[1]), new InventoryContent(c[0], c[1], stack));
+				else if (c[5] == 2)
+					inventoryRight.put(new CoordinateKey(c[0], c[1]), new InventoryContent(c[0], c[1], stack));
 
 			}
 
@@ -243,6 +250,12 @@ public class PlayerManager {
 			playersData.put(p.userID, playerData);
 			
 		}
+		
+	}
+	
+	public static void sendPacketToPlayer(int userID, Packet packet) {
+		
+		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID), packet);
 		
 	}
 	

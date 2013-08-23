@@ -1,13 +1,13 @@
 package com.pixel.building;
 
-import com.pixel.tile.Tile;
+import com.pixel.world.InteriorWorld;
 
 public class BuildingInfo {
 
 	public int width, height;
 	public int id;
 	public BuildingDoor door;
-	public Tile[] tiles;
+	public InteriorWorld interior;
 	
 	public BuildingInfo(int id, int width, int height) {
 		
@@ -26,16 +26,7 @@ public class BuildingInfo {
 	
 	public BuildingInfo setInterior(int width, int height) {
 		
-		tiles = new Tile[width * height];
-		for (int x = 0; x < width; x ++) {
-			
-			for (int y = 0; y < height; y ++) {
-				
-				tiles[((y * (width * height)) + x)] = new Tile(x, y, 0, false);
-				
-			}
-			
-		}
+		this.interior = new InteriorWorld(width, height, 2);
 		
 		return this;
 		

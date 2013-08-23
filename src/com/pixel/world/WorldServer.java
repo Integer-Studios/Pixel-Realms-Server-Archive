@@ -56,6 +56,8 @@ public class WorldServer {
 		
 		PixelLogger.print("Server Initialized.", PixelColor.RED);
 		
+		new PieceBuilding(150, 150, 0);
+		
 		init = true;
 		
 		PixelRealmsServer.world = this;
@@ -179,43 +181,43 @@ public class WorldServer {
 				new Tile(x, y, 0);
 				
 				if ((x < 20 && x >= 10) && (y > 10 && y < c-11) && r.nextInt(x-9) == 0) {
-					new Piece(x, y, 16);
+					new Piece(x, y, 16, true);
 				} else
 				if ((x > c-21 && x <= c-11) && (y > 10 && y < c-11) && r.nextInt(c-10-x) == 0) {
-					new Piece(x, y, 16);
+					new Piece(x, y, 16, true);
 				} else
 				if ((y < 20 && y >= 10) && (x > 10 && x < c-11) && r.nextInt(y-9) == 0) {
-					new Piece(x, y, 16);
+					new Piece(x, y, 16, true);
 				} else
 				if ((y > c-21 && y < c-11) && (x > 10 && x < c-11) && r.nextInt(c-10-y) == 0) {
-					new Piece(x, y, 16);
+					new Piece(x, y, 16, true);
 				} else
 				if (x < 10 || x > c-11 || y < 10 || y > c-11) {
-					new Piece(x, y, 16);
+					new Piece(x, y, 16, true);
 				} else
 				if (r.nextInt(10) == 0) {
-					new Piece(x, y, 1);
+					new Piece(x, y, 1, true);
 				} else
 				if (r.nextInt(10) == 0) {
-					new Piece(x, y, 2);
+					new Piece(x, y, 2, true);
 				}  else
 				if (r.nextInt(10) == 0) {
-					new Piece(x, y, 5);
+					new Piece(x, y, 5, true);
 				} else
 				if (r.nextInt(40) == 0) {
-					new Piece(x, y, 10);
+					new Piece(x, y, 10, true);
 				} else
 				if (r.nextInt(40) == 0) {
-					new Piece(x, y, 3);
+					new Piece(x, y, 3, true);
 				} else
 				if (r.nextInt(40) == 0) {
-					new Piece(x, y, 4);
+					new Piece(x, y, 4, true);
 				} else
 				if (r.nextInt(80) == 0) {
-					new Piece(x, y, 9);
+					new Piece(x, y, 9, true);
 				}
 				else {
-					new Piece(x, y, 0);
+					new Piece(x, y, 0, true);
 				}
 			
 			}
@@ -244,7 +246,7 @@ public class WorldServer {
 	}
 
 	public static void setPiece(int x, int y, int id) {
-		pieces[((y * c) + x)] = new Piece(x, y, id);
+		pieces[((y * c) + x)] = new Piece(x, y, id, true);
 
 		PlayerManager.broadcastPacket(new PacketUpdatePiece(pieces[((y * c) + x)]));
 
@@ -253,7 +255,7 @@ public class WorldServer {
 	public static void setPiece(int x, int y, int id, int damage, int metadata, int buildingID) {
 		
 		if (buildingID == -1) {
-			pieces[((y * c) + x)] = new Piece(x, y, id);
+			pieces[((y * c) + x)] = new Piece(x, y, id, true);
 		
 		} else {
 			
@@ -384,7 +386,7 @@ public class WorldServer {
 		for (int x = 0; x < piecesSave.size(); x ++) {
 
 			Integer[] p = piecesSave.get(x);
-			new Piece(p[0], p[1], p[2], p[3], p[4]);
+			new Piece(p[0], p[1], p[2], p[3], p[4], true);
 
 
 		}
@@ -394,7 +396,7 @@ public class WorldServer {
 				
 				if (pieces[((y * c) + x)] == null) {
 					
-					new Piece(x, y, 0);
+					new Piece(x, y, 0, true);
 					
 				}
 				

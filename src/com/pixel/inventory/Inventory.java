@@ -1,7 +1,9 @@
 package com.pixel.inventory;
 
-import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
+import com.pixel.util.CoordinateKey;
+import com.pixel.admin.PixelLogger;
 import com.pixel.communication.CommunicationServer;
 import com.pixel.communication.CommunicationServlet;
 import com.pixel.communication.packet.PacketUpdateInventoryContent;
@@ -11,13 +13,18 @@ import com.pixel.item.ItemStack;
 public class Inventory {
 	
 	public Inventory(int userID, int w, int h, int id) {
-		this(userID, w, h, new ArrayList<InventoryContent>(), id);
+		this(userID, w, h, new ConcurrentHashMap<CoordinateKey, InventoryContent>(), id);
 	}
 	
-	public Inventory(int userID, int w, int h, ArrayList<InventoryContent> ic, int id) {
+	public Inventory(int userID, int w, int h, ConcurrentHashMap<CoordinateKey, InventoryContent> ic, int id) {
 		width = w;
 		height = h;
 		content = ic;
+		if (content.size() > 10 && id == 0) {
+			
+			PixelLogger.err("hotbar huge mofo");
+			
+		}
 		this.userID = userID;
 		this.id = id;
 	}
@@ -31,34 +38,22 @@ public class Inventory {
 	}
 	
 	public InventoryContent getContent(int x, int y) {
-		for (int i = 0; i < content.size(); i++) {
-			if (content.get(i).x == x && content.get(i).y == y) {
-				return content.get(i);
-			}
-		}
-		return new InventoryContent(x, y, new ItemStack(Item.blank, 0));
+		
+		if (content.containsKey(new CoordinateKey(x, y))) 
+			return content.get(new CoordinateKey(x, y));
+		else
+			return new InventoryContent(x, y, new ItemStack(Item.blank, 0));
+
 	}
 	
 	public void setContent(int x, int y, ItemStack itemstack) {
-		for (int i = 0; i < content.size(); i++) {
-			if (content.get(i).x == x && content.get(i).y == y) {
-				content.set(i, new InventoryContent(x, y, itemstack));
-				CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID), new PacketUpdateInventoryContent(x,y,itemstack.item.id, itemstack.size, id));
-				return;
-			}
-		}
-		content.add(new InventoryContent(x, y, itemstack));
+		content.put(new CoordinateKey(x, y), new InventoryContent(x, y, itemstack));
 		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID), new PacketUpdateInventoryContent(x,y,itemstack.item.id, itemstack.size, id));
+
 	}
 	
 	public void clientSetContent(int x, int y, ItemStack itemstack) {
-		for (int i = 0; i < content.size(); i++) {
-			if (content.get(i).x == x && content.get(i).y == y) {
-				content.set(i, new InventoryContent(x, y, itemstack));
-				return;
-			}
-		}
-		content.add(new InventoryContent(x, y, itemstack));
+		content.put(new CoordinateKey(x, y), new InventoryContent(x, y, itemstack));
 
 	}
 	
@@ -105,7 +100,7 @@ public class Inventory {
 	
 	public int nextX, nextY;
 	public int width, height;
-	public ArrayList<InventoryContent> content;
+	public ConcurrentHashMap<CoordinateKey, InventoryContent> content;
 	public int userID;
 	public int id;
 }

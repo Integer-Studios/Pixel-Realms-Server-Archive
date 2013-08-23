@@ -10,7 +10,7 @@ import com.pixel.world.WorldServer;
 
 public class Piece {
 	
-	public Piece(int x, int y, int i) {
+	public Piece(int x, int y, int i, boolean propagate) {
 		id = i;
 		posX = x;
 		posY = y;
@@ -18,11 +18,12 @@ public class Piece {
 		info[id].onCreated(this);
 		collisionBox = new Rectangle(posX + info[id].xOffset, posY + info[id].yOffset, info[id].width, info[id].height);
 	
-		WorldServer.propagatePiece(this);
+		if (propagate)
+			WorldServer.propagatePiece(this);
 	
 	}
 	
-	public Piece(int i, int x, int y, int damage, int metadata) {
+	public Piece(int i, int x, int y, int damage, int metadata, boolean propagate) {
 		id = i;
 		posX = x;
 		posY = y;
@@ -31,7 +32,8 @@ public class Piece {
 		info[id].onCreated(this);
 		collisionBox = new Rectangle(posX + info[id].xOffset, posY + info[id].yOffset, info[id].width, info[id].height);
 	
-		WorldServer.propagatePiece(this);
+		if (propagate)
+			WorldServer.propagatePiece(this);
 	
 	}
 	
@@ -46,7 +48,7 @@ public class Piece {
 			damage = 0;
 		if (damage == 0) {
 			info[id].onDestroyed(w, this, player);
-			Piece p = new Piece(posX, posY, info[id].dropPiece);
+			Piece p = new Piece(posX, posY, info[id].dropPiece, true);
 			p.playerInCollidedPosition = true;
 			WorldServer.setPieceObject(posX, posY, p);
 
