@@ -35,6 +35,7 @@ public class PacketUpdateWorld extends Packet {
 			output.writeInt(loadTiles.get(x).id);
 			output.writeInt((int) loadTiles.get(x).posX);
 			output.writeInt((int) loadTiles.get(x).posY);
+			output.writeInt((int) loadTiles.get(x).metadata);
 			
 		}
 

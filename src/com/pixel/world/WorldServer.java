@@ -178,7 +178,7 @@ public class WorldServer {
 
 		for (int y = 0; y < c; y++) {
 			for (int x = 0; x < c; x++) {
-				new Tile(x, y, 0);
+				new Tile(x, y, 0, -1);
 				
 				if ((x < 20 && x >= 10) && (y > 10 && y < c-11) && r.nextInt(x-9) == 0) {
 					new Piece(x, y, 16, true);
@@ -228,8 +228,8 @@ public class WorldServer {
 		
 	}
 
-	public static void setTile(int x, int y, int id) {
-		tiles.put((y * c) + x, new Tile(x, y, id));
+	public static void setTile(int x, int y, int id, int metadata) {
+		tiles.put((y * c) + x, new Tile(x, y, id, metadata));
 		PlayerManager.broadcastPacket(new PacketUpdateTile(id, x, y));
 	}
 
@@ -379,7 +379,7 @@ public class WorldServer {
 			
 			Integer[] t = tileSave.get(x);
 			
-			new Tile(t[1], t[2], t[0]);
+			new Tile(t[1], t[2], t[0], t[3]);
 
 		}
 

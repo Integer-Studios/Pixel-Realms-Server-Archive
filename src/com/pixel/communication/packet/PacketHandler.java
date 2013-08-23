@@ -40,7 +40,7 @@ public class PacketHandler {
 	
 	public static void processUpdateTile(PacketUpdateTile packet) {
 		
-		WorldServer.setTile(packet.posX, packet.posY, packet.tileID);
+		WorldServer.setTile(packet.posX, packet.posY, packet.tileID, packet.metadata);
 		
 	}
 	
