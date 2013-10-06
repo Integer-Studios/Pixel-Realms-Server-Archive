@@ -1,15 +1,12 @@
 package com.pixel.entity;
 
 
-import com.pixel.entity.ai.Herd;
 import com.pixel.player.PlayerManager;
 import com.pixel.world.WorldServer;
 
 public class EntityAnimal extends EntityAlive {
 
-	public int herdID;
 	public boolean alpha = false;
-	public Herd herd;
 	public int xDestination, yDestination;
 	private double speed = .03;
 	
@@ -129,7 +126,6 @@ public class EntityAnimal extends EntityAlive {
 		spawnBody(w);
 		health = 0;
 		PlayerManager.updateLivingEntity(this);
-		herd.onEntityDeath(w, this);
 	}
 	
 }

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.pixel.communication.packet.PacketChat;
+import com.pixel.entity.EntityBunny;
 import com.pixel.entity.EntityPlayer;
-import com.pixel.entity.ai.HerdBunny;
 import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
 
@@ -32,8 +32,8 @@ public class ChatManager {
 				
 			} else if (msg.text.equalsIgnoreCase("spawn")) {
 				
-				new HerdBunny(PlayerManager.getPlayer(msg.userID).getX(), PlayerManager.getPlayer(msg.userID).getY());
-				PlayerManager.sendMessage(msg.userID, "Spawning Herd at your position!", Color.RED);
+				new EntityBunny(PlayerManager.getPlayer(msg.userID).getX(), PlayerManager.getPlayer(msg.userID).getY());
+				PlayerManager.sendMessage(msg.userID, "Spawning Bunny at your position!", Color.RED);
 				
 			} else if (msg.text.equalsIgnoreCase("locate") || msg.text.equalsIgnoreCase("loc")) {
 				

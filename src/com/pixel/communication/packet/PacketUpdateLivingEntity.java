@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.pixel.entity.EntityAlive;
-import com.pixel.entity.EntityAnimal;
 
 public class PacketUpdateLivingEntity extends Packet {
 
@@ -29,28 +28,12 @@ public class PacketUpdateLivingEntity extends Packet {
 
 		try {
 
-			if (entity instanceof EntityAnimal) {
-				
-				EntityAnimal animal = (EntityAnimal) entity;
-				
-				output.writeFloat(animal.getX());
-				output.writeFloat(animal.getY());
-				output.writeFloat(animal.health);
-				output.writeInt(animal.id);
-				output.writeBoolean(true);
-				output.writeInt(animal.herdID);
-				output.writeInt(animal.serverID);
+			output.writeFloat(entity.getX());
+			output.writeFloat(entity.getY());
+			output.writeFloat(entity.health);
+			output.writeInt(entity.id);
+			output.writeInt(entity.serverID);
 
-			} else {
-
-				output.writeFloat(entity.getX());
-				output.writeFloat(entity.getY());
-				output.writeFloat(entity.health);
-				output.writeInt(entity.id);
-				output.writeBoolean(false);
-				output.writeInt(entity.serverID);
-
-			}
 		} catch (Exception e) {
 
 			e.printStackTrace();

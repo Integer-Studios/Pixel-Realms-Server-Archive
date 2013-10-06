@@ -12,10 +12,8 @@ import com.pixel.communication.packet.PacketChat;
 import com.pixel.communication.packet.PacketUpdatePiece;
 import com.pixel.communication.packet.PacketUpdateTile;
 import com.pixel.entity.Entity;
-import com.pixel.entity.EntityAnimal;
+import com.pixel.entity.EntityAlive;
 import com.pixel.entity.EntityPlayer;
-import com.pixel.entity.ai.Herd;
-import com.pixel.entity.ai.HerdBunny;
 import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
 import com.pixel.player.PlayerManager;
@@ -35,7 +33,6 @@ public class WorldServer {
 	public static Piece[] pieces;
 	public static ConcurrentHashMap<Integer, PieceBuilding> buildings = new ConcurrentHashMap<Integer,PieceBuilding>();
 	public static ConcurrentHashMap<Integer, Entity> entities = new ConcurrentHashMap<Integer,Entity>();
-	public static ConcurrentHashMap<Integer, Herd> herds = new ConcurrentHashMap<Integer, Herd>();
 	public static boolean init = false;
 	
 	public WorldServer() {
@@ -67,35 +64,18 @@ public class WorldServer {
 	public void tick() {
 		
 		PlayerManager.tick();
-		
-		
-		for (Herd herd : herds.values()) {
-			
-			herd.tick(this);
-//			new HerdUpdater(herd, this).start();
 
-		}
 
 		for (int x = 0; x < entities.size(); x ++) {
 			try {
 				Thread.sleep(2);
 			} catch (Exception e){}
 			Entity entity = (Entity) entities.values().toArray()[x];
-			if (entity instanceof EntityAnimal) {
 
-				if (((EntityAnimal)entity).herd != null) {
-
-				} else
-					entity.tick(this);
-
-			} else {
-
-				entity.tick(this);
-
-			}
+			entity.tick(this);
 
 		}
-		
+
 		for (int i = 0; i < pieces.length; i++) {
 			pieces[i].tick(this);
 		}
@@ -224,7 +204,7 @@ public class WorldServer {
 			
 		}
 		
-		new HerdBunny(150, 150);
+//		new HerdBunny(150, 150);
 		
 	}
 
@@ -346,7 +326,9 @@ public class WorldServer {
 	public static void propagateEntity(Entity entity) {
 
 		entities.put(entity.serverID, entity);
-		
+		if (entity instanceof EntityAlive) {
+			PlayerManager.updateLivingEntity((EntityAlive)entity);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -373,7 +355,6 @@ public class WorldServer {
 		tiles.clear();
 		pieces = new Piece[c * c];
 		entities.clear();
-		herds.clear();
 		
 		for (int x = 0; x < tileSave.size(); x ++) {
 			
@@ -423,20 +404,6 @@ public class WorldServer {
 
 		}
 		
-		for (int x = 0; x < herdSave.size(); x++) {
-			
-			ArrayList<Float[]> herdArray = herdSave.get(x);
-			Float[] herdInfo = herdArray.get(0);
-			
-			Herd herd = Herd.getHerd(Math.round(herdInfo[8]));
-			herd.load(Math.round(herdInfo[0]), Math.round(herdInfo[1]), Math.round(herdInfo[2]), herdInfo[3], herdInfo[4], herdInfo[5], herdInfo[6], Math.round(herdInfo[7]), herdArray);
-			herd.id = herds.size() + 1;
-			herds.put(herd.herdID, herd);
-			
-		}
-		
-		
-
 	}
 
 	public void save() {

@@ -17,7 +17,7 @@ public class CommunicationServer implements Runnable {
 	public void run() {
 
 		ServerSocket serverSocket = null;
-		
+
 		try {
 			serverSocket = new ServerSocket(port);
 		} 
@@ -29,10 +29,11 @@ public class CommunicationServer implements Runnable {
 		while (true) {
 			
 			Socket clientSocket;
-			
+
 			try {
 
 				clientSocket = serverSocket.accept();
+				clientSocket.setTcpNoDelay(true);
 				new CommunicationServletHandler(clientSocket);
 			} catch (IOException e) {
 				PixelLogger.err("Error: Accept failed on " + port);

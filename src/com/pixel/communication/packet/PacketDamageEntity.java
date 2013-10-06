@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.pixel.entity.EntityAlive;
-import com.pixel.entity.EntityAnimal;
 
 public class PacketDamageEntity extends Packet {
 
@@ -30,43 +29,19 @@ public class PacketDamageEntity extends Packet {
 	@Override
 	public void writeData(DataOutputStream output) throws IOException {
 
-		if (entity instanceof EntityAnimal) {
+		output.writeInt(entity.serverID);
+		output.writeFloat(entity.health);
 
-			EntityAnimal animal = (EntityAnimal) entity;
-			
-			output.writeBoolean(true);
-			output.writeInt(animal.herdID);
-			output.writeInt(animal.serverID);
-			output.writeFloat(animal.health);
-
-		} else {
-			
-			output.writeBoolean(false);
-			output.writeInt(entity.serverID);
-			output.writeFloat(entity.health);
-			
-		}
-		
 	}
 
 	@Override
 	public void readData(DataInputStream input) throws IOException {
 
-		if (input.readBoolean()) {
-			
-			this.herdID = input.readInt();
-			this.serverID = input.readInt();
-			this.damage = input.readFloat();
-			
-		} else {
-			
-			this.serverID = input.readInt();
-			this.damage = input.readFloat();
-			
-		}
-		
+		this.serverID = input.readInt();
+		this.damage = input.readFloat();
+
 		PacketHandler.processDamageEntity(this);
-		
+
 	}
 	
 }

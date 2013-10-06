@@ -78,20 +78,12 @@ public class PacketHandler {
 	public static void processDamageEntity(PacketDamageEntity packet) {
 
 		EntityAlive entity = null;
-		
-		if (packet.herdID != -1) {
-		
-			entity = (EntityAlive)WorldServer.herds.get(packet.herdID).entities.get(packet.serverID);
-		
-		} else {
 
-			entity = (EntityAlive)WorldServer.getEntity(packet.serverID);
-			
-		}
-		
+		entity = (EntityAlive)WorldServer.getEntity(packet.serverID);
+
 		if (entity != null) {
 			entity.damage(PixelRealmsServer.world, packet.damage, PlayerManager.getPlayer(packet.userID));
 		}
 	}
-	
+
 }

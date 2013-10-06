@@ -8,8 +8,6 @@ import com.pixel.admin.PixelLogger.PixelColor;
 import com.pixel.chat.ChatMessage;
 import com.pixel.communication.packet.PacketChat;
 import com.pixel.entity.Entity;
-import com.pixel.entity.EntityAnimal;
-import com.pixel.entity.ai.Herd;
 import com.pixel.piece.Piece;
 import com.pixel.player.PlayerManager;
 import com.pixel.tile.Tile;
@@ -67,22 +65,6 @@ public class WorldSaveThread implements Runnable {
 		
 		ArrayList<ArrayList<Float[]>> herdSave = new ArrayList<ArrayList<Float[]>>();
 
-		for (Herd herd : WorldServer.herds.values()) {
-
-			ArrayList<Float[]> herdArray = new ArrayList<Float[]>();
-			
-			herdArray.add(new Float[]{(float) herd.id, (float) herd.alpha.serverID, (float) herd.timeSpent, herd.x, herd.y, herd.x, herd.y, (float) herd.currentID, (float) herd.herdID});
-			herdArray.add(new Float[]{(float) herd.alpha.id, herd.alpha.getX(), herd.alpha.getY(), herd.alpha.health, (float) herd.alpha.serverID, (float) herd.alpha.herdID});
-
-			for (EntityAnimal animal : herd.entities.values()) {
-				
-				herdArray.add(new Float[]{(float) animal.id, animal.getX(), animal.getY(), animal.health, (float) animal.serverID, (float) animal.herdID});
-				
-			}
-			
-			herdSave.add(herdArray);
-
-		}
 		k.save("herds.dat", herdSave);
 
 		PixelLogger.print("Entities Saved!", PixelColor.PURPLE);
