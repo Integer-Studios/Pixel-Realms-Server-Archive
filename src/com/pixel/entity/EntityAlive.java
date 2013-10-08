@@ -6,6 +6,7 @@ import com.pixel.world.WorldServer;
 public class EntityAlive extends Entity {
 
 	public float previousX, previousY, previousHealth;
+	public int speed;
 	
 	public EntityAlive(float x, float y, float width, float height, boolean propagate) {
 		super(x, y, width, height, propagate);

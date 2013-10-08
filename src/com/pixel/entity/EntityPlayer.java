@@ -1,5 +1,6 @@
 package com.pixel.entity;
 
+import com.pixel.communication.packet.PacketUpdatePlayer;
 import com.pixel.item.ItemStack;
 import com.pixel.player.PlayerInventory;
 import com.pixel.player.PlayerManager;
@@ -15,6 +16,7 @@ public class EntityPlayer extends Entity {
 	public int userID;
 	public ItemStack selectedItem;
 	public int session;
+	public int speed;
 	
 	public EntityPlayer(String username, int userID) {
 		super(20, 20, .9F, .2F, false);
@@ -22,9 +24,13 @@ public class EntityPlayer extends Entity {
 		this.username = username;
 		this.userID = userID;
 	}
-	public void tick(WorldServer w) {
+	public void tick(WorldServer world) {
 		
-		super.tick(w);
+			
+		PlayerManager.broadcastPacketUpdatePlayer(new PacketUpdatePlayer(this));
+			
+		
+		super.tick(world);
 	}
 
 	public PlayerInventory getPlayerInventory() {
@@ -96,6 +102,7 @@ public class EntityPlayer extends Entity {
 		}
 		return true;
 	}
+	
 	public void setSelectedItem(ItemStack itemStack) {
 
 		this.selectedItem = itemStack;

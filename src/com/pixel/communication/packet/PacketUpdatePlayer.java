@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import com.pixel.entity.EntityPlayer;
 import com.pixel.item.ItemStack;
 
 public class PacketUpdatePlayer extends Packet {
@@ -14,6 +15,12 @@ public class PacketUpdatePlayer extends Packet {
 	
 	public PacketUpdatePlayer() {
 		this.id = 2;
+	}
+	
+	public PacketUpdatePlayer(EntityPlayer player) {
+		
+		this(player.username, player.getX(), player.getY(), player.health, player.satisfaction, player.energy, player.userID, player.selectedItem);
+		
 	}
 	
 	public PacketUpdatePlayer(String username, float posX, float posY, float health, float satisfaction, float energy, int userID, ItemStack stack) {
