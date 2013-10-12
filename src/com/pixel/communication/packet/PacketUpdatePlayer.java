@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import com.pixel.entity.EntityPlayer;
 import com.pixel.item.ItemStack;
+import com.pixel.player.PlayerManager;
 
 public class PacketUpdatePlayer extends Packet {
 
@@ -36,6 +37,24 @@ public class PacketUpdatePlayer extends Packet {
 		if (stack != null) {
 			this.itemID = stack.item.id;
 			this.itemAmount = stack.size;
+		}
+	}
+	
+	public PacketUpdatePlayer(int userID) {
+		// TODO Auto-generated constructor stub
+		EntityPlayer p = PlayerManager.getPlayer(userID);
+		
+		this.id = 2;
+		this.username = p.username; 
+		this.posX = p.getX();
+		this.posY = p.getY();
+		this.health = p.health;
+		this.satisfaction = p.satisfaction;
+		this.energy = p.energy;
+		this.userID = userID;
+		if (p.selectedItem != null) {
+			this.itemID = p.selectedItem.item.id;
+			this.itemAmount = p.selectedItem.size;
 		}
 	}
 

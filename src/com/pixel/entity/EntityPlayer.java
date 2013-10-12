@@ -10,13 +10,13 @@ public class EntityPlayer extends Entity {
 
 	public float damage = 1.0F;
 	public float satisfaction, energy;
-	float direction;
 	int action;
 	public String username;
 	public int userID;
 	public ItemStack selectedItem;
 	public int session;
-	public int speed;
+	public float velocityX, velocityY;
+	public float speed;
 	
 	public EntityPlayer(String username, int userID) {
 		super(20, 20, .9F, .2F, false);
@@ -24,11 +24,16 @@ public class EntityPlayer extends Entity {
 		this.username = username;
 		this.userID = userID;
 	}
+	
+	public void accelerate(float x, float y) {
+		velocityX += x;
+		velocityY += y;
+	}
+	
 	public void tick(WorldServer world) {
 		
-			
-		PlayerManager.broadcastPacketUpdatePlayer(new PacketUpdatePlayer(this));
-			
+		posX += velocityX;
+		posY += velocityY;
 		
 		super.tick(world);
 	}
@@ -53,12 +58,6 @@ public class EntityPlayer extends Entity {
 		
 		this.session = session;
 		
-	}
-
-	public void setDirection(float direction) {
-
-		this.direction = direction;
-
 	}
 
 	public void setHealth(float health) {

@@ -80,13 +80,24 @@ public class PlayerManager {
 		}
 		PlayerManager.inventories.get(player.userID).sendInventory();
 
+		player.velocityX = 0;
+		player.velocityY = 0;
 		players.put(player.userID, player);
 		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(packet.userID), new PacketUpdatePlayer(PlayerManager.getPlayer(packet.userID).username, PlayerManager.getPlayer(packet.userID).posX, PlayerManager.getPlayer(packet.userID).posY, PlayerManager.getPlayer(packet.userID).health, PlayerManager.getPlayer(packet.userID).satisfaction, PlayerManager.getPlayer(packet.userID).energy, packet.userID, PlayerManager.getPlayer(packet.userID).selectedItem));
 
 		PixelLogger.print(player.username + " has logged in.", PixelColor.BLUE);
-		
+		sendPlayers(player.userID);
 		broadcastPacket(packet);
 		broadcastPacket(new PacketChat(new ChatMessage("Server", player.username + " has logged in.", Color.RED, player.userID)));
+		
+	}
+	
+	public static void sendPlayers(int userID) {
+		
+		for (EntityPlayer player: players.values()) {
+			sendPacketToPlayer(userID, new PacketUpdatePlayer(PlayerManager.getPlayer(player.userID).username, PlayerManager.getPlayer(player.userID).posX, PlayerManager.getPlayer(player.userID).posY, PlayerManager.getPlayer(player.userID).health, PlayerManager.getPlayer(player.userID).satisfaction, PlayerManager.getPlayer(player.userID).energy, player.userID, PlayerManager.getPlayer(player.userID).selectedItem));
+		
+		}
 		
 	}
 	
