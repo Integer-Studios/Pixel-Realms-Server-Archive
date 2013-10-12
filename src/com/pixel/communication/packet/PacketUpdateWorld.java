@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import com.pixel.communication.CommunicationServer;
 import com.pixel.communication.CommunicationServlet;
+import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
 import com.pixel.world.WorldComponent;
 
@@ -82,6 +83,12 @@ public class PacketUpdateWorld extends Packet {
 		posX = input.readInt();
 		posY = input.readInt();
 		
+		if (PlayerManager.getPlayer(userID).inside) {
+			
+			PlayerManager.getPlayer(userID).inside = false;
+			PlayerManager.getPlayer(userID).setPosition(PlayerManager.getPlayer(userID).oldX, PlayerManager.getPlayer(userID).oldY);
+			PlayerManager.updatePlayer(userID);
+		}
 		
 		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID), this);
 		
