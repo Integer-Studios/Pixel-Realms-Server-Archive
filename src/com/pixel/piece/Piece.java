@@ -80,7 +80,17 @@ public class Piece {
 				new PieceCabinBasic().setShouldCollide(true),//14
 				new PieceMultiItem(new ItemStack[] {new ItemStack(Item.bunnyFoot, 1), new ItemStack(Item.bunnyLeg, 1), new ItemStack(Item.bunnyFur, 1)}),//15
 				new PieceTripleHeight().setShouldCollide(true).setMaxDamage(-1).setIsCollectable(false),//16
-				new PieceBuildingInfo()//17
+				new PieceBuildingInfo(),//17
+				new PieceInfo().setIsCollectable(false).setShouldCollide(true).setSize(0F, 0F, 1F, 1F),//18
+				new PieceInfo().setIsCollectable(false).setShouldCollide(true).setSize(0F, 0F, 1F, 1F),//19
+				new PieceInfo().setIsCollectable(false).setShouldCollide(true).setSize(0F, 0F, 1F, 1F),//20
+				new PieceInfo().setIsCollectable(false).setShouldCollide(true).setSize(0F, 0F, 1F, 1F),//21
+				new PieceInfo().setIsCollectable(false).setShouldCollide(true).setSize(0F, 0F, 1F, 1F),//22
+				new PieceInfo().setIsCollectable(false).setShouldCollide(true).setSize(0F, 0F, 1F, 1F),//23
+				new PieceInfo().setIsCollectable(false).setShouldCollide(true).setSize(0F, 0F, 1F, 1F),//24
+				new PieceInfo().setIsCollectable(false).setShouldCollide(true).setSize(0F, 0F, 1F, 1F),//25
+
+
 		};
 		
 	}

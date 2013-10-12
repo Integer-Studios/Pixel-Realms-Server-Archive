@@ -47,9 +47,11 @@ public class Tile {
 				new TileRounded(0), //sand rounded 2
 				new TileInfo(), //water flat 3
 				new TileRounded(0), //water rounded 4
-				new TileInfo(), //cobble flat 3
-				new TileRounded(0), //cobble rounded 4
-				new TileInfo() //hill 5
+				new TileInfo(), //cobble flat 5
+				new TileRounded(0), //cobble rounded 6
+				new TileInfo(), //hill 7
+				new TileInfo(), //bg 8
+				new TileInfo(), //floor 9
 		};
 		
 	}
