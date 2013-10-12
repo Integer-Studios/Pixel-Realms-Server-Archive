@@ -1,6 +1,5 @@
 package com.pixel.entity;
 
-import com.pixel.communication.packet.PacketUpdatePlayer;
 import com.pixel.item.ItemStack;
 import com.pixel.player.PlayerInventory;
 import com.pixel.player.PlayerManager;
@@ -17,6 +16,9 @@ public class EntityPlayer extends Entity {
 	public int session;
 	public float velocityX, velocityY;
 	public float speed;
+	public boolean inside;
+	public int worldID;
+	public float oldX, oldY;
 	
 	public EntityPlayer(String username, int userID) {
 		super(20, 20, .9F, .2F, false);
@@ -25,9 +27,9 @@ public class EntityPlayer extends Entity {
 		this.userID = userID;
 	}
 	
-	public void accelerate(float x, float y) {
-		velocityX += x;
-		velocityY += y;
+	public void setVelocity(float x, float y) {
+		velocityX = x;
+		velocityY = y;
 	}
 	
 	public void tick(WorldServer world) {

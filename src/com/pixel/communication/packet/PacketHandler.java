@@ -37,30 +37,28 @@ public class PacketHandler {
 		}
 		
 	}
-	
+
 	public static void processMovePlayer(PacketMovePlayer packet) {
 
-		PlayerManager.getPlayer(packet.userID).accelerate(packet.changeX, packet.changeY);
+		PlayerManager.getPlayer(packet.userID).setVelocity(packet.velocityX, packet.velocityY);
 
-		float xDiff = Math.abs(PlayerManager.players.get(packet.userID).getX() - packet.posX);
-		float yDiff = Math.abs(PlayerManager.players.get(packet.userID).getY() - packet.posY);
-		
-//		if (xDiff < 0.5 && yDiff < 0.5) {
-			
-			PlayerManager.players.get(packet.userID).setPosX(packet.posX);
-			PlayerManager.players.get(packet.userID).setPosY(packet.posY);
-			PlayerManager.broadcastPacket(packet);
-			
-			if (PlayerManager.players.get(packet.userID).velocityX == 0 && PlayerManager.players.get(packet.userID).velocityY == 0) {
-				
-//				PlayerManager.broadcastPacket(new PacketUpdatePlayer(packet.userID));
-				
-			}
-//	}
+//		float xDiff = Math.abs(PlayerManager.players.get(packet.userID).getX() - packet.posX);
+//		float yDiff = Math.abs(PlayerManager.players.get(packet.userID).getY() - packet.posY);
+//
+//				if (xDiff < 0.5 && yDiff < 0.5) {
+
+		PlayerManager.broadcastPacket(packet);
+
+		if (PlayerManager.players.get(packet.userID).velocityX == 0 && PlayerManager.players.get(packet.userID).velocityY == 0) {
+
+			PlayerManager.broadcastPacket(new PacketUpdatePlayer(packet.userID));
+
+		}
+//			}
 
 	}
-	
-	
+
+
 	public static void processUpdateTile(PacketUpdateTile packet) {
 		
 		WorldServer.setTile(packet.posX, packet.posY, packet.tileID, packet.metadata);

@@ -80,6 +80,9 @@ public class PlayerManager {
 		}
 		PlayerManager.inventories.get(player.userID).sendInventory();
 
+		packet.posX = player.getX();
+		packet.posY = player.getY();
+		
 		player.velocityX = 0;
 		player.velocityY = 0;
 		players.put(player.userID, player);

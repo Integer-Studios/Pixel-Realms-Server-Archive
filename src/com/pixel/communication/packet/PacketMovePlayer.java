@@ -10,18 +10,18 @@ import com.pixel.player.PlayerManager;
 public class PacketMovePlayer extends Packet {
 
 	EntityAlive entity;
-	float changeX, changeY, posX, posY;
+	float velocityX, velocityY, posX, posY;
 	float speed;
 	
 	public PacketMovePlayer() {
 		this.id = 16;
 	}
 	
-	public PacketMovePlayer(int userID, float changeX, float changeY, float posX, float posY, int speed) {
+	public PacketMovePlayer(int userID, float velocityX, float velocityY, float posX, float posY, int speed) {
 		
 		this.id = 16;
-		this.changeX = changeX;
-		this.changeY = changeY;
+		this.velocityX = velocityX;
+		this.velocityY = velocityY;
 		this.posX = posX;
 		this.posY = posY;
 		this.userID = userID;
@@ -32,8 +32,8 @@ public class PacketMovePlayer extends Packet {
 	public void writeData(DataOutputStream output) throws IOException {
 
 		output.writeInt(userID);
-		output.writeFloat(changeX);
-		output.writeFloat(changeY);
+		output.writeFloat(velocityX);
+		output.writeFloat(velocityY);
 		output.writeFloat(posX);
 		output.writeFloat(posY);
 		
@@ -42,8 +42,8 @@ public class PacketMovePlayer extends Packet {
 	public void readData(DataInputStream input) throws IOException {
 
 		userID = input.readInt();
-		changeX = input.readFloat();
-		changeY = input.readFloat();
+		velocityX = input.readFloat();
+		velocityY = input.readFloat();
 		posX = input.readFloat();
 		posY = input.readFloat();
 		
