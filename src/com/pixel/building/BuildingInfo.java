@@ -26,7 +26,7 @@ public class BuildingInfo {
 	
 	public BuildingInfo setInterior(int width, int height) {
 		
-		this.interior = new InteriorWorld(width, height, 1);
+		this.interior = new InteriorWorld(width, height, id);
 		
 		return this;
 		
