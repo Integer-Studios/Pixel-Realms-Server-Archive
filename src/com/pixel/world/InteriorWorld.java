@@ -31,10 +31,39 @@ public class InteriorWorld {
 			
 			for (int y = 0; y < height; y ++) {
 				
-				tiles.put((y * (width * height)) + x, new Tile(x, y, id, -1, false));
+				tiles.put((y * (width * height)) + x, new Tile(x, y, 8, -1, false));
 				
 			}
 			
+		}
+		
+		if (id == 0) {
+			//cabin 1
+			for (int x = 1; x < 5; x ++) {
+				
+				for (int y = 1; y < 4; y ++) {
+					
+					tiles.put((y * (width * height)) + x, new Tile(x, y, 9, -1, false));
+					
+				}
+				
+			}
+			
+			for (int x = 1; x < 5; x ++) {
+				pieces.put((0 * (width * height)) + x, new Piece(x, 0, 18, false));
+				pieces.put((5 * (width * height)) + x, new Piece(x, 5, 18, false));
+			}
+			for (int y = 1; y < 4; y ++) {
+				pieces.put((y * (width * height)) + 0, new Piece(0, y, 19, false));
+				pieces.put((y * (width * height)) + 5, new Piece(5, y, 20, false));
+			}
+			pieces.put((0 * (width * height)) + 0, new Piece(0, 0, 21, false));
+			pieces.put((0 * (width * height)) + 5, new Piece(5, 0, 22, false));
+			pieces.put((5 * (width * height)) + 0, new Piece(0, 5, 23, false));
+			pieces.put((5 * (width * height)) + 5, new Piece(5, 5, 24, false));
+			pieces.put((5 * (width * height)) + 1, new Piece(1, 5, 25, false));
+
+
 		}
 		
 	}
