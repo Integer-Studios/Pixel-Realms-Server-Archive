@@ -72,10 +72,10 @@ public class EntityAnimal extends EntityAlive {
 		
 		Random r = new Random();
 		
-		if (velocityX == 0 && velocityY == 0 && r.nextInt(1000) == 0) {
+		if (velocityX == 0 && velocityY == 0 && r.nextInt(100) == 0) {
 			startRandomMovement(r);
 		} else
-		if ((velocityX != 0 || velocityY != 0) && r.nextInt(1000) == 0) {
+		if ((velocityX != 0 || velocityY != 0) && r.nextInt(100) == 0) {
 			System.out.println("stopping entity movement");
 			velocityX = 0;
 			velocityY = 0;

@@ -94,10 +94,10 @@ public class WorldServer {
 		int aY = posY - r;
 		int bY = posY + r;
 		
-		for (int x = aX; x <= bX; x ++) {
+		for (int y = aY; y <= bY; y ++) {
+
+			for (int x = aX; x <= bX; x ++) {
 			
-			for (int y = aY; y <= bY; y ++) {
-				
 				if (Math.sqrt((posX - x)*(posX - x) + (posY - y)*(posY - y)) <= r) {
 
 					if (getTileObject(x, y) != null) {

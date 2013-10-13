@@ -61,7 +61,7 @@ public class PacketUpdatePiece extends Packet {
 		if (input.readBoolean()) {
 			
 			buildingID = input.readInt();
-			PlayerManager.broadcastPacket(new PacketUpdatePiece(new PieceBuilding(posX, posY, buildingID)));
+//			PlayerManager.broadcastPacket(new PacketUpdatePiece(new PieceBuilding(posX, posY, buildingID)));
 			
 		} else {
 			

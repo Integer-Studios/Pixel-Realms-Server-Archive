@@ -18,6 +18,7 @@ public class PacketMoveLivingEntity extends Packet {
 	
 	public PacketMoveLivingEntity(EntityAlive entity) {
 		
+		this.id = 15;
 		this.entity = entity;
 		this.serverID = entity.serverID;
 		this.velocityX = entity.velocityX;
