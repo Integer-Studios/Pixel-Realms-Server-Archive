@@ -12,20 +12,22 @@ public class PacketMovePlayer extends Packet {
 	EntityAlive entity;
 	float velocityX, velocityY, posX, posY;
 	float speed;
+	int worldID;
 	
 	public PacketMovePlayer() {
 		this.id = 16;
 	}
 	
-	public PacketMovePlayer(int userID, float velocityX, float velocityY, float posX, float posY, int speed) {
+	public PacketMovePlayer(int userID) {
 		
 		this.id = 16;
-		this.velocityX = velocityX;
-		this.velocityY = velocityY;
-		this.posX = posX;
-		this.posY = posY;
 		this.userID = userID;
-		this.speed = speed;
+		this.worldID = PlayerManager.getPlayer(userID).worldID;
+		this.velocityX = PlayerManager.getPlayer(userID).velocityX;
+		this.velocityY = PlayerManager.getPlayer(userID).velocityY;
+		this.posX = PlayerManager.getPlayer(userID).posX;
+		this.posY = PlayerManager.getPlayer(userID).posY;
+		this.speed = PlayerManager.getPlayer(userID).speed;
 		
 	}
 	
@@ -36,6 +38,7 @@ public class PacketMovePlayer extends Packet {
 		output.writeFloat(velocityY);
 		output.writeFloat(posX);
 		output.writeFloat(posY);
+		output.writeInt(PlayerManager.getPlayer(userID).worldID);
 		
 	}
 

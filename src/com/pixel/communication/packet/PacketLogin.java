@@ -9,9 +9,8 @@ import com.pixel.entity.EntityPlayer;
 public class PacketLogin extends Packet {
 
 	public String username;
-	public float posX, posY, health, direction;
-	public int action;
-	public int session;
+	public float posX, posY, health, satisfaction, energy;
+	public int itemID, itemAmount, worldID, session;
 	
 	public PacketLogin () {
 		this.id = 1;
@@ -26,8 +25,9 @@ public class PacketLogin extends Packet {
 		this.posY = player.posY;
 		this.health = player.health;
 		this.session = player.session;
-		this.direction = 0;
-		this.action = 0;
+		this.energy = player.energy;
+		this.satisfaction = player.satisfaction;
+		this.worldID = player.worldID;
 		
 	}
 	
@@ -37,9 +37,10 @@ public class PacketLogin extends Packet {
 		output.writeFloat(this.posX);
 		output.writeFloat(this.posY);
 		output.writeFloat(this.health);
-		output.writeFloat(this.direction);
-		output.writeInt(this.action);
+		output.writeFloat(this.energy);
+		output.writeFloat(this.satisfaction);
 		output.writeInt(0);
+		output.writeInt(worldID);
 
 	}
 

@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
+import com.pixel.player.PlayerManager;
 
 public class PacketUpdatePiece extends Packet {
 
@@ -60,6 +61,7 @@ public class PacketUpdatePiece extends Packet {
 		if (input.readBoolean()) {
 			
 			buildingID = input.readInt();
+			PlayerManager.broadcastPacket(new PacketUpdatePiece(new PieceBuilding(posX, posY, buildingID)));
 			
 		} else {
 			

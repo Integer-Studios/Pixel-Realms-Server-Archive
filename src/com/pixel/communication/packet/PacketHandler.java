@@ -106,5 +106,15 @@ public class PacketHandler {
 			entity.damage(PixelRealmsServer.world, packet.damage, PlayerManager.getPlayer(packet.userID));
 		}
 	}
+	
+	public static void processInfoRequest(PacketInfoRequest packet) {
+		
+		if (packet.request.equals("players")) {
+			
+			PlayerManager.sendPlayers(packet.userID);
+			
+		}
+		
+	}
 
 }

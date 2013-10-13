@@ -42,6 +42,7 @@ public class Item {
 	public static Item baneOfEmera = new Item(20);
 	public static Item sharpenedRock = new Item(21);
 	public static Item stick = new Item(22);
+	public static Item cabinCornerstone = new Item(23);
 
 	public int id;
 	public String texture;

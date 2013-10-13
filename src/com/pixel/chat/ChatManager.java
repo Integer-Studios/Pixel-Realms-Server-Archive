@@ -7,8 +7,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.pixel.communication.packet.PacketChat;
+import com.pixel.communication.packet.PacketUpdatePiece;
+import com.pixel.communication.packet.PacketUpdatePlayer;
 import com.pixel.entity.EntityBunny;
 import com.pixel.entity.EntityPlayer;
+import com.pixel.piece.Piece;
+import com.pixel.piece.PieceBuilding;
 import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
 
@@ -52,7 +56,7 @@ public class ChatManager {
 
 					PlayerManager.getPlayer(msg.userID).setPosition(x, y);
 					PlayerManager.sendMessage(msg.userID, "Teleported to " + x + ", " + y + "!" , Color.BLUE);
-					PlayerManager.updatePlayer(msg.userID);
+					PlayerManager.broadcastPacket(new PacketUpdatePlayer(msg.userID));
 
 				} else if (args.length == 2) {
 					
@@ -63,7 +67,7 @@ public class ChatManager {
 						PlayerManager.getPlayer(msg.userID).setPosition(p.getX(), p.getY());
 						PlayerManager.sendMessage(msg.userID, "Teleported to " + args[1] + "!" , Color.BLUE);
 						PlayerManager.sendMessage(p.userID, msg.username + " teleported to you!" , Color.BLUE);
-						PlayerManager.updatePlayer(msg.userID);
+						PlayerManager.broadcastPacket(new PacketUpdatePlayer(msg.userID));
 						
 					} else {
 						
@@ -73,6 +77,21 @@ public class ChatManager {
 					
 				}
 				
+			} else if (msg.text.equals("cabin")) {
+				int x = ((int)PlayerManager.getPlayer(msg.userID).getX()) + 2;
+				int y = ((int)PlayerManager.getPlayer(msg.userID).getY()) + 2;
+				PlayerManager.broadcastPacket(new PacketUpdatePiece(new PieceBuilding(x, y, 0)));
+
+				for (int b = x; b < x + 4; b ++) {
+					
+					for (int i = y; i < y + 4; i ++) {
+						
+						if (!(b == x && i == y))
+							PlayerManager.broadcastPacket(new PacketUpdatePiece(new Piece(b, i, 0, true)));
+
+					}
+					
+				}
 			}
 		
 //			} else if (msg.text.startsWith("")) {

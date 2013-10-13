@@ -9,6 +9,7 @@ import com.pixel.chat.ChatMessage;
 import com.pixel.communication.packet.PacketChat;
 import com.pixel.entity.Entity;
 import com.pixel.piece.Piece;
+import com.pixel.piece.PieceBuilding;
 import com.pixel.player.PlayerManager;
 import com.pixel.tile.Tile;
 import com.pixel.util.Toolkit;
@@ -45,7 +46,10 @@ public class WorldSaveThread implements Runnable {
 		for (int x = 0; x < WorldServer.pieces.length; x ++) {
 
 			Piece p = WorldServer.pieces[x];
-			piecesSave.add(new Integer[]{p.id, p.posX, p.posY, p.damage, p.metadata, 1});
+			if (p.id == 17)
+				piecesSave.add(new Integer[]{p.id, p.posX, p.posY, p.damage, p.metadata, 1, ((PieceBuilding) p).building.id,  ((PieceBuilding) p).building.worldID});
+			else
+				piecesSave.add(new Integer[]{p.id, p.posX, p.posY, p.damage, p.metadata, 1});
 
 		}
 		k.save("pieces.dat", piecesSave);
