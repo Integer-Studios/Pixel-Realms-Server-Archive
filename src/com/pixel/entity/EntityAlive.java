@@ -1,12 +1,14 @@
 package com.pixel.entity;
 
+import com.pixel.communication.packet.PacketMoveLivingEntity;
 import com.pixel.player.PlayerManager;
 import com.pixel.world.WorldServer;
 
 public class EntityAlive extends Entity {
 
-	public float previousX, previousY, previousHealth;
-	public int speed;
+	public float previousHealth;
+	public float velocityX, velocityY, prevVelocityX, prevVelocityY;
+	public float speed;
 	
 	public EntityAlive(float x, float y, float width, float height, boolean propagate) {
 		super(x, y, width, height, propagate);
@@ -41,8 +43,9 @@ public class EntityAlive extends Entity {
 	}
 	
 	public void tick(WorldServer w) {
-
-		super.tick(w);
+		
+		posX += velocityX;
+		posY += velocityY;
 		
 		if (posX < 10) {
 			posX = 10;
@@ -57,10 +60,16 @@ public class EntityAlive extends Entity {
 			posY = WorldServer.c-11;
 		} 
 		
-		PlayerManager.broadcastEntity(this);
+		if ((velocityX - prevVelocityX != 0) || (velocityY - prevVelocityY != 0)) {
+			//send change velocity packet
+			PlayerManager.broadcastPacket(new PacketMoveLivingEntity(this));
+		}
+		//PlayerManager.broadcastEntity(this);
 
-		previousX = posX;
-		previousY = posY;
+		prevVelocityX = velocityX;
+		prevVelocityY = velocityY;
+		
+		super.tick(w);
 
 	}
 

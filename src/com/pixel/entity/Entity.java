@@ -77,7 +77,8 @@ public class Entity {
 	}
 
 	public void tick(WorldServer w) {
-		
+		prevPosX = posX;
+		prevPosY = posY;
 	}
 	
 	@SuppressWarnings("rawtypes")
