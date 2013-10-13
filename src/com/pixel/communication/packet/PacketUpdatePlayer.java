@@ -12,7 +12,7 @@ public class PacketUpdatePlayer extends Packet {
 
 	public String username;
 	public float posX, posY, health, satisfaction, energy;
-	public int itemID, itemAmount;
+	public int itemID, itemAmount, worlDID;
 	
 	public PacketUpdatePlayer() {
 		this.id = 2;
@@ -71,7 +71,7 @@ public class PacketUpdatePlayer extends Packet {
 			output.writeFloat(this.energy);
 			output.writeInt(this.itemID);
 			output.writeInt(this.itemAmount);
-
+			output.writeInt(PlayerManager.getPlayer(userID).worldID);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

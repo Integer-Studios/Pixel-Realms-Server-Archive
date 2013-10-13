@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.pixel.admin.PixelLogger;
 import com.pixel.admin.PixelLogger.PixelColor;
+import com.pixel.building.Building;
 import com.pixel.chat.ChatMessage;
 import com.pixel.communication.packet.PacketChat;
 import com.pixel.communication.packet.PacketUpdatePiece;
@@ -52,8 +53,6 @@ public class WorldServer {
 		}
 		
 		PixelLogger.print("Server Initialized.", PixelColor.RED);
-		
-		new PieceBuilding(150, 150, 0);
 		
 		init = true;
 		
@@ -239,7 +238,8 @@ public class WorldServer {
 		
 		} else {
 			
-			pieces[((y * c) + x)] = new PieceBuilding(x, y, buildingID);
+			if (Building.canBuildingFit(buildingID, x, y))
+				pieces[((y * c) + x)] = new PieceBuilding(x, y, buildingID);
 			
 		}
 		pieces[((y * c) + x)].damage = damage;
@@ -367,7 +367,12 @@ public class WorldServer {
 		for (int x = 0; x < piecesSave.size(); x ++) {
 
 			Integer[] p = piecesSave.get(x);
-			new Piece(p[0], p[1], p[2], p[3], p[4], true);
+			if (p[0] == 17) {
+				
+				new PieceBuilding(p[1], p[2], p[6], p[3], p[4], p[7]);
+				
+			} else
+				new Piece(p[0], p[1], p[2], p[3], p[4], true);
 
 
 		}

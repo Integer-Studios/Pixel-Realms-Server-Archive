@@ -50,7 +50,7 @@ public class PlayerManager {
 				
 			} else {
 				
-				playersData.put(packet.userID, new Float[]{150F, 150F, 100F, 100F, 100F});
+				playersData.put(packet.userID, new Float[]{150F, 150F, 100F, 100F, 100F, -1F});
 				inventories.put(packet.userID, new PlayerInventory(player.userID));
 				
 			}
@@ -66,16 +66,18 @@ public class PlayerManager {
 		player.setPosY(playersData.get(packet.userID)[1]);
 		
 		try {
-
+			
 			player.setHealth(playersData.get(packet.userID)[2]);
 			player.setSatisfaction(playersData.get(packet.userID)[3]);
 			player.setEnergy(playersData.get(packet.userID)[4]);
+			player.worldID = Math.round(playersData.get(packet.userID)[5]);
 
 		} catch (ArrayIndexOutOfBoundsException e) {
 
 			player.setHealth(100F);
 			player.setSatisfaction(100F);
 			player.setEnergy(100F);
+			player.worldID = -1;
 			
 		}
 		PlayerManager.inventories.get(player.userID).sendInventory();
@@ -87,10 +89,10 @@ public class PlayerManager {
 		player.velocityY = 0;
 		players.put(player.userID, player);
 		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(packet.userID), new PacketUpdatePlayer(PlayerManager.getPlayer(packet.userID).username, PlayerManager.getPlayer(packet.userID).posX, PlayerManager.getPlayer(packet.userID).posY, PlayerManager.getPlayer(packet.userID).health, PlayerManager.getPlayer(packet.userID).satisfaction, PlayerManager.getPlayer(packet.userID).energy, packet.userID, PlayerManager.getPlayer(packet.userID).selectedItem));
-
+		
 		PixelLogger.print(player.username + " has logged in.", PixelColor.BLUE);
 		sendPlayers(player.userID);
-		broadcastPacket(packet);
+		broadcastPacket(new PacketLogin(player));
 		broadcastPacket(new PacketChat(new ChatMessage("Server", player.username + " has logged in.", Color.RED, player.userID)));
 		
 	}
@@ -257,7 +259,7 @@ public class PlayerManager {
 		for (EntityPlayer p : players.values()) {
 			
 			p.tick(PixelRealmsServer.world);
-			Float[] playerData = new Float[]{p.posX, p.posY, p.health, p.satisfaction, p.energy};
+			Float[] playerData = new Float[]{p.posX, p.posY, p.health, p.satisfaction, p.energy, p.worldID + 0.0F};
 			playersData.put(p.userID, playerData);
 			
 		}

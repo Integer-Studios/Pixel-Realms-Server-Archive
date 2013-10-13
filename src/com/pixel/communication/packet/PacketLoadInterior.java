@@ -71,14 +71,15 @@ public class PacketLoadInterior extends Packet {
 	public void readData(DataInputStream input) throws IOException {
 
 		worldID = input.readInt();
-		System.out.println(worldID);
-		float center = (float) Math.sqrt(InteriorWorldManager.interiors.get(worldID).c) / 2;
 
+		PlayerManager.getPlayer(userID).worldID = worldID;
 		PlayerManager.getPlayer(userID).inside = true;
 		PlayerManager.getPlayer(userID).oldX = PlayerManager.getPlayer(userID).posX;
 		PlayerManager.getPlayer(userID).oldY = PlayerManager.getPlayer(userID).posY + 1;
-		PlayerManager.getPlayer(userID).setPosition(center, center);
-
+		PlayerManager.getPlayer(userID).setPosition(1.5F, 4F);
+		
+		PlayerManager.sendPlayers(userID);
+		PlayerManager.broadcastPacketUpdatePlayer(new PacketUpdatePlayer(userID));
 		PlayerManager.sendPacketToPlayer(userID, this);
 		
 	}
