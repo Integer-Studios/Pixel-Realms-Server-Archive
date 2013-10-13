@@ -28,6 +28,7 @@ public class EntityAnimal extends EntityAlive {
 	}
 	
 	public void startRandomMovement(Random r) {
+		System.out.println("starting random entity movement");
 		switch (r.nextInt(7)) {
 		case 0:
 			velocityX = speed;
@@ -75,6 +76,7 @@ public class EntityAnimal extends EntityAlive {
 			startRandomMovement(r);
 		} else
 		if ((velocityX != 0 || velocityY != 0) && r.nextInt(1000) == 0) {
+			System.out.println("stopping entity movement");
 			velocityX = 0;
 			velocityY = 0;
 		}

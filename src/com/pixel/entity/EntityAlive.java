@@ -62,6 +62,7 @@ public class EntityAlive extends Entity {
 		
 		if ((velocityX - prevVelocityX != 0) || (velocityY - prevVelocityY != 0)) {
 			//send change velocity packet
+			System.out.println("sending movelivingentity packet");
 			PlayerManager.broadcastPacket(new PacketMoveLivingEntity(this));
 		}
 		//PlayerManager.broadcastEntity(this);
