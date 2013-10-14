@@ -12,7 +12,7 @@ public class PacketUpdatePlayer extends Packet {
 
 	public String username;
 	public float posX, posY, health, satisfaction, energy;
-	public int itemID, itemAmount, worlDID;
+	public int itemID, itemAmount, worldID;
 	
 	public PacketUpdatePlayer() {
 		this.id = 2;
@@ -37,7 +37,10 @@ public class PacketUpdatePlayer extends Packet {
 		if (stack != null) {
 			this.itemID = stack.item.id;
 			this.itemAmount = stack.size;
+			
 		}
+		this.worldID = PlayerManager.getPlayer(userID).worldID;
+		
 	}
 	
 	public PacketUpdatePlayer(int userID) {
@@ -52,6 +55,8 @@ public class PacketUpdatePlayer extends Packet {
 		this.satisfaction = p.satisfaction;
 		this.energy = p.energy;
 		this.userID = userID;
+		this.worldID = PlayerManager.getPlayer(userID).worldID;
+
 		if (p.selectedItem != null) {
 			this.itemID = p.selectedItem.item.id;
 			this.itemAmount = p.selectedItem.size;
@@ -71,7 +76,7 @@ public class PacketUpdatePlayer extends Packet {
 			output.writeFloat(this.energy);
 			output.writeInt(this.itemID);
 			output.writeInt(this.itemAmount);
-			output.writeInt(PlayerManager.getPlayer(userID).worldID);
+			output.writeInt(this.worldID);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

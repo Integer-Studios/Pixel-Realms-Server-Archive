@@ -14,6 +14,7 @@ import com.pixel.communication.CommunicationServer;
 import com.pixel.communication.CommunicationServlet;
 import com.pixel.communication.packet.Packet;
 import com.pixel.communication.packet.PacketChat;
+import com.pixel.communication.packet.PacketLoadPlayer;
 import com.pixel.communication.packet.PacketLogin;
 import com.pixel.communication.packet.PacketLogout;
 import com.pixel.communication.packet.PacketUpdateLivingEntity;
@@ -50,7 +51,7 @@ public class PlayerManager {
 				
 			} else {
 				
-				playersData.put(packet.userID, new Float[]{150F, 150F, 100F, 100F, 100F, -1F});
+				playersData.put(packet.userID, new Float[]{200F, 200F, 100F, 100F, 100F, -1F});
 				inventories.put(packet.userID, new PlayerInventory(player.userID));
 				
 			}
@@ -88,7 +89,7 @@ public class PlayerManager {
 		player.velocityX = 0;
 		player.velocityY = 0;
 		players.put(player.userID, player);
-		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(packet.userID), new PacketUpdatePlayer(PlayerManager.getPlayer(packet.userID).username, PlayerManager.getPlayer(packet.userID).posX, PlayerManager.getPlayer(packet.userID).posY, PlayerManager.getPlayer(packet.userID).health, PlayerManager.getPlayer(packet.userID).satisfaction, PlayerManager.getPlayer(packet.userID).energy, packet.userID, PlayerManager.getPlayer(packet.userID).selectedItem));
+		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(packet.userID), new PacketLoadPlayer(PlayerManager.getPlayer(packet.userID)));
 		
 		PixelLogger.print(player.username + " has logged in.", PixelColor.BLUE);
 		sendPlayers(player.userID);

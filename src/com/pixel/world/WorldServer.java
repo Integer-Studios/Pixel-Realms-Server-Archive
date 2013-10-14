@@ -28,7 +28,7 @@ public class WorldServer {
 	public float pieceLayerOffset = 0.85F;
 	public float clipConstant = 0.4F;
 	public int worldSaveCount = 0;
-	public static int c = 384;
+	public static int c = 400;
 	public static int tileConstant = 48;
 	public static ConcurrentHashMap<Integer, Tile> tiles = new ConcurrentHashMap<Integer,Tile>();
 	public static Piece[] pieces;
@@ -230,22 +230,25 @@ public class WorldServer {
 		PlayerManager.broadcastPacket(new PacketUpdatePiece(pieces[((y * c) + x)]));
 
 	}
-	
+
 	public static void setPiece(int x, int y, int id, int damage, int metadata, int buildingID) {
-		
+
 		if (buildingID == -1) {
 			pieces[((y * c) + x)] = new Piece(x, y, id, true);
-		
-		} else {
-			
-			if (Building.canBuildingFit(buildingID, x, y))
-				pieces[((y * c) + x)] = new PieceBuilding(x, y, buildingID);
-			
-		}
-		pieces[((y * c) + x)].damage = damage;
-		pieces[((y * c) + x)].metadata = metadata;
+			pieces[((y * c) + x)].damage = damage;
+			pieces[((y * c) + x)].metadata = metadata;
 
-		PlayerManager.broadcastPacket(new PacketUpdatePiece(pieces[((y * c) + x)]));
+			PlayerManager.broadcastPacket(new PacketUpdatePiece(pieces[((y * c) + x)]));
+		} else if (Building.canBuildingFit(buildingID, x, y)) {
+			
+			pieces[((y * c) + x)] = new Piece(x, y, id, true);
+			pieces[((y * c) + x)].damage = damage;
+			pieces[((y * c) + x)].metadata = metadata;
+
+			PlayerManager.broadcastPacket(new PacketUpdatePiece(pieces[((y * c) + x)]));
+
+		}
+
 
 	}
 	

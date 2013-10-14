@@ -5,8 +5,10 @@ import java.util.Scanner;
 import java.awt.Color;
 import com.pixel.chat.ChatMessage;
 import com.pixel.communication.packet.PacketChat;
+import com.pixel.communication.packet.PacketUpdatePiece;
 import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
+import com.pixel.world.WorldServer;
 
 public class CommandLine extends Thread {
 	
@@ -40,12 +42,16 @@ public class CommandLine extends Thread {
 				
 				PixelRealmsServer.world.save();
 				
+			} else if (command.startsWith("/test")) {
+				
+				WorldServer.getPieceObject(Integer.parseInt(command.split(" ")[1]), Integer.parseInt(command.split(" ")[2])).metadata = Integer.parseInt(command.split(" ")[3]);
+				PlayerManager.broadcastPacket(new PacketUpdatePiece(WorldServer.getPieceObject(Integer.parseInt(command.split(" ")[1]), Integer.parseInt(command.split(" ")[2]))));
+				
 			} else {
 				
 				PlayerManager.broadcastPacket(new PacketChat(new ChatMessage("Admin", command, Color.BLUE, 0)));
 				
-			}
-			
+			} 
 		}
 		
 	}

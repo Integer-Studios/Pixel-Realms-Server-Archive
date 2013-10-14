@@ -2,10 +2,13 @@ package com.pixel.piece;
 
 public class PieceBuildingInfo extends PieceInfo {
 
-	public PieceBuildingInfo() {
+	int buildingID;
+	
+	public PieceBuildingInfo(int buildingID) {
 		
 		setSize(0F, -1.2F, 4F, 2.2F);
-		maxDamage = 1000;
+		this.buildingID = buildingID;
+		this.maxDamage = 1000;
 		
 	}
 	

@@ -8,12 +8,14 @@ public class BuildingInfo {
 	public int id;
 	public BuildingDoor door;
 	public InteriorWorld interior;
+	public int maxDamage;
 	
-	public BuildingInfo(int id, int width, int height) {
+	public BuildingInfo(int id, int width, int height, int maxDamage) {
 		
 		this.id = id;
 		this.width = width;
 		this.height = height;
+		this.maxDamage = maxDamage;
 		
 	}
 	
