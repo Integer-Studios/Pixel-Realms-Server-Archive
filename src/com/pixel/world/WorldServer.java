@@ -412,6 +412,8 @@ public class WorldServer {
 
 		}
 		
+		InteriorWorldManager.loadInteriors();
+		
 	}
 
 	public void save() {

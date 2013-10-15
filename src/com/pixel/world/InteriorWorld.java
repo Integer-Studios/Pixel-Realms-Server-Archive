@@ -1,9 +1,11 @@
 package com.pixel.world;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.pixel.entity.EntityAlive;
 import com.pixel.piece.Piece;
+import com.pixel.piece.PieceBuilding;
 import com.pixel.tile.Tile;
 
 public class InteriorWorld {
@@ -14,6 +16,14 @@ public class InteriorWorld {
 	public ConcurrentHashMap<Integer, EntityAlive> entities = new ConcurrentHashMap<Integer, EntityAlive>();
 	public boolean building;
 	public int wallID;
+	public int id, buildingID;
+	public int doorX, doorY;
+	
+	public InteriorWorld() {
+		
+		
+		
+	}
 	
 	public InteriorWorld(int width, int height, int id) {
 		
@@ -36,8 +46,9 @@ public class InteriorWorld {
 			}
 			
 		}
+		this.buildingID = id;
 		
-		if (id == 0) {
+		if (buildingID == 0) {
 			//cabin 1
 			for (int x = 1; x < 5; x ++) {
 				
@@ -67,5 +78,52 @@ public class InteriorWorld {
 		}
 		
 	}
-	
+
+	public ArrayList<ArrayList<Object[]>> save() {
+
+		ArrayList<Object[]> tileSave = new ArrayList<Object[]>();
+
+		for (Tile t : tiles.values()) {
+
+			if (t != null) {
+				tileSave.add(new Integer[]{t.id, t.posX, t.posY, t.metadata, 1});
+				System.out.println("T!");
+			}
+
+		}
+
+		ArrayList<Object[]> piecesSave = new ArrayList<Object[]>();
+
+		for (Piece p : pieces.values()) {
+
+			if (p.id == 17)
+				piecesSave.add(new Integer[]{p.id, p.posX, p.posY, p.damage, p.metadata, 1, ((PieceBuilding) p).building.id,  ((PieceBuilding) p).building.worldID});
+			else
+				piecesSave.add(new Integer[]{p.id, p.posX, p.posY, p.damage, p.metadata, 1});
+
+		}
+
+		ArrayList<Object[]> entitySave = new ArrayList<Object[]>();
+//
+//		for (int x = 0; x < entities.size(); x ++) {
+//
+//			Entity e = (Entity) entities.values().toArray()[x];
+//			entitySave.add(new Float[]{e.id + 0F, e.getX(), e.getY(), e.health, e.width, e.height, 1F});
+//
+//
+//		}
+//		
+		ArrayList<Object[]> properties = new ArrayList<Object[]>();
+		properties.add(new Object[] {id, c, wallID, building});
+		
+		ArrayList<ArrayList<Object[]>> world = new ArrayList<ArrayList<Object[]>>();
+		world.add(tileSave);
+		world.add(piecesSave);
+		world.add(entitySave);
+		world.add(properties);
+		
+		return world;
+
+	}
+
 }

@@ -6,9 +6,12 @@ import com.pixel.communication.CommunicationServlet;
 import com.pixel.entity.EntityAlive;
 import com.pixel.item.Item;
 import com.pixel.item.ItemStack;
+import com.pixel.piece.Piece;
 import com.pixel.player.PlayerLoadThread;
 import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
+import com.pixel.world.InteriorWorld;
+import com.pixel.world.InteriorWorldManager;
 import com.pixel.world.WorldServer;
 
 public class PacketHandler {
@@ -112,6 +115,28 @@ public class PacketHandler {
 		if (packet.request.equals("players")) {
 			
 			PlayerManager.sendPlayers(packet.userID);
+			
+		}
+		
+	}
+
+	public static void processUpdateInteriorPiece(PacketUpdateInteriorPiece packet) {
+		
+		if (InteriorWorldManager.interiors.containsKey(packet.worldID)) {
+			
+			InteriorWorld world = InteriorWorldManager.interiors.get(packet.worldID);
+			System.out.println(packet.x + " " + packet.y + " " + packet.pieceID);
+			if (world.pieces.contains((packet.y*world.c) + packet.x))
+				world.pieces.replace((packet.y*world.c) + packet.x, new Piece(packet.pieceID, packet.x, packet.y, packet.damage, packet.metadata, false));
+			else
+				world.pieces.put((packet.y*world.c) + packet.x, new Piece(packet.pieceID, packet.x, packet.y, packet.damage, packet.metadata, false));
+
+			Piece p = world.pieces.get((packet.y * world.c) + packet.x);
+			System.out.println(p.posX + " " + p.posY + " " + p.id);
+
+			PlayerManager.broadcastPacketToWorld(packet.worldID, new PacketUpdateInteriorPiece(packet.worldID, world.pieces.get((packet.y * world.c) + packet.x)));
+			
+			InteriorWorldManager.interiors.put(packet.worldID, world);
 			
 		}
 		

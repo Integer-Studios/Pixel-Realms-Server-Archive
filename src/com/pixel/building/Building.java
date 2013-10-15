@@ -25,7 +25,7 @@ public class Building {
 		this.height = info.get(id).height;
 		this.door = info.get(id).door;
 		this.interior = info.get(id).interior;
-		this.worldID = InteriorWorldManager.addWorld(this.interior);
+		this.worldID = InteriorWorldManager.addWorld(this.interior, x, y);
 
 	}
 	
@@ -40,7 +40,10 @@ public class Building {
 		this.height = info.get(id).height;
 		this.door = info.get(id).door;
 		this.worldID = worldID;
-		this.interior = InteriorWorldManager.loadWorld(worldID, id);
+		this.interior = InteriorWorldManager.loadWorld(worldID);
+		this.interior.doorX = x;
+		this.interior.doorY = y;
+	
 
 	}
 	
@@ -88,7 +91,7 @@ public static boolean canBuildingFit(int buildingID, int x, int y) {
 	
 	static {
 		
-		info.add(new BuildingInfo(0, 4, 3, 1000).setInterior(6, 6).setDoor(new BuildingDoor(0F, 0F, 0, 0, 0)));
+		info.add(new BuildingInfo(0, 4, 3, 1000).setInterior(6, 6).setDoor(new BuildingDoor(46F, -10F, 32, 56, 0)));
 		
 	}
 	

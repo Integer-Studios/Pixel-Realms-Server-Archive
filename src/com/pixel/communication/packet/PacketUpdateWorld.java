@@ -5,11 +5,16 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.pixel.building.Building;
+import com.pixel.building.BuildingDoor;
 import com.pixel.communication.CommunicationServer;
 import com.pixel.communication.CommunicationServlet;
 import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
+import com.pixel.world.InteriorWorld;
+import com.pixel.world.InteriorWorldManager;
 import com.pixel.world.WorldComponent;
+import com.pixel.world.WorldServer;
 
 public class PacketUpdateWorld extends Packet {
 
@@ -86,8 +91,15 @@ public class PacketUpdateWorld extends Packet {
 		if (PlayerManager.getPlayer(userID).inside) {
 			
 			PlayerManager.getPlayer(userID).inside = false;
+			float x, y;
+			InteriorWorld w = InteriorWorldManager.interiors.get(PlayerManager.getPlayer(userID).worldID);
+			BuildingDoor d = Building.info.get(InteriorWorldManager.interiors.get(PlayerManager.getPlayer(userID).worldID).buildingID).door;
+					
+			x = (d.x / WorldServer.tileConstant) + w.doorX + .4F;
+			y = (d.y / WorldServer.tileConstant) + w.doorY + 1.5F;
+
+			PlayerManager.getPlayer(userID).setPosition(x, y);
 			PlayerManager.getPlayer(userID).worldID = -1;
-			PlayerManager.getPlayer(userID).setPosition(PlayerManager.getPlayer(userID).oldX, PlayerManager.getPlayer(userID).oldY);
 			PlayerManager.broadcastPacket(new PacketUpdatePlayer(userID));
 		}
 		

@@ -67,11 +67,9 @@ public class WorldSaveThread implements Runnable {
 		}
 		k.save("entities.dat", entitySave);
 		
-		ArrayList<ArrayList<Float[]>> herdSave = new ArrayList<ArrayList<Float[]>>();
-
-		k.save("herds.dat", herdSave);
-
 		PixelLogger.print("Entities Saved!", PixelColor.PURPLE);
+		
+		InteriorWorldManager.saveInteriors();
 
 		PixelLogger.print("Save Complete!", PixelColor.RED);
 		

@@ -17,6 +17,7 @@ import com.pixel.communication.packet.PacketChat;
 import com.pixel.communication.packet.PacketLoadPlayer;
 import com.pixel.communication.packet.PacketLogin;
 import com.pixel.communication.packet.PacketLogout;
+import com.pixel.communication.packet.PacketUpdateInteriorPiece;
 import com.pixel.communication.packet.PacketUpdateLivingEntity;
 import com.pixel.communication.packet.PacketUpdatePlayer;
 import com.pixel.entity.EntityAlive;
@@ -111,11 +112,13 @@ public class PlayerManager {
 		
 		EntityPlayer p = players.get(userID);
 
-		new StatisticsThread(userID, p.username, 1).start();
+		try {
+			new StatisticsThread(userID, p.username, 1).start();
+		} catch (NullPointerException e){}
 		
 		if (p != null) {
 
-			Float[] playerData = new Float[]{p.posX, p.posY, p.health, p.satisfaction, p.energy};
+			Float[] playerData = new Float[]{p.posX, p.posY, p.health, p.satisfaction, p.energy, p.worldID + 0.0F};
 			playersData.put(userID, playerData);
 
 			players.remove(userID);
@@ -321,6 +324,19 @@ public class PlayerManager {
 			return "servlet";
 			
 		}
+
+	}
+
+	public static void broadcastPacketToWorld(int worldID, PacketUpdateInteriorPiece packet) {
+
+		for (EntityPlayer player : players.values()) {
+
+			if (player.worldID == worldID) {
+				CommunicationServlet servlet = CommunicationServer.userConnections.get(player.userID);
+				CommunicationServlet.addPacket(servlet, packet);
+			}
+
+		}	
 		
 	}	
 }
