@@ -102,7 +102,8 @@ public class PlayerManager {
 	public static void sendPlayers(int userID) {
 		
 		for (EntityPlayer player: players.values()) {
-			sendPacketToPlayer(userID, new PacketUpdatePlayer(PlayerManager.getPlayer(player.userID).username, PlayerManager.getPlayer(player.userID).posX, PlayerManager.getPlayer(player.userID).posY, PlayerManager.getPlayer(player.userID).health, PlayerManager.getPlayer(player.userID).satisfaction, PlayerManager.getPlayer(player.userID).energy, player.userID, PlayerManager.getPlayer(player.userID).selectedItem));
+			if (userID != player.userID)
+				sendPacketToPlayer(userID, new PacketUpdatePlayer(PlayerManager.getPlayer(player.userID).username, PlayerManager.getPlayer(player.userID).posX, PlayerManager.getPlayer(player.userID).posY, PlayerManager.getPlayer(player.userID).health, PlayerManager.getPlayer(player.userID).satisfaction, PlayerManager.getPlayer(player.userID).energy, player.userID, PlayerManager.getPlayer(player.userID).selectedItem));
 		
 		}
 		

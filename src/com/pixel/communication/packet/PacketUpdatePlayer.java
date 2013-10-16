@@ -67,7 +67,7 @@ public class PacketUpdatePlayer extends Packet {
 	public void writeData(DataOutputStream output) {
 
 		try {
-			
+
 			Packet.writeString(username, output);
 			output.writeFloat(this.posX);
 			output.writeFloat(this.posY);

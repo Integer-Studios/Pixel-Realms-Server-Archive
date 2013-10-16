@@ -74,12 +74,10 @@ public class PacketLoadInterior extends Packet {
 
 		PlayerManager.getPlayer(userID).worldID = worldID;
 		PlayerManager.getPlayer(userID).inside = true;
-		PlayerManager.getPlayer(userID).oldX = PlayerManager.getPlayer(userID).posX;
-		PlayerManager.getPlayer(userID).oldY = PlayerManager.getPlayer(userID).posY + 1;
 		PlayerManager.getPlayer(userID).setPosition(1.5F, 4F);
 		
 		PlayerManager.sendPlayers(userID);
-		PlayerManager.broadcastPacketUpdatePlayer(new PacketUpdatePlayer(userID));
+		PlayerManager.broadcastPacket(new PacketUpdatePlayer(userID));
 		PlayerManager.sendPacketToPlayer(userID, this);
 		
 	}

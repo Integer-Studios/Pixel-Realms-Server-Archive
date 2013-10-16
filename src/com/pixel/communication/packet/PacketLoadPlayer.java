@@ -37,7 +37,6 @@ public class PacketLoadPlayer extends Packet{
 		output.writeInt(this.itemID);
 		output.writeInt(this.itemAmount);
 		output.writeInt(this.worldID);
-		System.out.println(worldID + " Z");
 
 	}
 

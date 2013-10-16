@@ -338,6 +338,9 @@ public class WorldServer {
 	public void load() {
 		
 		Toolkit k = new Toolkit();
+		
+		InteriorWorldManager.loadInteriors();
+		
 		ArrayList<Integer[]> tileSave = (ArrayList<Integer[]>) k.load("tiles.dat");
 		ArrayList<Integer[]> piecesSave = (ArrayList<Integer[]>) k.load("pieces.dat");
 		ArrayList<Float[]> entitySave = (ArrayList<Float[]>) k.load("entities.dat");
@@ -412,7 +415,6 @@ public class WorldServer {
 
 		}
 		
-		InteriorWorldManager.loadInteriors();
 		
 	}
 
