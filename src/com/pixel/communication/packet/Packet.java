@@ -118,21 +118,21 @@ public abstract class Packet {
 
 	@SuppressWarnings("rawtypes")
 	public static Packet getPacket(int id) {
-        try
-        {
-            Class packetClass = (Class)packetMap.get(id);
-            return packetClass == null ? null : (Packet)packetClass.newInstance();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            System.out.println("Skipping packet with id " + id);
-            return null;
-        }
+		try
+		{
+			Class packetClass = (Class)packetMap.get(id);
+			return packetClass == null ? null : (Packet)packetClass.newInstance();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			System.out.println("Skipping packet with id " + id);
+			return null;
+		}
 	}
-	
-public void writeAuxiliaryVariables(DataOutputStream output) throws IOException {
-		
+
+	public void writeAuxiliaryVariables(DataOutputStream output) throws IOException {
+
 		output.writeInt(auxiliaryFloats.size());
 		output.writeInt(auxiliaryIntegers.size());
 		output.writeInt(auxiliaryBooleans.size());
