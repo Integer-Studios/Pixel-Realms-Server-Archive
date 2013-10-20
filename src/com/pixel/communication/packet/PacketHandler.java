@@ -130,8 +130,6 @@ public class PacketHandler {
 			else
 				world.pieces.put((packet.y*world.c) + packet.x, new Piece(packet.pieceID, packet.x, packet.y, packet.damage, packet.metadata, false));
 
-			Piece p = world.pieces.get((packet.y * world.c) + packet.x);
-
 			PlayerManager.broadcastPacketToWorld(packet.worldID, new PacketUpdateInteriorPiece(packet.worldID, world.pieces.get((packet.y * world.c) + packet.x)));
 			
 			InteriorWorldManager.interiors.put(packet.worldID, world);
