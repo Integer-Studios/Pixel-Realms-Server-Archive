@@ -184,13 +184,13 @@ public class PlayerManager {
 		
 		Toolkit k = new Toolkit();
 
-		Float[] playerData = (Float[]) k.load("players/" + userID + ".dat");
+		Float[] playerData = (Float[]) k.load("world/players/" + userID + ".dat");
 		playersData.put(userID, playerData);
 
-		if (new FileItem("inventories/" + userID + ".inv").exists()) {
+		if (new FileItem("world/inventories/" + userID + ".inv").exists()) {
 
 			@SuppressWarnings("unchecked")
-			ArrayList<Integer[]> inv = (ArrayList<Integer[]>) k.load("inventories/" + userID + ".inv");
+			ArrayList<Integer[]> inv = (ArrayList<Integer[]>) k.load("world/inventories/" + userID + ".inv");
 			ConcurrentHashMap<CoordinateKey, InventoryContent> hotbar = new ConcurrentHashMap<CoordinateKey, InventoryContent>();
 			ConcurrentHashMap<CoordinateKey, InventoryContent> inventoryLeft = new ConcurrentHashMap<CoordinateKey, InventoryContent>();
 			ConcurrentHashMap<CoordinateKey, InventoryContent> inventoryRight = new ConcurrentHashMap<CoordinateKey, InventoryContent>();
@@ -228,7 +228,7 @@ public class PlayerManager {
 		for (int userID : playersData.keySet()) {
 
 			Float[] playerData = playersData.get(userID);
-			k.save("players/" + userID + ".dat", playerData);
+			k.save("world/players/" + userID + ".dat", playerData);
 
 			PlayerInventory i = inventories.get(userID);
 			ArrayList<Integer[]> inv = new ArrayList<Integer[]>();
@@ -251,7 +251,7 @@ public class PlayerManager {
 
 			}
 
-			k.save("inventories/" + userID + ".inv", inv);
+			k.save("world/inventories/" + userID + ".inv", inv);
 
 		}
 

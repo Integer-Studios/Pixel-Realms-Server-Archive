@@ -1,6 +1,6 @@
 package com.pixel.piece;
 
-import com.pixel.building.BuildingInfo;
+import com.pixel.interior.BuildingInfo;
 
 public class PieceConstructionSiteInfo extends PieceInfo {
 
@@ -18,9 +18,7 @@ public class PieceConstructionSiteInfo extends PieceInfo {
 	public void onCreated(Piece p) {
 		
 		super.onCreated(p);
-		
-		System.out.println(p.posX + " " + p.posY);
-		
+
 	}
 
 }

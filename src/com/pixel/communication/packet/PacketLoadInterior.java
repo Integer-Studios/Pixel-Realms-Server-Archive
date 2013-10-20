@@ -5,11 +5,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.pixel.entity.EntityAlive;
+import com.pixel.interior.InteriorWorld;
+import com.pixel.interior.InteriorWorldManager;
 import com.pixel.piece.Piece;
 import com.pixel.player.PlayerManager;
 import com.pixel.tile.Tile;
-import com.pixel.world.InteriorWorld;
-import com.pixel.world.InteriorWorldManager;
 
 public class PacketLoadInterior extends Packet {
 
