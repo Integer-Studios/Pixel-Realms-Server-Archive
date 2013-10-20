@@ -9,7 +9,7 @@ import com.pixel.entity.EntityAlive;
 public class PacketMoveLivingEntity extends Packet {
 
 	EntityAlive entity;
-	int serverID;
+	int serverID, entityID;
 	public float velocityX, velocityY;
 	
 	public PacketMoveLivingEntity() {
@@ -20,6 +20,7 @@ public class PacketMoveLivingEntity extends Packet {
 		
 		this.id = 15;
 		this.entity = entity;
+		this.entityID = entity.id;
 		this.serverID = entity.serverID;
 		this.velocityX = entity.velocityX;
 		this.velocityY = entity.velocityY;
@@ -28,6 +29,7 @@ public class PacketMoveLivingEntity extends Packet {
 	
 	public void writeData(DataOutputStream output) throws IOException {
 
+		output.writeInt(entityID);
 		output.writeInt(serverID);
 		output.writeFloat(velocityX);
 		output.writeFloat(velocityY);
