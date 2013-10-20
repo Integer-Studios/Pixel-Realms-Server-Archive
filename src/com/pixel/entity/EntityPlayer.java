@@ -19,6 +19,7 @@ public class EntityPlayer extends Entity {
 	public boolean inside;
 	public int worldID;
 	public float oldX, oldY;
+	public float health = 100F;
 	
 	public EntityPlayer(String username, int userID) {
 		super(20, 20, .9F, .2F, false);

@@ -53,6 +53,8 @@ public class WorldServer {
 			
 		}
 		
+	//	createMap();
+		
 		PixelLogger.print("Server initialized on port: " + PixelRealmsServer.port, PixelColor.RED);
 		
 		init = true;
@@ -123,7 +125,7 @@ public class WorldServer {
 		
 		for (int b = 0; b < entities.size(); b ++) {
 			
-			Entity e = (Entity) entities.values().toArray()[b];
+			EntityAlive e = (EntityAlive) entities.values().toArray()[b];
 			if (Math.sqrt((posX - e.getX())*(posX - e.getX()) - (posY - e.getY())*(posY - e.getY())) <= r) {
 				loadEntities.add(new WorldComponent(e));
 				
@@ -150,6 +152,10 @@ public class WorldServer {
 
 		return components;
 		
+	}
+	
+	public void createMap() {
+		new WorldReader(this).readWorld();
 	}
 	
 	public void generateSquareMap() {
@@ -408,7 +414,7 @@ public class WorldServer {
 
 			entity.setX(e[1]);
 			entity.setY(e[2]);
-			entity.health = (e[3]);
+			((EntityAlive)entity).health = (e[3]);
 			entity.serverID = entities.size() + 1;
 			
 			propagateEntity(entity);

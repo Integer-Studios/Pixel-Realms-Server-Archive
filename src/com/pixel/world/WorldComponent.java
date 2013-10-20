@@ -1,6 +1,7 @@
 package com.pixel.world;
 
 import com.pixel.entity.Entity;
+import com.pixel.entity.EntityAlive;
 import com.pixel.entity.EntityPlayer;
 import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
@@ -62,7 +63,7 @@ public class WorldComponent {
 
 	}
 
-	public WorldComponent (Entity entity) {
+	public WorldComponent (EntityAlive entity) {
 
 		this.entity = entity;
 		this.posX = entity.getX();

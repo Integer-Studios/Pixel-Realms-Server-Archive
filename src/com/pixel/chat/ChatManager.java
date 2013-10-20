@@ -11,6 +11,7 @@ import com.pixel.communication.packet.PacketUpdatePiece;
 import com.pixel.communication.packet.PacketUpdatePlayer;
 import com.pixel.entity.EntityBunny;
 import com.pixel.entity.EntityPlayer;
+import com.pixel.entity.EntityPog;
 import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
 import com.pixel.player.PlayerManager;
@@ -36,7 +37,7 @@ public class ChatManager {
 				
 			} else if (msg.text.equalsIgnoreCase("spawn")) {
 				
-				new EntityBunny(PlayerManager.getPlayer(msg.userID).getX(), PlayerManager.getPlayer(msg.userID).getY());
+				new EntityPog(PlayerManager.getPlayer(msg.userID).getX(), PlayerManager.getPlayer(msg.userID).getY());
 				PlayerManager.sendMessage(msg.userID, "Spawning Bunny at your position!", Color.RED);
 				
 			} else if (msg.text.equalsIgnoreCase("locate") || msg.text.equalsIgnoreCase("loc")) {

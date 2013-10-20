@@ -3,7 +3,6 @@ package com.pixel.entity;
 
 import java.util.Random;
 
-import com.pixel.player.PlayerManager;
 import com.pixel.world.WorldServer;
 
 public class EntityAnimal extends EntityAlive {
@@ -105,12 +104,6 @@ public class EntityAnimal extends EntityAlive {
 		super.tick(w);
 
 
-	}
-
-	public void kill(WorldServer w, Entity damageSource) {
-		spawnBody(w);
-		health = 0;
-		PlayerManager.updateLivingEntity(this);
 	}
 
 }
