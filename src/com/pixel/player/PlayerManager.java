@@ -96,6 +96,8 @@ public class PlayerManager {
 		
 		PixelLogger.print(player.username + " has logged in.", PixelColor.BLUE);
 		sendPlayers(player.userID);
+		sendEntities(player.userID);
+		player.loaded = true;
 		broadcastPacket(new PacketLogin(player));
 		broadcastPacket(new PacketChat(new ChatMessage("Server", player.username + " has logged in.", Color.RED, player.userID)));
 		
@@ -137,7 +139,7 @@ public class PlayerManager {
 			PixelLogger.print(p.username + " has disconnected.", PixelColor.BLUE);
 			PlayerManager.broadcastPacket(new PacketLogout(userID));
 			broadcastPacket(new PacketChat(new ChatMessage("Server", p.username + " has disconnected.", Color.RED, p.userID)));
-
+			
 		}
 
 	}
@@ -314,13 +316,15 @@ public class PlayerManager {
 	
 	public static void broadcastEntity(EntityAlive entity) {
 
-		for (int x = 0; x < players.size(); x ++) {
+		for (EntityPlayer player : players.values()) {
 
-			CommunicationServlet servlet = CommunicationServer.userConnections.get(players.keySet().toArray()[x]);
-			CommunicationServlet.addPacket(servlet, new PacketUpdateLivingEntity(entity));
+			if (player.loaded) {
+				CommunicationServlet servlet = CommunicationServer.userConnections.get(player.userID);
+				CommunicationServlet.addPacket(servlet, new PacketUpdateLivingEntity(entity));
+			}
 
 		}	
-		
+
 	}
 
 	public static String getUsername(int userID) {
@@ -343,7 +347,7 @@ public class PlayerManager {
 
 		for (EntityPlayer player : players.values()) {
 
-			if (player.worldID == worldID) {
+			if (player.worldID == worldID && player.loaded) {
 				CommunicationServlet servlet = CommunicationServer.userConnections.get(player.userID);
 				CommunicationServlet.addPacket(servlet, packet);
 			}

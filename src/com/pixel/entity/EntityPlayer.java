@@ -18,6 +18,7 @@ public class EntityPlayer extends Entity {
 	public float speed;
 	public boolean inside;
 	public int worldID;
+	public boolean loaded;
 	public float oldX, oldY;
 	public float health = 100F;
 	
