@@ -17,10 +17,10 @@ public abstract class Packet {
 	public CommunicationServlet servletLogin;
 	public int id;
 	public int userID;
-	public ArrayList<Float> auxiliaryFloats;
-	public ArrayList<Integer> auxiliaryIntegers;
-	public ArrayList<Boolean> auxiliaryBooleans;
-	public ArrayList<String> auxiliaryStrings;
+	public ArrayList<Float> auxiliaryFloats = new ArrayList<Float>();
+	public ArrayList<Integer> auxiliaryIntegers = new ArrayList<Integer>();
+	public ArrayList<Boolean> auxiliaryBooleans = new ArrayList<Boolean>();
+	public ArrayList<String> auxiliaryStrings = new ArrayList<String>();
 
 	@SuppressWarnings("rawtypes")
 	private static HashMap<Integer, Class> packetMap = new HashMap<Integer, Class>();

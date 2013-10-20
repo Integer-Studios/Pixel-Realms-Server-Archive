@@ -20,6 +20,7 @@ import com.pixel.communication.packet.PacketLogout;
 import com.pixel.communication.packet.PacketUpdateInteriorPiece;
 import com.pixel.communication.packet.PacketUpdateLivingEntity;
 import com.pixel.communication.packet.PacketUpdatePlayer;
+import com.pixel.entity.Entity;
 import com.pixel.entity.EntityAlive;
 import com.pixel.entity.EntityPlayer;
 import com.pixel.inventory.InventoryContent;
@@ -29,6 +30,7 @@ import com.pixel.start.PixelRealmsServer;
 import com.pixel.util.CoordinateKey;
 import com.pixel.util.FileItem;
 import com.pixel.util.Toolkit;
+import com.pixel.world.WorldServer;
 
 public class PlayerManager {
 
@@ -104,6 +106,15 @@ public class PlayerManager {
 		for (EntityPlayer player: players.values()) {
 			if (userID != player.userID)
 				sendPacketToPlayer(userID, new PacketUpdatePlayer(PlayerManager.getPlayer(player.userID).username, PlayerManager.getPlayer(player.userID).posX, PlayerManager.getPlayer(player.userID).posY, PlayerManager.getPlayer(player.userID).health, PlayerManager.getPlayer(player.userID).satisfaction, PlayerManager.getPlayer(player.userID).energy, player.userID, PlayerManager.getPlayer(player.userID).selectedItem));
+		
+		}
+		
+	}
+	
+	public static void sendEntities(int userID) {
+		
+		for (Entity entity: WorldServer.entities.values()) {
+			sendPacketToPlayer(userID, new PacketUpdateLivingEntity((EntityAlive)entity));
 		
 		}
 		
