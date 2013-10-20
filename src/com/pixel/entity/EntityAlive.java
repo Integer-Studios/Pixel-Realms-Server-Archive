@@ -2,7 +2,6 @@ package com.pixel.entity;
 
 import com.pixel.communication.packet.PacketMoveLivingEntity;
 import com.pixel.communication.packet.PacketUpdateLivingEntity;
-import com.pixel.communication.packet.PacketUpdatePlayer;
 import com.pixel.player.PlayerManager;
 import com.pixel.world.WorldServer;
 
