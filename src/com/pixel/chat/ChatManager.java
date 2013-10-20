@@ -9,7 +9,6 @@ import java.util.Date;
 import com.pixel.communication.packet.PacketChat;
 import com.pixel.communication.packet.PacketUpdatePiece;
 import com.pixel.communication.packet.PacketUpdatePlayer;
-import com.pixel.entity.EntityBunny;
 import com.pixel.entity.EntityPlayer;
 import com.pixel.entity.EntityPog;
 import com.pixel.piece.Piece;
