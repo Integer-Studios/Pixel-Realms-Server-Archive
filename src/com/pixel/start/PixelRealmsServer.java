@@ -1,7 +1,10 @@
 package com.pixel.start;
 
+import java.io.IOException;
+
 import com.pixel.admin.CommandLine;
 import com.pixel.communication.CommunicationServer;
+import com.pixel.util.FileItem;
 import com.pixel.util.TextFile;
 import com.pixel.world.WorldServer;
 
@@ -35,18 +38,41 @@ public class PixelRealmsServer extends Thread {
 	}
 	
 	public void loadConfiguration() {
-		
-		TextFile configuration = new TextFile("configuration.pxl");
-		
-		for (int x = 1; x <= configuration.lineCount(); x ++) {
+
+		if (new FileItem("configuration.pxl").exists()) {
+
+			TextFile configuration = new TextFile("configuration.pxl");
+
+			for (int x = 1; x <= configuration.lineCount(); x ++) {
+
+				String line = configuration.readLine(x);
+
+				if (line.startsWith("port: ")) {
+
+					line = line.replaceFirst("port: ", "");
+					port = Integer.parseInt(line);
+
+				}
+
+			}
+
+		} else {
 			
-			String line = configuration.readLine(x);
+			new FileItem("configuration.pxl").create();
 			
-			if (line.startsWith("port: ")) {
-				
-				line = line.replaceFirst("port: ", "");
-				port = Integer.parseInt(line);
-				
+			new TextFile("configuration.pxl").write("port: 25565");
+		
+			port = 25565;
+			
+		}
+		
+		if (!new FileItem("world/").exists()) {
+			
+			try {
+				new FileItem("world/").createNewDirectory();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 		}
