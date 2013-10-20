@@ -5,14 +5,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.pixel.building.Building;
-import com.pixel.building.BuildingDoor;
 import com.pixel.communication.CommunicationServer;
 import com.pixel.communication.CommunicationServlet;
+import com.pixel.interior.Building;
+import com.pixel.interior.BuildingDoor;
+import com.pixel.interior.InteriorWorld;
+import com.pixel.interior.InteriorWorldManager;
 import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
-import com.pixel.world.InteriorWorld;
-import com.pixel.world.InteriorWorldManager;
 import com.pixel.world.WorldComponent;
 import com.pixel.world.WorldServer;
 

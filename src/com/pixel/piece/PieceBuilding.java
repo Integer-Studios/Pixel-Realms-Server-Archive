@@ -1,6 +1,6 @@
 package com.pixel.piece;
 
-import com.pixel.building.Building;
+import com.pixel.interior.Building;
 
 public class PieceBuilding extends Piece {
 

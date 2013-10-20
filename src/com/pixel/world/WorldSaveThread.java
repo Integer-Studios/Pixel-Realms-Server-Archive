@@ -8,6 +8,7 @@ import com.pixel.admin.PixelLogger.PixelColor;
 import com.pixel.chat.ChatMessage;
 import com.pixel.communication.packet.PacketChat;
 import com.pixel.entity.EntityAlive;
+import com.pixel.interior.InteriorWorldManager;
 import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
 import com.pixel.player.PlayerManager;
@@ -37,7 +38,7 @@ public class WorldSaveThread implements Runnable {
 			
 		}
 		
-		k.save("tiles.dat", tileSave);
+		k.save("world/tiles.dat", tileSave);
 
 		PixelLogger.print("Tiles Saved!", PixelColor.PURPLE);
 		
@@ -52,7 +53,7 @@ public class WorldSaveThread implements Runnable {
 				piecesSave.add(new Integer[]{p.id, p.posX, p.posY, p.damage, p.metadata, 1});
 
 		}
-		k.save("pieces.dat", piecesSave);
+		k.save("world/pieces.dat", piecesSave);
 
 		PixelLogger.print("Pieces Saved!", PixelColor.PURPLE);
 
@@ -65,7 +66,7 @@ public class WorldSaveThread implements Runnable {
 
 
 		}
-		k.save("entities.dat", entitySave);
+		k.save("world/entities.dat", entitySave);
 		
 		PixelLogger.print("Entities Saved!", PixelColor.PURPLE);
 		

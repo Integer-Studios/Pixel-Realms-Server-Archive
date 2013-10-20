@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.pixel.admin.PixelLogger;
 import com.pixel.admin.PixelLogger.PixelColor;
-import com.pixel.building.Building;
 import com.pixel.chat.ChatMessage;
 import com.pixel.communication.packet.PacketChat;
 import com.pixel.communication.packet.PacketUpdatePiece;
@@ -15,6 +14,8 @@ import com.pixel.communication.packet.PacketUpdateTile;
 import com.pixel.entity.Entity;
 import com.pixel.entity.EntityAlive;
 import com.pixel.entity.EntityPlayer;
+import com.pixel.interior.Building;
+import com.pixel.interior.InteriorWorldManager;
 import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
 import com.pixel.player.PlayerManager;
@@ -40,7 +41,7 @@ public class WorldServer {
 		
 		pieces = new Piece[c * c];
 		
-		if (!(new FileItem("tiles.dat").exists())) {
+		if (!(new FileItem("world/tiles.dat").exists())) {
 			PixelLogger.print("Generating Random World...", PixelColor.PURPLE);
 			generateSquareMap();		
 			PixelLogger.print("Generation Complete!", PixelColor.PURPLE);
@@ -54,7 +55,7 @@ public class WorldServer {
 		
 	//	createMap();
 		
-		PixelLogger.print("Server Initialized.", PixelColor.RED);
+		PixelLogger.print("Server initialized on port: " + PixelRealmsServer.port, PixelColor.RED);
 		
 		init = true;
 		
@@ -347,10 +348,10 @@ public class WorldServer {
 		
 		InteriorWorldManager.loadInteriors();
 		
-		ArrayList<Integer[]> tileSave = (ArrayList<Integer[]>) k.load("tiles.dat");
-		ArrayList<Integer[]> piecesSave = (ArrayList<Integer[]>) k.load("pieces.dat");
-		ArrayList<Float[]> entitySave = (ArrayList<Float[]>) k.load("entities.dat");
-		ArrayList<ArrayList<Float[]>> herdSave = (ArrayList<ArrayList<Float[]>>) k.load("herds.dat");
+		ArrayList<Integer[]> tileSave = (ArrayList<Integer[]>) k.load("world/tiles.dat");
+		ArrayList<Integer[]> piecesSave = (ArrayList<Integer[]>) k.load("world/pieces.dat");
+		ArrayList<Float[]> entitySave = (ArrayList<Float[]>) k.load("world/entities.dat");
+		ArrayList<ArrayList<Float[]>> herdSave = (ArrayList<ArrayList<Float[]>>) k.load("world/herds.dat");
 		
 		if (herdSave == null) {
 			

@@ -7,12 +7,17 @@ import java.util.HashMap;
 
 import com.pixel.admin.PixelLogger;
 
-
 public class CommunicationServer implements Runnable {
 
 //	public static ArrayList<CommunicationServletHandler> connections = new ArrayList<CommunicationServletHandler>();
 	public static HashMap<Integer, CommunicationServlet> userConnections = new HashMap<Integer, CommunicationServlet>();
-	public int port = 25566;
+	public int port;
+
+	public CommunicationServer(int port) {
+		
+		this.port = port;
+		
+	}
 	
 	public void run() {
 
