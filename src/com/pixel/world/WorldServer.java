@@ -66,11 +66,10 @@ public class WorldServer {
 		PlayerManager.tick();
 
 
-		for (int x = 0; x < entities.size(); x ++) {
+		for (Entity entity : entities.values()) {
 			try {
 				Thread.sleep(2);
 			} catch (Exception e){}
-			Entity entity = (Entity) entities.values().toArray()[x];
 
 			entity.tick(this);
 
