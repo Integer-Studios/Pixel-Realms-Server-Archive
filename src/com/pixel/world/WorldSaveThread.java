@@ -7,7 +7,7 @@ import com.pixel.admin.PixelLogger;
 import com.pixel.admin.PixelLogger.PixelColor;
 import com.pixel.chat.ChatMessage;
 import com.pixel.communication.packet.PacketChat;
-import com.pixel.entity.Entity;
+import com.pixel.entity.EntityAlive;
 import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
 import com.pixel.player.PlayerManager;
@@ -60,7 +60,7 @@ public class WorldSaveThread implements Runnable {
 
 		for (int x = 0; x < WorldServer.entities.size(); x ++) {
 
-			Entity e = (Entity) WorldServer.entities.values().toArray()[x];
+			EntityAlive e = (EntityAlive) WorldServer.entities.values().toArray()[x];
 			entitySave.add(new Float[]{e.id + 0F, e.getX(), e.getY(), e.health, e.width, e.height, 1F});
 
 

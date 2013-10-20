@@ -9,6 +9,7 @@ public class EntityAlive extends Entity {
 	public float previousHealth;
 	public float velocityX, velocityY, prevVelocityX, prevVelocityY;
 	public float speed;
+	public float health = 100F;
 	
 	public EntityAlive(float x, float y, float width, float height, boolean propagate) {
 		super(x, y, width, height, propagate);
@@ -62,7 +63,6 @@ public class EntityAlive extends Entity {
 		
 		if ((velocityX - prevVelocityX != 0) || (velocityY - prevVelocityY != 0)) {
 			//send change velocity packet
-			System.out.println("sending movelivingentity packet");
 			PlayerManager.broadcastPacket(new PacketMoveLivingEntity(this));
 		}
 		//PlayerManager.broadcastEntity(this);

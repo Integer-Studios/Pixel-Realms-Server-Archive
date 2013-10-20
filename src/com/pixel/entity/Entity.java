@@ -9,7 +9,6 @@ import com.pixel.world.WorldServer;
 public class Entity {
 	
 	public float posX, posY, prevPosX, prevPosY;
-	public float health = 100F;
 	public int id;
 	public float width, height;
 	public int serverID;
@@ -99,6 +98,7 @@ public class Entity {
 	static {
 		
 		entityMap.put(1, EntityBunny.class);
+		entityMap.put(2, EntityPog.class);
 		
 	}
 	
