@@ -1,6 +1,8 @@
 package com.pixel.entity;
 
 import com.pixel.communication.packet.PacketMoveLivingEntity;
+import com.pixel.communication.packet.PacketUpdateLivingEntity;
+import com.pixel.communication.packet.PacketUpdatePlayer;
 import com.pixel.player.PlayerManager;
 import com.pixel.world.WorldServer;
 
@@ -64,6 +66,12 @@ public class EntityAlive extends Entity {
 		if ((velocityX - prevVelocityX != 0) || (velocityY - prevVelocityY != 0)) {
 			//send change velocity packet
 			PlayerManager.broadcastPacket(new PacketMoveLivingEntity(this));
+		}
+		
+		if (velocityX == 0 && velocityY == 0) {
+
+			PlayerManager.broadcastPacket(new PacketUpdateLivingEntity(this));
+
 		}
 		//PlayerManager.broadcastEntity(this);
 
