@@ -3,7 +3,6 @@ package com.pixel.entity;
 import com.pixel.item.ItemStack;
 import com.pixel.player.PlayerInventory;
 import com.pixel.player.PlayerManager;
-import com.pixel.world.WorldServer;
 
 public class EntityPlayer extends Entity {
 
@@ -14,7 +13,6 @@ public class EntityPlayer extends Entity {
 	public int userID;
 	public ItemStack selectedItem;
 	public int session;
-	public float velocityX, velocityY;
 	public float speed;
 	public boolean inside;
 	public int worldID;
@@ -27,20 +25,6 @@ public class EntityPlayer extends Entity {
 		this.setPosition(200, 200);
 		this.username = username;
 		this.userID = userID;
-	}
-	
-	public void setVelocity(float x, float y) {
-		velocityX = x;
-		velocityY = y;
-		
-	}
-	
-	public void tick(WorldServer world) {
-		
-		posX += velocityX;
-		posY += velocityY;
-		
-		super.tick(world);
 	}
 
 	public PlayerInventory getPlayerInventory() {

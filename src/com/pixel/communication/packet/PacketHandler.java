@@ -42,7 +42,6 @@ public class PacketHandler {
 	}
 
 	public static void processMovePlayer(PacketMovePlayer packet) {
-
 		PlayerManager.getPlayer(packet.userID).setVelocity(packet.velocityX, packet.velocityY);
 
 //		float xDiff = Math.abs(PlayerManager.players.get(packet.userID).getX() - packet.posX);

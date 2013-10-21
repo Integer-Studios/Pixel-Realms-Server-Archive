@@ -71,44 +71,45 @@ public static boolean testEntitiesAgainstPoint(Entity sender, float x, float y, 
 	}
 	
 	public static boolean testPieceAgainstEntity(Piece p, Entity e, WorldServer w, boolean b) {
-		if (e.getCollisionBox().overlaps(p.getCollisionBox())) {
+		Rectangle collisionBox = new Rectangle(e.getX()+e.getVelocityX() - (e.width/2), e.getY()+e.getVelocityY() - (e.height/2), e.width, e.height);
+		if (collisionBox.overlaps(p.getCollisionBox())) {
 			if (b) {
-				if (e.getPreviousX() > p.getCollisionBox().getX() && e.getPreviousX() < p.getCollisionBox().getX() + p.getCollisionBox().getWidth()) {
+				if (e.getX() > p.getCollisionBox().getX() && e.getX() < p.getCollisionBox().getX() + p.getCollisionBox().getWidth()) {
 					int diff;
-					if (e.getPreviousY() < e.getY()) {
+					if (e.getY() < e.getY()+e.getVelocityY()) {
 						diff = -1;
-					} else  if (e.getPreviousY() > e.getY()) {
+					} else  if (e.getY() > e.getY()+e.getVelocityY()) {
 						diff = 1;
 					} else {
 						diff = 0;
 					}
 					float borderTop = p.getCollisionBox().getY();
 					float borderBottom = p.getCollisionBox().getY() + p.getCollisionBox().getHeight();
-					if (Math.abs(e.getPreviousY()-borderTop) < Math.abs(e.getPreviousY()-borderBottom)) {
+					if (Math.abs(e.getY()-borderTop) < Math.abs(e.getY()-borderBottom)) {
 						if (diff == -1)
-							e.setY(e.getPreviousY());
+							e.setVelocityY(0);
 					} else {
 						if (diff == 1)
-							e.setY(e.getPreviousY());
+							e.setVelocityY(0);
 					}
 				} else
-				if (e.getPreviousY() > p.getCollisionBox().getY() && e.getPreviousY() < p.getCollisionBox().getY() + p.getCollisionBox().getHeight()) {
+				if (e.getY() > p.getCollisionBox().getY() && e.getY() < p.getCollisionBox().getY() + p.getCollisionBox().getHeight()) {
 					int diff;
-					if (e.getPreviousX() < e.getX()) {
+					if (e.getX() < e.getX() + e.getVelocityX()) {
 						diff = -1;
-					} else  if (e.getPreviousX() > e.getX()) {
+					} else  if (e.getX() > e.getX() + e.getVelocityX()) {
 						diff = 1;
 					} else {
 						diff = 0;
 					}
 					float borderLeft = p.getCollisionBox().getX();
 					float borderRight = p.getCollisionBox().getX() + p.getCollisionBox().getWidth();
-					if (Math.abs(e.getPreviousX()-borderLeft) < Math.abs(e.getPreviousX()-borderRight)) {
+					if (Math.abs(e.getX()-borderLeft) < Math.abs(e.getX()-borderRight)) {
 						if (diff == -1)
-							e.setX(e.getPreviousX());
+							e.setVelocityX(0);
 					} else {
 						if (diff == 1)
-							e.setX(e.getPreviousX());
+							e.setVelocityX(0);
 					}
 				} 
 			}
@@ -132,43 +133,46 @@ public static boolean testEntitiesAgainstPoint(Entity sender, float x, float y, 
 	}
 	
 	public static boolean testEntitities(Entity p, Entity e, WorldServer w) {		
-		if (e.getCollisionBox().overlaps(p.getCollisionBox())) {
-			if (e.getPreviousX() > p.getCollisionBox().getX() && e.getPreviousX() < p.getCollisionBox().getX() + p.getCollisionBox().getWidth()) {
+		Rectangle collisionBoxE = new Rectangle(e.getX() + e.getVelocityX() - (e.width/2), e.getY() + e.getVelocityY() - (e.height/2), e.width, e.height);
+		Rectangle collisionBoxP = new Rectangle(p.getX() + p.getVelocityX() - (p.width/2), p.getY() + p.getVelocityY() - (p.height/2), p.width, p.height);
+
+		if (collisionBoxE.overlaps(collisionBoxP)) {
+			if (e.getX() > p.getCollisionBox().getX() && e.getX() < p.getCollisionBox().getX() + p.getCollisionBox().getWidth()) {
 				int diff;
-				if (e.getPreviousY() < e.getY()) {
+				if (e.getY() < e.getY() + e.getVelocityY()) {
 					diff = -1;
-				} else  if (e.getPreviousY() > e.getY()) {
+				} else  if (e.getY() > e.getY() + e.getVelocityY()) {
 					diff = 1;
 				} else {
 					diff = 0;
 				}
 				float borderTop = p.getCollisionBox().getY();
 				float borderBottom = p.getCollisionBox().getY() + p.getCollisionBox().getHeight();
-				if (Math.abs(e.getPreviousY()-borderTop) < Math.abs(e.getPreviousY()-borderBottom)) {
+				if (Math.abs(e.getY()-borderTop) < Math.abs(e.getY()-borderBottom)) {
 					if (diff == -1)
-						e.setY(e.getPreviousY());
+						e.setVelocityY(0);
 				} else {
 					if (diff == 1)
-						e.setY(e.getPreviousY());
+						e.setVelocityY(0);
 				}
 			} else
-			if (e.getPreviousY() > p.getCollisionBox().getY() && e.getPreviousY() < p.getCollisionBox().getY() + p.getCollisionBox().getHeight()) {
+			if (e.getY() > p.getCollisionBox().getY() && e.getY() < p.getCollisionBox().getY() + p.getCollisionBox().getHeight()) {
 				int diff;
-				if (e.getPreviousX() < e.getX()) {
+				if (e.getX() < e.getX() + e.getVelocityX()) {
 					diff = -1;
-				} else  if (e.getPreviousX() > e.getX()) {
+				} else  if (e.getX() > e.getX() + e.getVelocityX()) {
 					diff = 1;
 				} else {
 					diff = 0;
 				}
 				float borderLeft = p.getCollisionBox().getX();
 				float borderRight = p.getCollisionBox().getX() + p.getCollisionBox().getWidth();
-				if (Math.abs(e.getPreviousX()-borderLeft) < Math.abs(e.getPreviousX()-borderRight)) {
+				if (Math.abs(e.getX()-borderLeft) < Math.abs(e.getX()-borderRight)) {
 					if (diff == -1)
-						e.setX(e.getPreviousX());
+						e.setVelocityX(0);
 				} else {
 					if (diff == 1)
-						e.setX(e.getPreviousX());
+						e.setVelocityX(0);
 				}
 			} 
 		}

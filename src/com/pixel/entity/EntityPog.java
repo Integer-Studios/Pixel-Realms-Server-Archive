@@ -1,6 +1,5 @@
 package com.pixel.entity;
 
-import com.pixel.world.WorldServer;
 
 public class EntityPog extends EntityMonster {
 	

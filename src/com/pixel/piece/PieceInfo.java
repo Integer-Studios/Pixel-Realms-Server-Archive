@@ -81,7 +81,7 @@ public class PieceInfo {
 		return this;
 	}
 	
-	public boolean shouldCollide, isCollectable = true;;
+	public boolean shouldCollide = false, isCollectable = true;;
 	public boolean playerInInteractionZone;
 	public int dropPiece;
 	public float width = 0.8F, height = 0.15F, xOffset = 0.1F, yOffset = 0.85F;

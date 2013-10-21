@@ -45,6 +45,7 @@ public class PacketMovePlayer extends Packet {
 	public void readData(DataInputStream input) throws IOException {
 
 		userID = input.readInt();
+		System.out.println("player move " + userID);
 		velocityX = input.readFloat();
 		velocityY = input.readFloat();
 		posX = input.readFloat();
