@@ -25,6 +25,7 @@ public class EntityPlayer extends Entity {
 		this.setPosition(200, 200);
 		this.username = username;
 		this.userID = userID;
+		this.shouldCollide = false;
 	}
 
 	public PlayerInventory getPlayerInventory() {

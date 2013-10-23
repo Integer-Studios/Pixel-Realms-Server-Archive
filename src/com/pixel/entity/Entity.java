@@ -9,6 +9,7 @@ import com.pixel.communication.packet.PacketUpdateLivingEntity;
 import com.pixel.piece.Piece;
 import com.pixel.player.PlayerManager;
 import com.pixel.util.CollisionBox;
+import com.pixel.util.CoordinateKey;
 import com.pixel.world.WorldServer;
 
 public class Entity {
@@ -20,6 +21,7 @@ public class Entity {
 	public int serverID;
 	public boolean updated = true;
 	public boolean shouldCollide = true;
+	public HashMap<CoordinateKey, Integer[]> entityKeys = new HashMap<CoordinateKey, Integer[]>();
 
 	public Rectangle collisionBox;
 
@@ -128,29 +130,24 @@ public class Entity {
 		if (posY > WorldServer.c-11) {
 			posY = WorldServer.c-11;
 		} 
-		if (this instanceof EntityAlive) {
-			System.out.println(velocityX + " " + velocityY);
-		}
-		checkPieceCollisions(w);
-		if (this instanceof EntityAlive) {
-			System.out.println(velocityX + " " + velocityY);
-			System.out.println();
-		}
+		
+		addToEntityKeys();
 
 
-		if ((velocityX - prevVelocityX != 0) || (velocityY - prevVelocityY != 0)) {
-			//call same collisions on client, don't send this packet after collisions, call it before
-			if (this instanceof EntityAlive) {
+		if (shouldCollide) {
+
+			checkCollisions(w);
+
+			if ((velocityX - prevVelocityX != 0) || (velocityY - prevVelocityY != 0)) {
+				//call same collisions on client, don't send this packet after collisions, call it before
 				PlayerManager.broadcastPacket(new PacketMoveLivingEntity((EntityAlive)this));
 			}
-		}
-		
-		if (velocityX == 0 && velocityY == 0) {
-			//only send this packet
-			if (this instanceof EntityAlive) {
-				PlayerManager.broadcastPacket(new PacketUpdateLivingEntity((EntityAlive)this));
-			}
 
+			if (velocityX == 0 && velocityY == 0) {
+				//only send this packet
+				PlayerManager.broadcastPacket(new PacketUpdateLivingEntity((EntityAlive)this));
+
+			}
 		}
 		
 //		System.out.println(posX + ", " + posY);
@@ -162,7 +159,24 @@ public class Entity {
 		prevPosY = posY;
 	}
 	
-	public void checkPieceCollisions(WorldServer w) {
+	public void addToEntityKeys() {
+		CoordinateKey location = new CoordinateKey((int)posX, (int)posY);
+
+		if (entityKeys.containsKey(location)) {
+			Integer[] entitiesAtLocation = entityKeys.get(location);
+			Integer[] newEntitiesAtLocation = new Integer[entitiesAtLocation.length+1];
+			for (int i = 0; i < entitiesAtLocation.length; i++) {
+				newEntitiesAtLocation[i] = entitiesAtLocation[i];
+			}
+			newEntitiesAtLocation[entitiesAtLocation.length] = this.serverID;
+			entityKeys.put(location, newEntitiesAtLocation);
+		} else {
+			Integer[] newEntitiesAtLocation = new Integer[]{this.serverID};
+			entityKeys.put(location, newEntitiesAtLocation);
+		}
+	}
+	
+	public void checkCollisions(WorldServer w) {
 		int r = 10;
 		int aX = (int)posX - r;
 		int bX = (int)posX + r;
@@ -175,6 +189,13 @@ public class Entity {
 			
 				if (Math.sqrt(((int)posX - x)*((int)posX - x) + ((int)posY - y)*((int)posY - y)) <= r) {
 					CollisionBox.testPieceAgainstEntity(WorldServer.getPieceObject(x, y), this, w, Piece.info[WorldServer.getPiece(x, y)].shouldCollide);
+					CoordinateKey location = new CoordinateKey(x, y);
+					if (entityKeys.containsKey(location)) {
+						Integer[] e = entityKeys.get(location);
+						for (int i = 0; i < e.length; i++) {
+							CollisionBox.testEntitities(this, WorldServer.entities.get(e[i]), w);
+						}
+					}
 				}
 
 			}
