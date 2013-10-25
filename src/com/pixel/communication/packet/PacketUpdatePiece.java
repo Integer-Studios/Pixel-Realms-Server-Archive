@@ -12,6 +12,10 @@ public class PacketUpdatePiece extends Packet {
 	public int posX;
 	public int posY;
 	
+	public PacketUpdatePiece() {
+		this.id = 20;
+	}
+	
 	public PacketUpdatePiece(Piece piece) {
 		
 		this.id = 20;

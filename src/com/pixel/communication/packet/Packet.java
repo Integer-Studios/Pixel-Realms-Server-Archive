@@ -299,6 +299,7 @@ public abstract class Packet {
 		packetMap.put(18, PacketLoadPlayer.class);
 		packetMap.put(19, PacketUpdateInteriorPiece.class);
 		packetMap.put(20, PacketUpdatePiece.class);
+		packetMap.put(21, PacketUpdateConstructionSite.class);
 
 	}
 	

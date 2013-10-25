@@ -11,6 +11,8 @@ import com.pixel.communication.packet.PacketChangePiece;
 import com.pixel.communication.packet.PacketUpdatePlayer;
 import com.pixel.entity.EntityPlayer;
 import com.pixel.entity.EntityPog;
+import com.pixel.item.Item;
+import com.pixel.item.ItemStack;
 import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
 import com.pixel.player.PlayerManager;
@@ -92,6 +94,13 @@ public class ChatManager {
 					}
 					
 				}
+			} else if (msg.text.equals("kit")) {
+				
+				PlayerManager.getPlayer(msg.userID).giveItem(new ItemStack(Item.testAxe, 1));
+				PlayerManager.getPlayer(msg.userID).giveItem(new ItemStack(Item.testPick, 1));
+				PlayerManager.getPlayer(msg.userID).giveItem(new ItemStack(Item.rock, 50));
+				PlayerManager.getPlayer(msg.userID).giveItem(new ItemStack(Item.logPine, 50));
+
 			}
 		
 //			} else if (msg.text.startsWith("")) {

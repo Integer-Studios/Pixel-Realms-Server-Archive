@@ -89,7 +89,7 @@ public class Building {
 	
 	static {
 		
-		info.add(new BuildingInfo(0, 4, 3, 1000).setInterior(6, 6).setDoor(new BuildingDoor(46F, -10F, 32, 56, 0)));
+		info.add(new BuildingInfo(0, 4, 3, 1000).setInterior(6, 6).setDoor(new BuildingDoor(46F, -10F, 32, 56, 0)).addRequirement(9, 25).addRequirement(3, 50));
 		
 	}
 	

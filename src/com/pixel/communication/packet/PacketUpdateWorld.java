@@ -87,7 +87,6 @@ public class PacketUpdateWorld extends Packet {
 
 		posX = input.readInt();
 		posY = input.readInt();
-		
 		if (PlayerManager.getPlayer(userID).inside) {
 			
 			PlayerManager.getPlayer(userID).inside = false;
