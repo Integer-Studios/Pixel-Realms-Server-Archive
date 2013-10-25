@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.pixel.communication.packet.PacketChat;
-import com.pixel.communication.packet.PacketUpdatePiece;
+import com.pixel.communication.packet.PacketChangePiece;
 import com.pixel.communication.packet.PacketUpdatePlayer;
 import com.pixel.entity.EntityPlayer;
 import com.pixel.entity.EntityPog;
@@ -80,14 +80,14 @@ public class ChatManager {
 			} else if (msg.text.equals("cabin")) {
 				int x = ((int)PlayerManager.getPlayer(msg.userID).getX()) + 2;
 				int y = ((int)PlayerManager.getPlayer(msg.userID).getY()) + 2;
-				PlayerManager.broadcastPacket(new PacketUpdatePiece(new PieceBuilding(x, y, 0)));
+				PlayerManager.broadcastPacket(new PacketChangePiece(new PieceBuilding(x, y, 0)));
 
 				for (int b = x; b < x + 4; b ++) {
 					
 					for (int i = y; i < y + 4; i ++) {
 						
 						if (!(b == x && i == y))
-							PlayerManager.broadcastPacket(new PacketUpdatePiece(new Piece(b, i, 0, true)));
+							PlayerManager.broadcastPacket(new PacketChangePiece(new Piece(b, i, 0, true)));
 
 					}
 					

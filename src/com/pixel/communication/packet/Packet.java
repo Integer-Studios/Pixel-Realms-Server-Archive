@@ -52,6 +52,14 @@ public abstract class Packet {
 			int id = CommunicationServlet.getInput(servlet).readInt();
 			int userID = CommunicationServlet.getInput(servlet).readInt();
 			Packet packet = getPacket(id);
+			
+			if (packet == null) {
+				
+				PixelLogger.err("Skipping packet with id: " + id);
+				return null;
+				
+			}
+			
 			packet.id = id;
 			packet.userID = userID;
 			if (id == 1) 
@@ -275,7 +283,7 @@ public abstract class Packet {
 		packetMap.put(2, PacketUpdatePlayer.class);
 		packetMap.put(3, PacketWorldData.class);
 		packetMap.put(4, PacketUpdateTile.class);
-		packetMap.put(5, PacketUpdatePiece.class);
+		packetMap.put(5, PacketChangePiece.class);
 		packetMap.put(6, PacketUpdateWorld.class);
 		packetMap.put(7, PacketUpdateLivingEntity.class);
 		packetMap.put(8, PacketChat.class);
@@ -290,6 +298,7 @@ public abstract class Packet {
 		packetMap.put(17, PacketInfoRequest.class);
 		packetMap.put(18, PacketLoadPlayer.class);
 		packetMap.put(19, PacketUpdateInteriorPiece.class);
+		packetMap.put(20, PacketUpdatePiece.class);
 
 	}
 	

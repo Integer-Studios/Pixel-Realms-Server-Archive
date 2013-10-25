@@ -4,14 +4,17 @@ package com.pixel.communication.packet;
 import com.pixel.communication.CommunicationServer;
 import com.pixel.communication.CommunicationServlet;
 import com.pixel.entity.EntityAlive;
+import com.pixel.interior.ConstructionSiteManager;
 import com.pixel.interior.InteriorWorld;
 import com.pixel.interior.InteriorWorldManager;
 import com.pixel.item.Item;
 import com.pixel.item.ItemStack;
 import com.pixel.piece.Piece;
+import com.pixel.piece.PieceConstructionSiteInfo;
 import com.pixel.player.PlayerLoadThread;
 import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
+import com.pixel.util.CoordinateKey;
 import com.pixel.world.WorldServer;
 
 public class PacketHandler {
@@ -68,7 +71,7 @@ public class PacketHandler {
 		
 	}
 	
-	public static void processUpdatePiece(PacketUpdatePiece packet) {
+	public static void processChangePiece(PacketChangePiece packet) {
 		
 		WorldServer.setPiece(packet.posX, packet.posY, packet.pieceID, packet.damage, packet.metadata, packet.buildingID);
 
@@ -133,6 +136,17 @@ public class PacketHandler {
 			PlayerManager.broadcastPacketToWorld(packet.worldID, new PacketUpdateInteriorPiece(packet.worldID, world.pieces.get((packet.y * world.c) + packet.x)));
 			
 			InteriorWorldManager.interiors.put(packet.worldID, world);
+			
+		}
+		
+	}
+
+	public static void processUpdatePiece(PacketUpdatePiece packet) {
+
+		if (Piece.info[WorldServer.getPiece(packet.posX, packet.posY)] instanceof PieceConstructionSiteInfo) {
+
+			if (packet.auxiliaryBooleans.get(0))
+				ConstructionSiteManager.sites.get(new CoordinateKey(packet.posX, packet.posY)).addItem(packet.auxiliaryIntegers.get(0), packet.auxiliaryIntegers.get(1));
 			
 		}
 		

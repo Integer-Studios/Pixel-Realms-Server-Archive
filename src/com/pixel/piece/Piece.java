@@ -1,7 +1,7 @@
 package com.pixel.piece;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.pixel.communication.packet.PacketUpdatePiece;
+import com.pixel.communication.packet.PacketChangePiece;
 import com.pixel.entity.EntityPlayer;
 import com.pixel.item.Item;
 import com.pixel.item.ItemStack;
@@ -52,7 +52,7 @@ public class Piece {
 			p.playerInCollidedPosition = true;
 			WorldServer.setPieceObject(posX, posY, p);
 
-			PlayerManager.broadcastPacket(new PacketUpdatePiece(p));
+			PlayerManager.broadcastPacket(new PacketChangePiece(p));
 
 		}
 	}
