@@ -9,18 +9,22 @@ import com.pixel.admin.PixelLogger;
 import com.pixel.admin.PixelLogger.PixelColor;
 import com.pixel.chat.ChatMessage;
 import com.pixel.communication.packet.PacketChat;
-import com.pixel.communication.packet.PacketUpdatePiece;
+import com.pixel.communication.packet.PacketUpdateConstructionSite;
+import com.pixel.communication.packet.PacketChangePiece;
 import com.pixel.communication.packet.PacketUpdateTile;
 import com.pixel.entity.Entity;
 import com.pixel.entity.EntityAlive;
 import com.pixel.entity.EntityPlayer;
 import com.pixel.interior.Building;
+import com.pixel.interior.ConstructionSiteManager;
 import com.pixel.interior.InteriorWorldManager;
 import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
+import com.pixel.piece.PieceConstructionSiteInfo;
 import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
 import com.pixel.tile.Tile;
+import com.pixel.util.CoordinateKey;
 import com.pixel.util.FileItem;
 import com.pixel.util.Toolkit;
 
@@ -110,6 +114,13 @@ public class WorldServer {
 						WorldComponent piece = null;
 						if (getPieceObject(x, y) != null) {
 							piece = new WorldComponent(getPieceObject(x, y));
+							
+							if (Piece.info[piece.id] instanceof PieceConstructionSiteInfo) {
+								
+								PlayerManager.sendPacketToPlayer(userID, new PacketUpdateConstructionSite(ConstructionSiteManager.sites.get(new CoordinateKey(x, y))));
+								
+							}
+							
 							loadTiles.add(tile);
 							loadPieces.add(piece);
 						} else {
@@ -250,7 +261,7 @@ public class WorldServer {
 	public static void setPiece(int x, int y, int id) {
 		pieces[((y * c) + x)] = new Piece(x, y, id, true);
 
-		PlayerManager.broadcastPacket(new PacketUpdatePiece(pieces[((y * c) + x)]));
+		PlayerManager.broadcastPacket(new PacketChangePiece(pieces[((y * c) + x)]));
 
 	}
 
@@ -261,14 +272,14 @@ public class WorldServer {
 			pieces[((y * c) + x)].damage = damage;
 			pieces[((y * c) + x)].metadata = metadata;
 
-			PlayerManager.broadcastPacket(new PacketUpdatePiece(pieces[((y * c) + x)]));
+			PlayerManager.broadcastPacket(new PacketChangePiece(pieces[((y * c) + x)]));
 		} else if (Building.canBuildingFit(buildingID, x, y)) {
 			
 			pieces[((y * c) + x)] = new Piece(x, y, id, true);
 			pieces[((y * c) + x)].damage = damage;
 			pieces[((y * c) + x)].metadata = metadata;
 
-			PlayerManager.broadcastPacket(new PacketUpdatePiece(pieces[((y * c) + x)]));
+			PlayerManager.broadcastPacket(new PacketChangePiece(pieces[((y * c) + x)]));
 
 		}
 

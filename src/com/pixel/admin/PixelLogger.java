@@ -10,7 +10,8 @@ public class PixelLogger {
 	public static String purple_color = "\u001B[35m";
 	
 	public static String prefix = "[Pixel Realms] ";
-	
+	public static String debugPrefix = "[Debug] ";
+
 	public enum PixelColor {
 		
 		RED(red_color),
@@ -53,6 +54,47 @@ public class PixelLogger {
 		System.out.println(color + prefix + msg);
 		System.out.print(RESET);
 
+	}
+	
+	public static void debug(String key, int...is) {
+		
+		System.out.print(debugPrefix + key + " ");
+		
+	    for(int i: is) {
+	    	
+	    	System.out.print(i + " ");
+	    	
+	    }
+
+	    System.out.println();
+
+	}
+	
+	public static void debug(String key, float...fs) {
+		
+		System.out.print(debugPrefix + key + " ");
+		
+	    for(float f : fs) {
+	    	
+	    	System.out.print(f + " ");
+	    
+	    }
+
+	    System.out.println();
+	    
+	}
+	
+	public static void debug(String key, String...str) {
+		
+		System.out.print(debugPrefix + key + " ");
+		
+	    for(String s : str) {
+	    	
+	    	System.out.print(s + " ");
+	    	
+	    }
+	    System.out.println();
+		
 	}
 	
 }

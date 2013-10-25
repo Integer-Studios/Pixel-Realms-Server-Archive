@@ -1,6 +1,5 @@
 package com.pixel.communication.packet;
 
-
 import com.pixel.communication.CommunicationServer;
 import com.pixel.communication.CommunicationServlet;
 import com.pixel.entity.EntityAlive;
@@ -43,7 +42,6 @@ public class PacketHandler {
 
 	public static void processMovePlayer(PacketMovePlayer packet) {
 		PlayerManager.getPlayer(packet.userID).setVelocity(packet.velocityX, packet.velocityY);
-
 //		float xDiff = Math.abs(PlayerManager.players.get(packet.userID).getX() - packet.posX);
 //		float yDiff = Math.abs(PlayerManager.players.get(packet.userID).getY() - packet.posY);
 //
@@ -67,7 +65,7 @@ public class PacketHandler {
 		
 	}
 	
-	public static void processUpdatePiece(PacketUpdatePiece packet) {
+	public static void processChangePiece(PacketChangePiece packet) {
 		
 		WorldServer.setPiece(packet.posX, packet.posY, packet.pieceID, packet.damage, packet.metadata, packet.buildingID);
 
@@ -134,6 +132,13 @@ public class PacketHandler {
 			InteriorWorldManager.interiors.put(packet.worldID, world);
 			
 		}
+		
+	}
+
+	public static void processUpdatePiece(PacketUpdatePiece packet) {
+
+		WorldServer.getPieceObject(packet.posX, packet.posY).metadata = packet.metadata;
+
 		
 	}
 

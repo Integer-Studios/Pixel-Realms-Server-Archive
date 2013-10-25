@@ -298,6 +298,21 @@ public class PlayerManager {
 			CommunicationServlet.addPacket(servlet, packet);
 
 		}	
+
+	}
+
+	public static void broadcastPacketExcludingPlayer(Packet packet, int userID) {
+
+		for (EntityPlayer p : players.values()) {
+
+			if (p.userID != userID) {
+
+				CommunicationServlet servlet = CommunicationServer.userConnections.get(p.userID);
+				CommunicationServlet.addPacket(servlet, packet);
+
+			}
+
+		}	
 		
 	}
 	

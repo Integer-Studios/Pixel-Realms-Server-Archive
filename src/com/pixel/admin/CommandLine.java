@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.awt.Color;
 import com.pixel.chat.ChatMessage;
 import com.pixel.communication.packet.PacketChat;
-import com.pixel.communication.packet.PacketUpdatePiece;
+import com.pixel.communication.packet.PacketChangePiece;
 import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
 import com.pixel.world.WorldServer;
@@ -45,7 +45,7 @@ public class CommandLine extends Thread {
 			} else if (command.startsWith("/test")) {
 				
 				WorldServer.getPieceObject(Integer.parseInt(command.split(" ")[1]), Integer.parseInt(command.split(" ")[2])).metadata = Integer.parseInt(command.split(" ")[3]);
-				PlayerManager.broadcastPacket(new PacketUpdatePiece(WorldServer.getPieceObject(Integer.parseInt(command.split(" ")[1]), Integer.parseInt(command.split(" ")[2]))));
+				PlayerManager.broadcastPacket(new PacketChangePiece(WorldServer.getPieceObject(Integer.parseInt(command.split(" ")[1]), Integer.parseInt(command.split(" ")[2]))));
 				
 			} else {
 				

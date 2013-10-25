@@ -1,6 +1,5 @@
 package com.pixel.entity;
 
-
 public class EntityPog extends EntityMonster {
 	
 	public EntityPog(float x, float y) {

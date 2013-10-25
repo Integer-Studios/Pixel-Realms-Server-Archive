@@ -1,5 +1,6 @@
 package com.pixel.interior;
 
+import java.util.HashMap;
 
 public class BuildingInfo {
 
@@ -8,6 +9,7 @@ public class BuildingInfo {
 	public BuildingDoor door;
 	public InteriorWorld interior;
 	public int maxDamage;
+	public HashMap<Integer, Integer> requirements = new HashMap<Integer, Integer>();
 	
 	public BuildingInfo(int id, int width, int height, int maxDamage) {
 		
@@ -29,6 +31,14 @@ public class BuildingInfo {
 		
 		this.interior = new InteriorWorld(width, height, id);
 		
+		return this;
+		
+	}
+	
+	
+	public BuildingInfo addRequirement(int id, int amount) {
+		
+		requirements.put(id, amount);
 		return this;
 		
 	}

@@ -21,7 +21,7 @@ public class EntityPlayer extends Entity {
 	public float health = 100F;
 	
 	public EntityPlayer(String username, int userID) {
-		super(20, 20, .9F, .2F, false);
+		super(200, 200, .9F, .2F, false);
 		this.setPosition(200, 200);
 		this.username = username;
 		this.userID = userID;
