@@ -118,17 +118,17 @@ public class Entity {
 		posX += velocityX;
 		posY += velocityY;
 		
-		if (posX < 10) {
-			posX = 10;
+		if (posX < 0) {
+			posX = 0;
 		}
-		if (posY < 10) {
-			posY = 10;
+		if (posY < 0) {
+			posY = 0;
 		}
-		if (posX > WorldServer.c-11) {
-			posX = WorldServer.c-11;
+		if (posX > WorldServer.c-1) {
+			posX = WorldServer.c-1;
 		}
-		if (posY > WorldServer.c-11) {
-			posY = WorldServer.c-11;
+		if (posY > WorldServer.c-1) {
+			posY = WorldServer.c-1;
 		} 
 		
 		addToEntityKeys();
