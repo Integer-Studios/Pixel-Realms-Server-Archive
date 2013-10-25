@@ -169,10 +169,10 @@ public class WorldReader {
 		pieces.put(-14993118, 7);//pine down #1b3922
 		pieces.put(-14540782, 8);//pine logs #1b3922
 		pieces.put(-12170947, 9);//big rock #46493d
-		pieces.put(-13472213, 9);//apple tree #326e2b
-		pieces.put(-5468610, 10);//apple stump #4e3d21
-		pieces.put(-15191787, 11);//apple down #326e2b
-		pieces.put(-11649759, 12);//apple logs #4e3d21
+		pieces.put(-13472213, 10);//apple tree #326e2b
+		pieces.put(-5468610, 11);//apple stump #4e3d21
+		pieces.put(-15191787, 12);//apple down #326e2b
+		pieces.put(-11649759, 13);//apple logs #4e3d21
 		
 		pieces.put(-14776012, 16);//abyssal fur #1e8934
 
