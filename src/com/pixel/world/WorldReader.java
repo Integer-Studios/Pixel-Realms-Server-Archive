@@ -6,6 +6,7 @@ import java.awt.image.PixelGrabber;
 import java.util.HashMap;
 
 import com.pixel.admin.PixelLogger;
+import com.pixel.piece.Piece;
 import com.pixel.tile.Tile;
 
 public class WorldReader {
@@ -14,33 +15,49 @@ public class WorldReader {
 		world = w;
 	}
 	
+	public static boolean debug = true;
+	
 	public WorldServer world;
 	public static HashMap<Integer, Integer> tiles = new HashMap<Integer, Integer>();
 	public static HashMap<Integer, Integer> pieces = new HashMap<Integer, Integer>();
 	
 	public void readWorld() {
-		 Image image = Toolkit.getDefaultToolkit().getImage("map.png");
+		 Image tileMap = Toolkit.getDefaultToolkit().getImage("map/tiles.png");
 
-		    PixelGrabber grabber = new PixelGrabber(image, 0, 0, -1, -1, false);
-
+		    PixelGrabber grabber = new PixelGrabber(tileMap, 0, 0, -1, -1, false);
+		    
+		    log("Pixel map loading...");
+		    
 		    try {
 		    	if (grabber.grabPixels()) {
 		    		
+				    log("Tile map loaded.");
+				    
 		    		int width = grabber.getWidth();
 		    		int height = grabber.getHeight();
 		    		if (width != height) {
-		    			PixelLogger.err("Pixel map does not conform to c squared requirements (width != height). Aborting read.");
+		    			PixelLogger.err("Tile map does not conform to c squared requirements (width != height). Aborting read.");
 		    			System.exit(-1);
 		    		}
 		    		
 		    		WorldServer.c = width;
-		    		
+				    log("Reading tile map...");
+
 		    		int[] data = (int[]) grabber.getPixels();
 		    		int index = 0;
+		    		int id = -1;
 		    		for (int y = 0; y < WorldServer.c; y++) {
 		    			for (int x = 0; x < WorldServer.c; x++) {
-		    				new Tile(x, y, getTileIDForColor(data[index]), -1);
-		    				System.out.println("(" + x + ", " + y + ") id:" + getTileIDForColor(data[index]));
+		    				id = getTileIDForColor(data[index]);
+		    				if (id != -1) {
+//		    					if (id != WorldServer.defautTile) {
+		    						new Tile(x, y, id, -1);
+//		    					}
+		    					log("Tile loaded at position: (" + x + ", " + y + ") with id:" + id);
+		    				} else {
+		    					err("Tile not loaded at (" + x + ", " + y + ")");
+	    						new Tile(x, y, WorldServer.defautTile, -1);
+		    				}
 		    				index++;
 		    			}
 		    		}
@@ -48,12 +65,86 @@ public class WorldReader {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		    
+		    log("Tile map read.");
+
+		    
+			 Image pieceMap = Toolkit.getDefaultToolkit().getImage("map/pieces.png");
+
+			    grabber = new PixelGrabber(pieceMap, 0, 0, -1, -1, false);
+
+			    try {
+			    	if (grabber.grabPixels()) {
+			    		
+					    log("Piece map loaded.");
+			    		
+			    		int width = grabber.getWidth();
+			    		int height = grabber.getHeight();
+			    		if (width != height) {
+			    			PixelLogger.err("Piece map does not conform to c squared requirements (width != height). Aborting read.");
+			    			System.exit(-1);
+			    		}
+			    		
+			    		WorldServer.c = width;
+			    		
+			    		WorldServer.pieces = new Piece[WorldServer.c * WorldServer.c];
+			    		
+					    log("Reading piece map...");
+					    
+			    		int[] data = (int[]) grabber.getPixels();
+			    		int index = 0;
+			    		int id = -1;
+			    		for (int y = 0; y < WorldServer.c; y++) {
+			    			for (int x = 0; x < WorldServer.c; x++) {
+			    				
+			    				id = getPieceIDForColor(data[index]);
+			    				if (id != -1) {
+				    				new Piece(x, y, id, true);
+			    					log("Piece loaded at position: (" + x + ", " + y + ") with id:" + id);
+			    				} else {
+			    					err("Piece not loaded at (" + x + ", " + y + ")");
+		    						new Piece(x, y, 0, true);
+			    				}
+			    				
+			    				index++;
+			    			}
+			    		}
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			    
+			    log("Piece map read.");
+			    log("Pixel map read.");
+
 	}
 	
 	private int getTileIDForColor(int i) {
+		if (!tiles.containsKey(i)) {
+			err("Tile id could not be found for color code: " + i);
+			return -1;
+		}
 		return tiles.get(i);
 	}
 
+	private int getPieceIDForColor(int i) {
+		if (!pieces.containsKey(i)) {
+			err("Piece id could not be found for color code: " + i);
+			return -1;
+		}
+		return pieces.get(i);
+	}
+	
+	private void log(String s) {
+		if (debug)
+		PixelLogger.print(s, PixelLogger.PixelColor.PURPLE);
+	}
+	
+	private void err(String s) {
+		if (debug)
+		PixelLogger.err(s);
+	}
+	
 	static {
 		tiles.put(-10516671, 0);//grass flat #5f8741
 		tiles.put(-6581689, 1);//sand flat #9b9247
@@ -67,7 +158,25 @@ public class WorldReader {
 		tiles.put(-11521513, 9);//building floor #503217
 		
 		
-		pieces.put(69, 0);
+		
+		pieces.put(16777215, 0);//blank (transparent)
+		pieces.put(-6827661, 1);//grass #97d173
+		pieces.put(-12227797, 2);//grass #456b2b
+		pieces.put(-10725986, 3);//flower #5c559e
+		pieces.put(-7301508, 4);//rock #90967c
+		pieces.put(-13074873, 5);//pine #387e47
+		pieces.put(-10404837, 6);//pine stump #1b3922
+		pieces.put(-14993118, 7);//pine down #1b3922
+		pieces.put(-14540782, 8);//pine logs #1b3922
+		pieces.put(-12170947, 9);//big rock #46493d
+		pieces.put(-13472213, 9);//apple tree #326e2b
+		pieces.put(-5468610, 10);//apple stump #4e3d21
+		pieces.put(-15191787, 11);//apple down #326e2b
+		pieces.put(-11649759, 12);//apple logs #4e3d21
+		
+		pieces.put(-14776012, 16);//abyssal fur #1e8934
+
+
 		
 	}
 

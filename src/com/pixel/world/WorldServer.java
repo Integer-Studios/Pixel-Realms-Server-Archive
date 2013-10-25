@@ -41,20 +41,23 @@ public class WorldServer {
 	public static ConcurrentHashMap<Integer, Entity> entities = new ConcurrentHashMap<Integer,Entity>();
 	public static boolean init = false;
 	
+	public static int defautTile = 0;
+	
 	public WorldServer() {
-		
-		pieces = new Piece[c * c];
-		
+				
 		if (!(new FileItem("world/tiles.dat").exists())) {
-			PixelLogger.print("Generating Random World...", PixelColor.PURPLE);
-			generateSquareMap();		
-			PixelLogger.print("Generation Complete!", PixelColor.PURPLE);
-			
+//			PixelLogger.print("Generating Flat World...", PixelColor.PURPLE);
+//			generateSquareMap();		
+//			PixelLogger.print("Generation Complete!", PixelColor.PURPLE);
+			PixelLogger.print("Loading Pixel Map...", PixelColor.PURPLE);
+			new WorldReader(this).readWorld();
+			PixelLogger.print("Pixel Map Loaded!", PixelColor.PURPLE);
 		} else {
 			PixelLogger.print("Loading World...", PixelColor.PURPLE);
 			load();
 			PixelLogger.print("World Loaded!", PixelColor.PURPLE);
-			
+			pieces = new Piece[c * c];
+
 		}
 		
 	//	createMap();
@@ -170,11 +173,25 @@ public class WorldServer {
 	}
 	
 	public void generateSquareMap() {
+
+		for (int y = 0; y < c; y++) {
+			for (int x = 0; x < c; x++) {
+				new Tile(x, y, defautTile, -1);
+				new Piece(x, y, 0, true);
+			}
+			
+		}
+		
+//		new HerdBunny(150, 150);
+		
+	}
+	
+	public void generateRandomMap() {
 		Random r = new Random();
 
 		for (int y = 0; y < c; y++) {
 			for (int x = 0; x < c; x++) {
-				new Tile(x, y, 0, -1);
+				new Tile(x, y, defautTile, -1);
 				
 				if ((x < 20 && x >= 10) && (y > 10 && y < c-11) && r.nextInt(x-9) == 0) {
 					new Piece(x, y, 16, true);
