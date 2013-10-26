@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.PixelGrabber;
 import java.util.HashMap;
+import java.util.Random;
 
 import com.pixel.admin.PixelLogger;
 import com.pixel.piece.Piece;
@@ -16,6 +17,7 @@ public class WorldReader {
 	}
 	
 	public static boolean debug = true;
+	public static boolean genBiome = true;
 	
 	public WorldServer world;
 	public static HashMap<Integer, Integer> tiles = new HashMap<Integer, Integer>();
@@ -62,11 +64,11 @@ public class WorldReader {
 		    			}
 		    		}
 				}
-			} catch (InterruptedException e) {
+			    log("Tile map read.");
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		    
-		    log("Tile map read.");
 
 		    
 			 Image pieceMap = Toolkit.getDefaultToolkit().getImage("map/pieces.png");
@@ -110,13 +112,78 @@ public class WorldReader {
 			    			}
 			    		}
 					}
-				} catch (InterruptedException e) {
+				    log("Piece map read.");
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			    
-			    log("Piece map read.");
 			    log("Pixel map read.");
+			    
+			    if (genBiome) {
+			    	
+			    	generateBiome();
+			    	
+			    }
 
+	}
+	
+	public void generateBiome() {
+		log("Generating biome...");
+		Random r = new Random();
+
+		for (int y = 0; y < WorldServer.c; y++) {
+			for (int x = 0; x < WorldServer.c; x++) {
+				
+				if (WorldServer.getTile(x, y) == 0) {
+				
+				if ((x < 20 && x >= 10) && (y > 10 && y < WorldServer.c-11) && r.nextInt(x-9) == 0) {
+					new Piece(x, y, 16, true);
+				} else
+				if ((x > WorldServer.c-21 && x <= WorldServer.c-11) && (y > 10 && y < WorldServer.c-11) && r.nextInt(WorldServer.c-10-x) == 0) {
+					new Piece(x, y, 16, true);
+				} else
+				if ((y < 20 && y >= 10) && (x > 10 && x < WorldServer.c-11) && r.nextInt(y-9) == 0) {
+					new Piece(x, y, 16, true);
+				} else
+				if ((y > WorldServer.c-21 && y < WorldServer.c-11) && (x > 10 && x < WorldServer.c-11) && r.nextInt(WorldServer.c-10-y) == 0) {
+					new Piece(x, y, 16, true);
+				} else
+				if (x < 10 || x > WorldServer.c-11 || y < 10 || y > WorldServer.c-11) {
+					new Piece(x, y, 16, true);
+				} else
+				if (r.nextInt(10) == 0) {
+					new Piece(x, y, 1, true);
+				} else
+				if (r.nextInt(10) == 0) {
+					new Piece(x, y, 2, true);
+				}  else
+				if (r.nextInt(10) == 0) {
+					new Piece(x, y, 5, true);
+				} else
+				if (r.nextInt(40) == 0) {
+					new Piece(x, y, 10, true);
+				} else
+				if (r.nextInt(40) == 0) {
+					new Piece(x, y, 3, true);
+				} else
+				if (r.nextInt(40) == 0) {
+					new Piece(x, y, 4, true);
+				} else
+				if (r.nextInt(80) == 0) {
+					new Piece(x, y, 9, true);
+				}
+				else {
+					new Piece(x, y, 0, true);
+				}
+				
+				}
+			
+			}
+			
+		}
+		
+		log("Biome generated!");
+		
 	}
 	
 	private int getTileIDForColor(int i) {
