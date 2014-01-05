@@ -1,6 +1,9 @@
 package com.pixel.entity;
 
+import com.pixel.item.ItemStack;
+import com.pixel.piece.PieceSac;
 import com.pixel.player.PlayerManager;
+import com.pixel.util.CoordinateKey;
 import com.pixel.world.WorldServer;
 
 public class EntityAlive extends Entity {
@@ -8,6 +11,7 @@ public class EntityAlive extends Entity {
 	public float previousHealth;
 	public float speed;
 	public float health = 100F;
+	public ItemStack[] drops;
 	
 	public EntityAlive(float x, float y, float width, float height, boolean propagate) {
 		super(x, y, width, height, propagate);
@@ -17,6 +21,10 @@ public class EntityAlive extends Entity {
 	public EntityAlive(float x, float y, float width, float height) {
 		super(x, y, width, height, true);
 		// TODO Auto-generated constructor stub
+	}
+	
+	public void setDrops(ItemStack[] is) {
+		drops = is;
 	}
 	
 	public void setMaxHealth(float health) {
@@ -57,12 +65,14 @@ public class EntityAlive extends Entity {
 
 		int newX = Math.round(posX);
 		int newY = Math.round(posY);
-		
-		if (this instanceof EntityBunny) {
-			
-			WorldServer.setPiece(newX, newY, 15);
-			
-		}
+		WorldServer.setPiece(newX, newY, 27);
+		PieceSac.sacContents.put(new CoordinateKey(newX, newY), drops);
+//		
+//		if (this instanceof EntityBunny) {
+//			
+//			WorldServer.setPiece(newX, newY, 15);
+//			
+//		}
 		
 	}
 	

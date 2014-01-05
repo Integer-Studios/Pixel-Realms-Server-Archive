@@ -16,7 +16,7 @@ public class WorldReader {
 		world = w;
 	}
 	
-	public static boolean debug = true;
+	public static boolean debug = false;
 	public static boolean genBiome = true;
 	
 	public WorldServer world;

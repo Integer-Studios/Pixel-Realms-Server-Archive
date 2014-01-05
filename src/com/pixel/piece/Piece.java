@@ -90,6 +90,7 @@ public class Piece {
 				new PieceInfo().setIsCollectable(false).setShouldCollide(true).setSize(0F, 0F, 1F, 1F),//24
 				new PieceInfo().setIsCollectable(false).setShouldCollide(true).setSize(0F, 0F, 1F, 1F),//25
 				new PieceConstructionSiteInfo(0),//26
+				new PieceSac().setShouldCollide(true).setDropItemStack(new ItemStack(Item.flowerPurple, 1)),//27
 
 		};
 		
