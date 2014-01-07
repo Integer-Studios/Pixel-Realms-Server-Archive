@@ -17,6 +17,7 @@ import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
 import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
+import com.pixel.world.WorldServer;
 
 public class ChatManager {
 
@@ -38,8 +39,10 @@ public class ChatManager {
 				
 			} else if (msg.text.equalsIgnoreCase("spawn")) {
 				
-				new EntityPog(PlayerManager.getPlayer(msg.userID).getX(), PlayerManager.getPlayer(msg.userID).getY());
-				PlayerManager.sendMessage(msg.userID, "Spawning Bunny at your position!", Color.RED);
+//				new EntityPog(PlayerManager.getPlayer(msg.userID).getX(), PlayerManager.getPlayer(msg.userID).getY());
+				WorldServer.setPiece(Math.round(PlayerManager.getPlayer(msg.userID).getX()), Math.round(PlayerManager.getPlayer(msg.userID).getY()), 28, 0, 0, -1);
+
+				PlayerManager.sendMessage(msg.userID, "Spawning Spawner at your position!", Color.RED);
 				
 			} else if (msg.text.equalsIgnoreCase("locate") || msg.text.equalsIgnoreCase("loc")) {
 				

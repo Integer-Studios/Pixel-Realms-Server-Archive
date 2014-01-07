@@ -53,10 +53,10 @@ public class WorldServer {
 			new WorldReader(this).readWorld();
 			PixelLogger.print("Pixel Map Loaded!", PixelColor.PURPLE);
 		} else {
+			pieces = new Piece[c * c];
 			PixelLogger.print("Loading World...", PixelColor.PURPLE);
 			load();
 			PixelLogger.print("World Loaded!", PixelColor.PURPLE);
-			pieces = new Piece[c * c];
 
 		}
 		

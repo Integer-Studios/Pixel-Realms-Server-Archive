@@ -9,6 +9,7 @@ import com.pixel.communication.CommunicationServer;
 import com.pixel.communication.CommunicationServlet;
 import com.pixel.interior.Building;
 import com.pixel.interior.BuildingDoor;
+import com.pixel.interior.BuildingListener;
 import com.pixel.interior.InteriorWorld;
 import com.pixel.interior.InteriorWorldManager;
 import com.pixel.player.PlayerManager;
@@ -99,6 +100,7 @@ public class PacketUpdateWorld extends Packet {
 
 			PlayerManager.getPlayer(userID).setPosition(x, y);
 			PlayerManager.getPlayer(userID).worldID = -1;
+			BuildingListener.setWorld(userID, -1);
 			PlayerManager.broadcastPacket(new PacketUpdatePlayer(userID));
 		}
 		

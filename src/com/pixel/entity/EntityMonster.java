@@ -18,6 +18,7 @@ public class EntityMonster extends EntityAlive{
 
 	public void startRandomMovement(Random r) {
 		System.out.println("starting random entity movement");
+		
 		switch (r.nextInt(7)) {
 		case 0:
 			velocityX = speed;
@@ -59,16 +60,16 @@ public class EntityMonster extends EntityAlive{
 
 	public void tick(WorldServer w) {
 		
-		Random r = new Random();
-		
-		if (velocityX == 0 && velocityY == 0 && r.nextInt(100) == 0) {
-			startRandomMovement(r);
-		} else
-		if ((velocityX != 0 || velocityY != 0) && r.nextInt(100) == 0) {
-			System.out.println("stopping entity movement");
-			velocityX = 0;
-			velocityY = 0;
-		}
+//		Random r = new Random();
+//		
+//		if (velocityX == 0 && velocityY == 0 && r.nextInt(100) == 0) {
+//			startRandomMovement(r);
+//		} else
+//		if ((velocityX != 0 || velocityY != 0) && r.nextInt(100) == 0) {
+//			System.out.println("stopping entity movement");
+//			velocityX = 0;
+//			velocityY = 0;
+//		}
 
 //		if (yDestination > (int) posY) {
 //

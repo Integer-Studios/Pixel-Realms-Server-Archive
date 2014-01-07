@@ -116,9 +116,11 @@ public class Entity {
 	}
 
 	public void tick(WorldServer w) {
+		
 		posX += velocityX;
 		posY += velocityY;
-		
+		collisionBox = new Rectangle(posX - (width/2), posY - (height/2), width, height);
+
 		if (posX < 0) {
 			posX = 0;
 		}

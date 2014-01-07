@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.pixel.entity.EntityAlive;
+import com.pixel.interior.BuildingListener;
 import com.pixel.interior.InteriorWorld;
 import com.pixel.interior.InteriorWorldManager;
 import com.pixel.piece.Piece;
@@ -75,6 +76,8 @@ public class PacketLoadInterior extends Packet {
 		PlayerManager.getPlayer(userID).worldID = worldID;
 		PlayerManager.getPlayer(userID).inside = true;
 		PlayerManager.getPlayer(userID).setPosition(1.5F, 4F);
+		
+		BuildingListener.setWorld(userID, worldID);
 		
 		PlayerManager.sendPlayers(userID);
 		PlayerManager.broadcastPacket(new PacketUpdatePlayer(userID));
