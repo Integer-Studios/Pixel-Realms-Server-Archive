@@ -12,6 +12,8 @@ public class EntityAlive extends Entity {
 	public float speed;
 	public float health = 100F;
 	public ItemStack[] drops;
+	public boolean shouldKill = false;
+	public Entity killerDamageSource;
 	
 	public EntityAlive(float x, float y, float width, float height, boolean propagate) {
 		super(x, y, width, height, propagate);
@@ -42,8 +44,8 @@ public class EntityAlive extends Entity {
 	public void damage(WorldServer w, float damage, Entity damageSource) {
 		this.health -= damage;
 		if (this.health <= 0.0F) {
-			this.kill(w, damageSource);
-			
+			shouldKill = true;
+			killerDamageSource = damageSource;
 		}
 		
 		updated = false;
@@ -51,7 +53,10 @@ public class EntityAlive extends Entity {
 	
 	public void tick(WorldServer w) {
 		super.tick(w);
-
+		if (shouldKill) {
+			shouldKill = false;
+			kill(w, killerDamageSource);
+		}
 	}
 
 	public void kill(WorldServer w, Entity damageSource) {
