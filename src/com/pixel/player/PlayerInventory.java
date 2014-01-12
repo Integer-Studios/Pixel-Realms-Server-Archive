@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.pixel.communication.CommunicationServer;
 import com.pixel.communication.CommunicationServlet;
+import com.pixel.communication.packet.PacketLoginStage;
 import com.pixel.communication.packet.PacketUpdateInventoryContent;
 import com.pixel.inventory.Inventory;
 import com.pixel.inventory.InventoryContent;
@@ -47,6 +48,8 @@ public class PlayerInventory {
 			CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID), new PacketUpdateInventoryContent(c.x,c.y,c.itemstack.item.id, c.itemstack.size, 2));
 
 		}
+		
+		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID), new PacketLoginStage(2, 1F));
 		
 	}
 	

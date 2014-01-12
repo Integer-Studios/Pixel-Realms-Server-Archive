@@ -1,16 +1,17 @@
 package com.pixel.chat;
 
 import java.awt.Color;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.pixel.admin.PixelLogger;
 import com.pixel.communication.packet.PacketChat;
 import com.pixel.communication.packet.PacketChangePiece;
 import com.pixel.communication.packet.PacketUpdatePlayer;
 import com.pixel.entity.EntityPlayer;
-import com.pixel.entity.EntityPog;
 import com.pixel.item.Item;
 import com.pixel.item.ItemStack;
 import com.pixel.piece.Piece;
@@ -44,6 +45,14 @@ public class ChatManager {
 
 				PlayerManager.sendMessage(msg.userID, "Spawning Spawner at your position!", Color.RED);
 				
+			} else if (msg.text.equalsIgnoreCase("time")) {
+				
+				java.util.Date date1= new java.util.Date();
+				long currentTimestamp = new Timestamp(date1.getTime()).getTime();
+				
+				PixelLogger.debug("Current World Time: ", PixelRealmsServer.world.time);
+				PixelLogger.debug("Current Time: ", currentTimestamp);
+
 			} else if (msg.text.equalsIgnoreCase("locate") || msg.text.equalsIgnoreCase("loc")) {
 				
 				EntityPlayer p = PlayerManager.getPlayer(msg.userID);

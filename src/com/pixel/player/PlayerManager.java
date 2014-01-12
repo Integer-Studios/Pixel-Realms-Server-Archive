@@ -1,4 +1,7 @@
+
+
 package com.pixel.player;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +19,7 @@ import com.pixel.communication.packet.Packet;
 import com.pixel.communication.packet.PacketChat;
 import com.pixel.communication.packet.PacketLoadPlayer;
 import com.pixel.communication.packet.PacketLogin;
+import com.pixel.communication.packet.PacketLoginStage;
 import com.pixel.communication.packet.PacketLogout;
 import com.pixel.communication.packet.PacketUpdateInteriorPiece;
 import com.pixel.communication.packet.PacketUpdateLivingEntity;
@@ -111,6 +115,8 @@ public class PlayerManager {
 		
 		}
 		
+		sendPacketToPlayer(userID, new PacketLoginStage(3, 1F));
+		
 	}
 	
 	public static void sendEntities(int userID) {
@@ -119,6 +125,8 @@ public class PlayerManager {
 			sendPacketToPlayer(userID, new PacketUpdateLivingEntity((EntityAlive)entity));
 		
 		}
+
+		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID), new PacketLoginStage(4, 1F));
 		
 	}
 	

@@ -1,6 +1,7 @@
 package com.pixel.world;
 
 import java.awt.Color;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,6 +13,7 @@ import com.pixel.communication.packet.PacketChat;
 import com.pixel.communication.packet.PacketUpdateConstructionSite;
 import com.pixel.communication.packet.PacketChangePiece;
 import com.pixel.communication.packet.PacketUpdateTile;
+import com.pixel.communication.packet.PacketUpdateTime;
 import com.pixel.entity.Entity;
 import com.pixel.entity.EntityAlive;
 import com.pixel.entity.EntityPlayer;
@@ -40,6 +42,11 @@ public class WorldServer {
 	public static ConcurrentHashMap<Integer, PieceBuilding> buildings = new ConcurrentHashMap<Integer,PieceBuilding>();
 	public static ConcurrentHashMap<Integer, Entity> entities = new ConcurrentHashMap<Integer,Entity>();
 	public static boolean init = false;
+	public long time = 12000;
+	public long timeSinceStart = 0;
+	public long dayLength = 24000;
+	public long lastTimestamp;
+	public long total;
 	
 	public static int defautTile = 0;
 	
@@ -70,10 +77,39 @@ public class WorldServer {
 		
 	}
 	
+	public long getTime() {
+		return time;
+	}
+	
+	public long getTimeOfDay() {
+		return time % dayLength;
+	}
+
+	
 	public void tick() {
+
+		time++;
+		timeSinceStart++;
+		
+		java.util.Date date1= new java.util.Date();
+		long currentTimestamp = new Timestamp(date1.getTime()).getTime();	
+		
+		long timeBetween = currentTimestamp - lastTimestamp;
+		
+		total += timeBetween;
+		
+		if ((time / 3000) ==  ((int) (time / 3000))) {
+			
+			timeBetween = total / timeSinceStart;
+			
+			PlayerManager.broadcastPacket(new PacketUpdateTime(this, timeBetween));
+			
+		}
+		
+		java.util.Date date= new java.util.Date();
+		lastTimestamp = new Timestamp(date.getTime()).getTime();		
 		
 		PlayerManager.tick();
-
 
 		for (Entity entity : entities.values()) {
 			try {

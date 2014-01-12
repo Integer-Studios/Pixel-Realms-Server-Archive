@@ -1,7 +1,5 @@
 package com.pixel.entity.ai;
 
-import java.util.Random;
-
 import com.badlogic.gdx.math.Rectangle;
 import com.pixel.admin.PixelLogger;
 import com.pixel.entity.EntityPlayer;
@@ -133,8 +131,8 @@ public class GroupPog extends Group {
 								
 								if (Piece.info[WorldServer.pieces[b].id].shouldCollide) {
 									
-									float diffXOb = WorldServer.pieces[b].posX - p.posX;
-									float diffYOb = WorldServer.pieces[b].posY - p.posY;
+//									float diffXOb = WorldServer.pieces[b].posX - p.posX;
+//									float diffYOb = WorldServer.pieces[b].posY - p.posY;
 //									Random r = new Random();
 //									if (diffXOb < diffYOb) {
 //										
