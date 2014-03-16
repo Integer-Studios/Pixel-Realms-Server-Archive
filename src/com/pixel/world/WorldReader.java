@@ -43,6 +43,8 @@ public class WorldReader {
 		    		}
 		    		
 		    		WorldServer.c = width;
+		    		WorldServer.pieces = new Piece[WorldServer.c * WorldServer.c];
+		    		WorldServer.generateSquareMap();
 				    log("Reading tile map...");
 
 		    		int[] data = (int[]) grabber.getPixels();

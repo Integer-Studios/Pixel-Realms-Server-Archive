@@ -53,6 +53,12 @@ public class ChatManager {
 				PixelLogger.debug("Current World Time: ", PixelRealmsServer.world.time);
 				PixelLogger.debug("Current Time: ", currentTimestamp);
 
+			} else if (msg.text.contains("set time ")) {
+				
+				String number = msg.text.split(" time ")[1];
+				long time = Long.parseLong(number);
+				PixelRealmsServer.world.setTime(time);
+				
 			} else if (msg.text.equalsIgnoreCase("locate") || msg.text.equalsIgnoreCase("loc")) {
 				
 				EntityPlayer p = PlayerManager.getPlayer(msg.userID);

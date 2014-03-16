@@ -84,6 +84,17 @@ public class WorldServer {
 	public long getTimeOfDay() {
 		return time % dayLength;
 	}
+	
+	public void setTime(long time) {
+		
+		this.time = time;
+		java.util.Date date1= new java.util.Date();
+		long currentTimestamp = new Timestamp(date1.getTime()).getTime();	
+		
+		long timeBetween = currentTimestamp - lastTimestamp;
+		PlayerManager.broadcastPacket(new PacketUpdateTime(this, timeBetween));
+		
+	}
 
 	
 	public void tick() {
@@ -208,7 +219,7 @@ public class WorldServer {
 		new WorldReader(this).readWorld();
 	}
 	
-	public void generateSquareMap() {
+	public static void generateSquareMap() {
 
 		for (int y = 0; y < c; y++) {
 			for (int x = 0; x < c; x++) {
@@ -386,6 +397,12 @@ public class WorldServer {
 
 	public static void propagatePiece(Piece piece) {
 
+		if (pieces == null) {
+			
+			System.out.println("C");
+			
+		}
+		
 		pieces[(piece.posY * c) + piece.posX] = piece;
 
 	}
