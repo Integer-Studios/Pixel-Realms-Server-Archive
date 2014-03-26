@@ -119,6 +119,11 @@ public class ChatManager {
 				PlayerManager.getPlayer(msg.userID).giveItem(new ItemStack(Item.rock, 50));
 				PlayerManager.getPlayer(msg.userID).giveItem(new ItemStack(Item.logPine, 50));
 
+			} else if (msg.text.equals("fire")) {
+				int x = ((int)PlayerManager.getPlayer(msg.userID).getX()) + 2;
+				int y = ((int)PlayerManager.getPlayer(msg.userID).getY()) + 2;
+				PlayerManager.broadcastPacket(new PacketChangePiece(new Piece(x, y, 29, true)));
+
 			}
 		
 //			} else if (msg.text.startsWith("")) {
