@@ -37,9 +37,10 @@ public class WorldServer {
 	public int worldSaveCount = 0;
 	public static int c = 400;
 	public static int tileConstant = 48;
-	public static ConcurrentHashMap<Integer, Tile> tiles = new ConcurrentHashMap<Integer,Tile>();
-	public static Piece[] pieces;
-	public static ConcurrentHashMap<Integer, PieceBuilding> buildings = new ConcurrentHashMap<Integer,PieceBuilding>();
+	public static ConcurrentHashMap<Integer, WorldChunk> chunks = new ConcurrentHashMap<Integer,WorldChunk>();
+//	public static ConcurrentHashMap<Integer, Tile> tiles = new ConcurrentHashMap<Integer,Tile>();
+//	public static Piece[] pieces;
+//	public static ConcurrentHashMap<Integer, PieceBuilding> buildings = new ConcurrentHashMap<Integer,PieceBuilding>();
 	public static ConcurrentHashMap<Integer, Entity> entities = new ConcurrentHashMap<Integer,Entity>();
 	public static boolean init = false;
 	public long time = 12000;
@@ -60,7 +61,7 @@ public class WorldServer {
 			new WorldReader(this).readWorld();
 			PixelLogger.print("Pixel Map Loaded!", PixelColor.PURPLE);
 		} else {
-			pieces = new Piece[c * c];
+//			pieces = new Piece[c * c];
 			PixelLogger.print("Loading World...", PixelColor.PURPLE);
 			load();
 			PixelLogger.print("World Loaded!", PixelColor.PURPLE);
@@ -122,18 +123,58 @@ public class WorldServer {
 		
 		PlayerManager.tick();
 
-		for (Entity entity : entities.values()) {
+//		for (Entity entity : entities.values()) {
+//			try {
+//				Thread.sleep(2);
+//			} catch (Exception e){}
+//
+//			entity.tick(this);
+//
+//		}
+//
+//		for (int i = 0; i < pieces.length; i++) {
+//			pieces[i].tick(this);
+//		}
+		
+		for (WorldChunk chunk : chunks.values()) {
+			
 			try {
 				Thread.sleep(2);
 			} catch (Exception e){}
 
-			entity.tick(this);
-
+			chunk.tick(this);
+			
 		}
+		
+	}
+	
+	public ArrayList<WorldChunk> getChunksToLoad(int posX, int posY, int userID) {
+		
+		int r = 5;
+		int x = posX >> 4;
+		int y = posY >> 4;
+		
+		int aX = x - r;
+		int bX = x + r;
+		int aY = y - r;
+		int bY = y + r;
+		
+		ArrayList<WorldChunk> chunksToLoad = new ArrayList<WorldChunk>();
+		
+		for (int tY = aY; y <= bY; tY ++) {
 
-		for (int i = 0; i < pieces.length; i++) {
-			pieces[i].tick(this);
+			for (int tX = aX; x <= bX; tX ++) {
+
+				int id = (tY * (c >> 4)) + tX;
+
+				if (!PlayerManager.getPlayer(userID).loadedChunks.contains(id))
+					chunksToLoad.add(getChunk(tX, tY));
+				
+			}
+			
 		}
+		
+		return chunksToLoad;
 		
 	}
 	
@@ -289,44 +330,44 @@ public class WorldServer {
 	}
 
 	public static void setTile(int x, int y, int id, int metadata) {
-		tiles.put((y * c) + x, new Tile(x, y, id, metadata));
+		new Tile(x, y, id, metadata);
 		PlayerManager.broadcastPacket(new PacketUpdateTile(id, x, y));
 	}
 
 	public static int getTile(int x, int y) {
-		return tiles.get((y * c) + x).id;
+		return getChunk(x, y).getTile(x, y).id;
 	}
 
 	public static Tile getTileObject(int x, int y) {
-		return tiles.get((y * c) + x);
+		return getChunk(x, y).getTile(x, y);
 	}
 	
 	public static void setPieceObject(int x, int y, Piece p) {
-		pieces[((y * c) + x)] = p;
+		getChunk(x, y).setPiece(p);
 	}
 
 	public static void setPiece(int x, int y, int id) {
-		pieces[((y * c) + x)] = new Piece(x, y, id, true);
+		new Piece(x, y, id, true);
 
-		PlayerManager.broadcastPacket(new PacketChangePiece(pieces[((y * c) + x)]));
+		PlayerManager.broadcastPacket(new PacketChangePiece(getPieceObject(x, y)));
 
 	}
 
 	public static void setPiece(int x, int y, int id, int damage, int metadata, int buildingID) {
 
 		if (buildingID == -1) {
-			pieces[((y * c) + x)] = new Piece(x, y, id, true);
-			pieces[((y * c) + x)].damage = damage;
-			pieces[((y * c) + x)].metadata = metadata;
+			new Piece(x, y, id, true);
+			getPieceObject(x, y).damage = damage;
+			getPieceObject(x, y).metadata = metadata;
 
-			PlayerManager.broadcastPacket(new PacketChangePiece(pieces[((y * c) + x)]));
+			PlayerManager.broadcastPacket(new PacketChangePiece(getPieceObject(x, y)));
 		} else if (Building.canBuildingFit(buildingID, x, y)) {
 			
-			pieces[((y * c) + x)] = new Piece(x, y, id, true);
-			pieces[((y * c) + x)].damage = damage;
-			pieces[((y * c) + x)].metadata = metadata;
+			new Piece(x, y, id, true);
+			getPieceObject(x, y).damage = damage;
+			getPieceObject(x, y).metadata = metadata;
 
-			PlayerManager.broadcastPacket(new PacketChangePiece(pieces[((y * c) + x)]));
+			PlayerManager.broadcastPacket(new PacketChangePiece(getPieceObject(x, y)));
 
 		}
 
@@ -334,11 +375,11 @@ public class WorldServer {
 	}
 	
 	public static int getPiece(int x, int y) {
-		return pieces[(y * c) + x].id;
+		return getChunk(x, y).getPiece(x, y).id;
 	}
 
 	public static Piece getPieceObject(int x, int y) {
-		return pieces[(y * c) + x];
+		return getChunk(x, y).getPiece(x, y);
 	}
 	
 	public static Entity getEntity(int serverID) {
@@ -397,19 +438,13 @@ public class WorldServer {
 
 	public static void propagatePiece(Piece piece) {
 
-		if (pieces == null) {
-			
-			System.out.println("C");
-			
-		}
-		
-		pieces[(piece.posY * c) + piece.posX] = piece;
+		getChunk(piece).propagatePiece(piece);
 
 	}
 
 	public static void propagateTile(Tile tile) {
 
-		tiles.put((tile.posY * c) + tile.posX, tile);
+		getChunk(tile).propagateTile(tile);
 		
 	}
 	
@@ -445,8 +480,8 @@ public class WorldServer {
 			
 		}
 		
-		tiles.clear();
-		pieces = new Piece[c * c];
+//		tiles.clear();
+//		pieces = new Piece[c * c];
 		entities.clear();
 		
 		for (int x = 0; x < tileSave.size(); x ++) {
@@ -470,23 +505,23 @@ public class WorldServer {
 
 		}
 		
-		for (int y = 0; y < c; y++) {
-			for (int x = 0; x < c; x++) {
-				
-				if (pieces[((y * c) + x)] == null) {
-					
-					new Piece(x, y, 0, true);
-					
-				}
-				
-			}
-		}
-		
-		for (int x = 0; x < pieces.length; x ++) {
-			
-			
-			
-		}
+//		for (int y = 0; y < c; y++) {
+//			for (int x = 0; x < c; x++) {
+//				
+//				if (pieces[((y * c) + x)] == null) {
+//					
+//					new Piece(x, y, 0, true);
+//					
+//				}
+//				
+//			}
+//		}
+//		
+//		for (int x = 0; x < pieces.length; x ++) {
+//			
+//			
+//			
+//		}
 
 		for (int x = 0; x < entitySave.size(); x ++) {
 
@@ -504,7 +539,36 @@ public class WorldServer {
 		
 		
 	}
+	
+	public static WorldChunk getChunk(Tile tile) {
+		
+		return getChunk(tile.posX, tile.posY);
 
+	}
+
+	public static WorldChunk getChunk(Piece piece) {
+
+		return getChunk(piece.posX, piece.posY);
+
+	}
+
+	public static WorldChunk getChunk(int x, int y) {
+		
+		int id = (y * (c >> 4)) + x;
+		
+		if (chunks.containsKey(id)) {
+			
+			return (chunks.get(id));
+			
+		} else {
+			
+			return new WorldChunk(PixelRealmsServer.world, x, y);
+			
+		}
+		
+	}
+
+	
 	public void save() {
 		
 		PlayerManager.broadcastPacket(new PacketChat(new ChatMessage("Server", "Saving World...", Color.RED, 0)));
@@ -512,6 +576,12 @@ public class WorldServer {
 		
 		PlayerManager.save();
 		new Thread(new WorldSaveThread(this)).start();
+		
+	}
+
+	public static void propagateChunk(WorldChunk chunk) {
+
+		chunks.put((chunk.y * (c >> 4)) + chunk.x, chunk);
 		
 	}
 	

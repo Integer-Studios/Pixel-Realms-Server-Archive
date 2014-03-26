@@ -3,6 +3,7 @@ package com.pixel.util;
 import com.badlogic.gdx.math.Rectangle;
 import com.pixel.entity.Entity;
 import com.pixel.piece.Piece;
+import com.pixel.world.WorldChunk;
 import com.pixel.world.WorldServer;
 
 public class CollisionBox {
@@ -54,19 +55,19 @@ public static boolean testEntitiesAgainstPoint(Entity sender, float x, float y, 
 
 	}
 	
-	public static int testPiecesAgainstCollisionBox(Rectangle r, WorldServer w) {
+	public static Piece testPiecesAgainstCollisionBox(Rectangle r, WorldServer w) {
 		
-		for (int b = 0; b < WorldServer.pieces.length; b ++) {
-
-			Piece p = WorldServer.pieces[b];
+		for (WorldChunk c : WorldServer.chunks.values()) {
 			
-			if (r.overlaps(p.getCollisionBox()) && Piece.info[p.id].isCollectable) {
-				return b;
+			for (Piece p : c.pieces.values()) {
+				if (r.overlaps(p.getCollisionBox()) && Piece.info[p.id].isCollectable) {
+					return p;
+				}
 			}
-
+			
 		}
 		
-		return -1;
+		return null;
 
 	}
 	

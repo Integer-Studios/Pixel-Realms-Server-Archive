@@ -117,6 +117,7 @@ public class Piece {
 	public int metadata;
 	public int posX;
 	public int posY;
+	public int lightID;
 	public int damage = 10;
 	public boolean playerInCollidedPosition;
 	public Rectangle collisionBox;

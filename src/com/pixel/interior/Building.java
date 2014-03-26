@@ -56,9 +56,9 @@ public class Building {
 			
 			for (int i = y; i > (y - height); i --) {
  
-				if (WorldServer.pieces[((i * WorldServer.c) + b)] != null) {
+				if (WorldServer.getPieceObject(b, i) != null) {
 					
-					int tempID = WorldServer.pieces[((i * WorldServer.c) + b)].id;
+					int tempID = WorldServer.getPieceObject(b, i).id;
 					
 					if (tempID != 0 && tempID != 1 && tempID != 2 && tempID != 3) {
 						

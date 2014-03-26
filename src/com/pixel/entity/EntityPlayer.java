@@ -1,5 +1,7 @@
 package com.pixel.entity;
 
+import java.util.ArrayList;
+
 import com.pixel.item.ItemStack;
 import com.pixel.player.PlayerInventory;
 import com.pixel.player.PlayerManager;
@@ -19,6 +21,7 @@ public class EntityPlayer extends Entity {
 	public boolean loaded;
 	public float oldX, oldY;
 	public float health = 100F;
+	public ArrayList<Integer> loadedChunks = new ArrayList<Integer>();
 	
 	public EntityPlayer(String username, int userID) {
 		super(200, 200, .9F, .2F, false);

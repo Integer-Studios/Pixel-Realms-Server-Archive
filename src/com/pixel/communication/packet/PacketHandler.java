@@ -142,4 +142,10 @@ public class PacketHandler {
 		
 	}
 
+	public static void processEntityAnimation(PacketEntityAnimation packet) {
+
+		PlayerManager.broadcastPacket(packet);
+		
+	}
+
 }

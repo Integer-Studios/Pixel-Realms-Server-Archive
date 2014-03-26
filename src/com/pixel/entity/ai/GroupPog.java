@@ -125,11 +125,11 @@ public class GroupPog extends Group {
 							
 							Rectangle box = new Rectangle((p.getX() + p.velocityX) - (p.width/2), (p.getY() + p.velocityY) - (p.height/2), p.width, p.health);
 
-							int b = CollisionBox.testPiecesAgainstCollisionBox(box, w);
+							Piece b = CollisionBox.testPiecesAgainstCollisionBox(box, w);
 
-							if (b != -1) {
+							if (b != null) {
 								
-								if (Piece.info[WorldServer.pieces[b].id].shouldCollide) {
+//								if (Piece.info[WorldServer.pieces[b].id].shouldCollide) {
 									
 //									float diffXOb = WorldServer.pieces[b].posX - p.posX;
 //									float diffYOb = WorldServer.pieces[b].posY - p.posY;
@@ -155,7 +155,7 @@ public class GroupPog extends Group {
 //									p.velocityX = (float) (Math.cos(angle) * p.speed);
 //									p.velocityY = (float) (Math.sin(angle) * p.speed);
 									
-								}
+//								}
 								
 							}
 

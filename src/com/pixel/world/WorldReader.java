@@ -43,7 +43,6 @@ public class WorldReader {
 		    		}
 		    		
 		    		WorldServer.c = width;
-		    		WorldServer.pieces = new Piece[WorldServer.c * WorldServer.c];
 		    		WorldServer.generateSquareMap();
 				    log("Reading tile map...");
 
@@ -90,8 +89,6 @@ public class WorldReader {
 			    		}
 			    		
 			    		WorldServer.c = width;
-			    		
-			    		WorldServer.pieces = new Piece[WorldServer.c * WorldServer.c];
 			    		
 					    log("Reading piece map...");
 					    
