@@ -27,7 +27,8 @@ public class WorldChunk {
 		this.world = world;
 		this.x = x; 
 		this.y = y;
-		
+		pieces = new ConcurrentHashMap<Integer, Piece>();
+
 		WorldServer.propagateChunk(this);
 		
 	}

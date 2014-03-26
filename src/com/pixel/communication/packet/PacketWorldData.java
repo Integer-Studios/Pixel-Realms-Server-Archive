@@ -83,7 +83,7 @@ public class PacketWorldData extends Packet {
 				
 			}
 			
-//			output.writeInt(c.size());
+//			/output.writeInt(PlayerManager.players);
 //			
 //			for (int x = 0; x < loadPlayers.size(); x ++) {
 //

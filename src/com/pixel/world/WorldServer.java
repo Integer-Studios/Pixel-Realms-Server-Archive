@@ -161,12 +161,12 @@ public class WorldServer {
 		
 		ArrayList<WorldChunk> chunksToLoad = new ArrayList<WorldChunk>();
 		
-		for (int tY = aY; y <= bY; tY ++) {
+		for (int tY = aY; tY <= bY; tY ++) {
 
-			for (int tX = aX; x <= bX; tX ++) {
+			for (int tX = aX; tX <= bX; tX ++) {
 
 				int id = (tY * (c >> 4)) + tX;
-
+				
 				if (!PlayerManager.getPlayer(userID).loadedChunks.contains(id))
 					chunksToLoad.add(getChunk(tX, tY));
 				
