@@ -14,6 +14,8 @@ import com.pixel.communication.packet.PacketUpdatePlayer;
 import com.pixel.entity.EntityPlayer;
 import com.pixel.item.Item;
 import com.pixel.item.ItemStack;
+import com.pixel.lighting.PixelLight;
+import com.pixel.lighting.PixelLightType;
 import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
 import com.pixel.player.PlayerManager;
@@ -112,6 +114,11 @@ public class ChatManager {
 					}
 					
 				}
+			}  else if (msg.text.equals("light")) {
+				int x = ((int)PlayerManager.getPlayer(msg.userID).getX());
+				int y = ((int)PlayerManager.getPlayer(msg.userID).getY());
+				new PixelLight(x, y, 400, 400, PixelLightType.DEFAULT);
+
 			} else if (msg.text.equals("kit")) {
 				
 				PlayerManager.getPlayer(msg.userID).giveItem(new ItemStack(Item.testAxe, 1));

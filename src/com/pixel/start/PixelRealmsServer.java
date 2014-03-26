@@ -3,6 +3,7 @@ package com.pixel.start;
 import java.io.IOException;
 
 import com.pixel.admin.CommandLine;
+import com.pixel.communication.CommunicationInfoServer;
 import com.pixel.communication.CommunicationServer;
 import com.pixel.util.FileItem;
 import com.pixel.util.TextFile;
@@ -13,6 +14,7 @@ public class PixelRealmsServer extends Thread {
 	public static WorldServer world;
 	public GameServer game;
 	public static int port;
+	public CommunicationInfoServer is;
 	
 	public static void main(String[] args) {
 
@@ -26,7 +28,9 @@ public class PixelRealmsServer extends Thread {
 		
 		CommunicationServer server = new CommunicationServer(port);
 		new Thread(server).start();
-		
+		is = new CommunicationInfoServer();
+		new Thread(is).start();
+
 		CommandLine commandLine = new CommandLine();
 		commandLine.start();
 		

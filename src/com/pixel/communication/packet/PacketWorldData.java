@@ -7,9 +7,13 @@ import java.util.ArrayList;
 
 import com.pixel.communication.CommunicationServer;
 import com.pixel.communication.CommunicationServlet;
+import com.pixel.entity.Entity;
+import com.pixel.piece.Piece;
+import com.pixel.piece.PieceBuilding;
 import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
-import com.pixel.world.WorldComponent;
+import com.pixel.tile.Tile;
+import com.pixel.world.WorldChunk;
 import com.pixel.world.WorldServer;
 
 public class PacketWorldData extends Packet {
@@ -26,68 +30,70 @@ public class PacketWorldData extends Packet {
 	@Override
 	public void writeData(DataOutputStream output) throws IOException {
 		
-		ArrayList<ArrayList<WorldComponent>> components = PixelRealmsServer.world.getComponentsToLoad((int)PlayerManager.getPlayer(userID).getX(), (int)PlayerManager.getPlayer(userID).getY(), userID);
+		ArrayList<WorldChunk> chunks = PixelRealmsServer.world.getChunksToLoad((int)PlayerManager.getPlayer(userID).getX(), (int)PlayerManager.getPlayer(userID).getY(), userID);
 		
-		ArrayList<WorldComponent> loadTiles = components.get(0);
-		ArrayList<WorldComponent> loadPieces = components.get(1);
-		ArrayList<WorldComponent> loadEntities = components.get(2);
-		ArrayList<WorldComponent> loadPlayers = components.get(3);
-
 		output.writeInt(WorldServer.c);
-		output.writeInt(loadTiles.size());
+		output.writeInt(chunks.size());
 		
-		for (int x = 0; x < loadTiles.size(); x ++) {
+		for (WorldChunk c : chunks) {
 			
-			output.writeInt(loadTiles.get(x).id);
-			output.writeInt((int) loadTiles.get(x).posX);
-			output.writeInt((int) loadTiles.get(x).posY);
-			output.writeInt((int) loadTiles.get(x).metadata);
+			output.writeInt(c.x);
+			output.writeInt(c.y);
 			
-		}
+			output.writeInt(c.tiles.size());
+			for (Tile t : c.tiles.values()) {
+				
+				output.writeInt(t.id);
+				output.writeInt(t.posX);
+				output.writeInt(t.posY);
+				output.writeInt(t.metadata);
 
-		output.writeInt(loadPieces.size());
-
-		for (int x = 0; x < loadPieces.size(); x ++) {
+			}
 			
-			output.writeInt(loadPieces.get(x).id);
-			output.writeInt((int) loadPieces.get(x).posX);
-			output.writeInt((int) loadPieces.get(x).posY);
-			output.writeInt((int) loadPieces.get(x).damage);
-			output.writeInt((int) loadPieces.get(x).metadata);
-			if (loadPieces.get(x).buildingID != -1) {
+			output.writeInt(c.pieces.size());
+			for (Piece p : c.pieces.values()) {
 				
-				output.writeBoolean(true);
-				output.writeInt(loadPieces.get(x).worldID);
-				output.writeInt(loadPieces.get(x).buildingID);
+				output.writeInt(p.id);
+				output.writeInt(p.posX);
+				output.writeInt(p.posY);
+				output.writeInt(p.metadata);
+				output.writeInt(p.damage);
+				output.writeInt(p.lightID);
+				if (p instanceof PieceBuilding) {
+					
+					output.writeBoolean(true);
+					output.writeInt(((PieceBuilding) p).building.worldID);
+					output.writeInt(((PieceBuilding) p).building.id);
+					
+				} else {
+					
+					output.writeBoolean(false);
+					
+				}
+			}
+			
+			output.writeInt(c.entities.size());
+
+			for (Entity e : c.entities.values()) {
 				
-			} else {
-				
-				output.writeBoolean(false);
+				output.writeInt(e.id);
+				output.writeFloat(e.getX());
+				output.writeFloat(e.getY());
+				output.writeInt(e.serverID);
 				
 			}
-
-		}
-		
-		output.writeInt(loadEntities.size());
-
-		for (int x = 0; x < loadEntities.size(); x ++) {
 			
-			output.writeInt(loadEntities.get(x).id);
-			output.writeFloat(loadEntities.get(x).posX);
-			output.writeFloat(loadEntities.get(x).posY);
-			output.writeInt(loadEntities.get(x).serverID);
-			
-		}
-		
-		output.writeInt(loadPlayers.size());
-		
-		for (int x = 0; x < loadPlayers.size(); x ++) {
+//			output.writeInt(c.size());
+//			
+//			for (int x = 0; x < loadPlayers.size(); x ++) {
+//
+//				output.writeInt(loadPlayers.get(x).userID);
+//				Packet.writeString(loadPlayers.get(x).username, output);
+//				output.writeFloat(loadPlayers.get(x).posX);
+//				output.writeFloat(loadPlayers.get(x).posY);
+//				
+//			}
 
-			output.writeInt(loadPlayers.get(x).userID);
-			Packet.writeString(loadPlayers.get(x).username, output);
-			output.writeFloat(loadPlayers.get(x).posX);
-			output.writeFloat(loadPlayers.get(x).posY);
-			
 		}
 		
 	}
