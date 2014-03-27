@@ -554,15 +554,16 @@ public class WorldServer {
 
 	public static WorldChunk getChunk(int x, int y) {
 		
-		int id = (y * (c >> 4)) + x;
+		int id = ((y >> 4) * (c >> 4)) + (x >> 4);
+		
 		
 		if (chunks.containsKey(id)) {
 			
 			return (chunks.get(id));
 			
 		} else {
-			
-			return new WorldChunk(PixelRealmsServer.world, x, y);
+
+			return new WorldChunk(PixelRealmsServer.world, (x >> 4), (y >> 4));
 			
 		}
 		
@@ -582,7 +583,6 @@ public class WorldServer {
 	public static void propagateChunk(WorldChunk chunk) {
 
 		chunks.put((chunk.y * (c >> 4)) + chunk.x, chunk);
-		
 	}
 	
 }
