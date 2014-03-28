@@ -40,6 +40,8 @@ public class PacketWorldData extends Packet {
 			output.writeInt(c.x);
 			output.writeInt(c.y);
 			
+			System.out.println("C: " + c.x + " " + c.y);
+			
 			output.writeInt(c.tiles.size());
 			for (Tile t : c.tiles.values()) {
 				

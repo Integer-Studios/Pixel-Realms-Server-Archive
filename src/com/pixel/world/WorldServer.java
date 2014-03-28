@@ -150,14 +150,18 @@ public class WorldServer {
 	
 	public ArrayList<WorldChunk> getChunksToLoad(int posX, int posY, int userID) {
 		
-		int r = 5;
+		int r = 2;
 		int x = posX >> 4;
 		int y = posY >> 4;
-		
+		System.out.println(x + " " + y);
 		int aX = x - r;
 		int bX = x + r;
 		int aY = y - r;
 		int bY = y + r;
+		
+		int a = 0;
+		
+		System.out.println(aX + " " + aY + " " + bX + " " + bY);
 		
 		ArrayList<WorldChunk> chunksToLoad = new ArrayList<WorldChunk>();
 		
@@ -167,8 +171,11 @@ public class WorldServer {
 
 				int id = (tY * (c >> 4)) + tX;
 				
-				if (!PlayerManager.getPlayer(userID).loadedChunks.contains(id))
-					chunksToLoad.add(getChunk(tX, tY));
+				if (!PlayerManager.getPlayer(userID).loadedChunks.contains(id)) {
+					chunksToLoad.add(getChunk(tX, tY, true));
+					a ++;
+					System.out.println("B: " + a + " " + tX + " " + tY);
+				}
 				
 			}
 			
@@ -335,15 +342,15 @@ public class WorldServer {
 	}
 
 	public static int getTile(int x, int y) {
-		return getChunk(x, y).getTile(x, y).id;
+		return getChunk(x, y, false).getTile(x, y).id;
 	}
 
 	public static Tile getTileObject(int x, int y) {
-		return getChunk(x, y).getTile(x, y);
+		return getChunk(x, y, false).getTile(x, y);
 	}
 	
 	public static void setPieceObject(int x, int y, Piece p) {
-		getChunk(x, y).setPiece(p);
+		getChunk(x, y, false).setPiece(p);
 	}
 
 	public static void setPiece(int x, int y, int id) {
@@ -375,11 +382,11 @@ public class WorldServer {
 	}
 	
 	public static int getPiece(int x, int y) {
-		return getChunk(x, y).getPiece(x, y).id;
+		return getChunk(x, y, false).getPiece(x, y).id;
 	}
 
 	public static Piece getPieceObject(int x, int y) {
-		return getChunk(x, y).getPiece(x, y);
+		return getChunk(x, y, false).getPiece(x, y);
 	}
 	
 	public static Entity getEntity(int serverID) {
@@ -542,33 +549,39 @@ public class WorldServer {
 	
 	public static WorldChunk getChunk(Tile tile) {
 		
-		return getChunk(tile.posX, tile.posY);
+		return getChunk(tile.posX, tile.posY, false);
 
 	}
 
 	public static WorldChunk getChunk(Piece piece) {
 
-		return getChunk(piece.posX, piece.posY);
+		return getChunk(piece.posX, piece.posY, false);
 
 	}
 
-	public static WorldChunk getChunk(int x, int y) {
-		
-		int id = ((y >> 4) * (c >> 4)) + (x >> 4);
-		
-		
+	public static WorldChunk getChunk(int x, int y, boolean chunk) {
+
+		int id = 0;
+		if (chunk)
+			id = ((y) * (c >> 4)) + (x);
+		else
+			id = ((y >> 4) * (c >> 4)) + (x >> 4);
+
 		if (chunks.containsKey(id)) {
-			
+
 			return (chunks.get(id));
-			
+
 		} else {
 
-			return new WorldChunk(PixelRealmsServer.world, (x >> 4), (y >> 4));
-			
-		}
-		
-	}
+			if (chunk)
+				return new WorldChunk(PixelRealmsServer.world, (x), (y));
+			else
+				return new WorldChunk(PixelRealmsServer.world, (x >> 4), (y >> 4));
 
+		}
+
+	}
+	
 	
 	public void save() {
 		
@@ -583,6 +596,7 @@ public class WorldServer {
 	public static void propagateChunk(WorldChunk chunk) {
 
 		chunks.put((chunk.y * (c >> 4)) + chunk.x, chunk);
+
 	}
 	
 }
