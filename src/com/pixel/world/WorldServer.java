@@ -3,7 +3,10 @@ package com.pixel.world;
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.pixel.admin.PixelLogger;
@@ -37,10 +40,16 @@ public class WorldServer {
 	public int worldSaveCount = 0;
 	public static int c = 400;
 	public static int tileConstant = 48;
-	public static ConcurrentHashMap<Integer, WorldChunk> chunks = new ConcurrentHashMap<Integer,WorldChunk>();
-//	public static ConcurrentHashMap<Integer, Tile> tiles = new ConcurrentHashMap<Integer,Tile>();
-//	public static Piece[] pieces;
-//	public static ConcurrentHashMap<Integer, PieceBuilding> buildings = new ConcurrentHashMap<Integer,PieceBuilding>();
+	public static Map<Integer, WorldChunk> chunks = new TreeMap<Integer, WorldChunk>(new Comparator<Integer>() {
+		public int compare(Integer o1, Integer o2) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+	});
+	//	public static ConcurrentHashMap<Integer, WorldChunk> chunks = new ConcurrentHashMap<Integer,WorldChunk>();
+	//	public static ConcurrentHashMap<Integer, Tile> tiles = new ConcurrentHashMap<Integer,Tile>();
+	//	public static Piece[] pieces;
+	//	public static ConcurrentHashMap<Integer, PieceBuilding> buildings = new ConcurrentHashMap<Integer,PieceBuilding>();
 	public static ConcurrentHashMap<Integer, Entity> entities = new ConcurrentHashMap<Integer,Entity>();
 	public static boolean init = false;
 	public long time = 12000;
@@ -568,7 +577,7 @@ public class WorldServer {
 			id = ((y >> 4) * (c >> 4)) + (x >> 4);
 
 		if (chunks.containsKey(id)) {
-
+			
 			return (chunks.get(id));
 
 		} else {
@@ -597,6 +606,11 @@ public class WorldServer {
 
 		chunks.put((chunk.y * (c >> 4)) + chunk.x, chunk);
 
+	}
+
+	public static void finalizeChunks() {
+		
+		
 	}
 	
 }

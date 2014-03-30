@@ -26,115 +26,117 @@ public class WorldReader {
 	public void readWorld() {
 		 Image tileMap = Toolkit.getDefaultToolkit().getImage("map/tiles.png");
 
-		    PixelGrabber grabber = new PixelGrabber(tileMap, 0, 0, -1, -1, false);
-		    
-		    log("Pixel map loading...");
-		    
-		    try {
-		    	if (grabber.grabPixels()) {
-		    		
-				    log("Tile map loaded.");
-				    
-		    		int width = grabber.getWidth();
-		    		int height = grabber.getHeight();
-		    		if (width != height) {
-		    			PixelLogger.err("Tile map does not conform to c squared requirements (width != height). Aborting read.");
-		    			System.exit(-1);
-		    		}
-		    		
-		    		WorldServer.c = width;
-		    		WorldServer.generateSquareMap();
-				    log("Reading tile map...");
+		 PixelGrabber grabber = new PixelGrabber(tileMap, 0, 0, -1, -1, false);
 
-		    		int[] data = (int[]) grabber.getPixels();
-		    		int index = 0;
-		    		int id = -1;
-		    		for (int y = 0; y < WorldServer.c; y++) {
-		    			for (int x = 0; x < WorldServer.c; x++) {
-		    				id = getTileIDForColor(data[index]);
-		    				if (id != -1) {
-//		    					if (id != WorldServer.defautTile) {
-		    						new Tile(x, y, id, -1);
-//		    					}
-		    					log("Tile loaded at position: (" + x + ", " + y + ") with id:" + id);
-		    				} else {
-		    					err("Tile not loaded at (" + x + ", " + y + ")");
-	    						new Tile(x, y, WorldServer.defautTile, -1);
-		    				}
-		    				index++;
-		    			}
-		    		}
-				}
-			    log("Tile map read.");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		    
+		 log("Pixel map loading...");
 
-		    
-			 Image pieceMap = Toolkit.getDefaultToolkit().getImage("map/pieces.png");
+		 try {
+			 if (grabber.grabPixels()) {
 
-			    grabber = new PixelGrabber(pieceMap, 0, 0, -1, -1, false);
+				 log("Tile map loaded.");
 
-			    try {
-			    	if (grabber.grabPixels()) {
-			    		
-					    log("Piece map loaded.");
-			    		
-			    		int width = grabber.getWidth();
-			    		int height = grabber.getHeight();
-			    		if (width != height) {
-			    			PixelLogger.err("Piece map does not conform to c squared requirements (width != height). Aborting read.");
-			    			System.exit(-1);
-			    		}
-			    		
-			    		WorldServer.c = width;
-			    		
-					    log("Reading piece map...");
-					    
-			    		int[] data = (int[]) grabber.getPixels();
-			    		int index = 0;
-			    		int id = -1;
-			    		for (int y = 0; y < WorldServer.c; y++) {
-			    			for (int x = 0; x < WorldServer.c; x++) {
-			    				
-			    				id = getPieceIDForColor(data[index]);
-			    				if (id != -1) {
-				    				new Piece(x, y, id, true);
-			    					log("Piece loaded at position: (" + x + ", " + y + ") with id:" + id);
-			    				} else {
-			    					err("Piece not loaded at (" + x + ", " + y + ")");
-		    						new Piece(x, y, 0, true);
-			    				}
-			    				
-			    				index++;
-			    			}
-			    		}
-					}
-				    log("Piece map read.");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			    
-			    log("Pixel map read.");
-			    
-			    if (genBiome) {
-			    	
-			    	generateBiome();
-			    	
-			    }
+				 int width = grabber.getWidth();
+				 int height = grabber.getHeight();
+				 if (width != height) {
+					 PixelLogger.err("Tile map does not conform to c squared requirements (width != height). Aborting read.");
+					 System.exit(-1);
+				 }
+
+				 WorldServer.c = width;
+				 WorldServer.generateSquareMap();
+				 log("Reading tile map...");
+
+				 int[] data = (int[]) grabber.getPixels();
+				 int index = 0;
+				 int id = -1;
+				 for (int y = 0; y < WorldServer.c; y++) {
+					 for (int x = 0; x < WorldServer.c; x++) {
+						 id = getTileIDForColor(data[index]);
+						 if (id != -1) {
+							 //		    					if (id != WorldServer.defautTile) {
+							 new Tile(x, y, id, -1);
+							 //		    					}
+							 log("Tile loaded at position: (" + x + ", " + y + ") with id:" + id);
+						 } else {
+							 err("Tile not loaded at (" + x + ", " + y + ")");
+							 new Tile(x, y, WorldServer.defautTile, -1);
+						 }
+						 index++;
+					 }
+				 }
+			 }
+			 log("Tile map read.");
+		 } catch (Exception e) {
+			 e.printStackTrace();
+		 }
+
+
+
+		 Image pieceMap = Toolkit.getDefaultToolkit().getImage("map/pieces.png");
+
+		 grabber = new PixelGrabber(pieceMap, 0, 0, -1, -1, false);
+
+		 try {
+			 if (grabber.grabPixels()) {
+
+				 log("Piece map loaded.");
+
+				 int width = grabber.getWidth();
+				 int height = grabber.getHeight();
+				 if (width != height) {
+					 PixelLogger.err("Piece map does not conform to c squared requirements (width != height). Aborting read.");
+					 System.exit(-1);
+				 }
+
+				 WorldServer.c = width;
+
+				 log("Reading piece map...");
+
+				 int[] data = (int[]) grabber.getPixels();
+				 int index = 0;
+				 int id = -1;
+				 for (int y = 0; y < WorldServer.c; y++) {
+					 for (int x = 0; x < WorldServer.c; x++) {
+
+						 id = getPieceIDForColor(data[index]);
+						 if (id != -1) {
+							 new Piece(x, y, id, true);
+							 log("Piece loaded at position: (" + x + ", " + y + ") with id:" + id);
+						 } else {
+							 err("Piece not loaded at (" + x + ", " + y + ")");
+							 new Piece(x, y, 0, true);
+						 }
+
+						 index++;
+					 }
+				 }
+			 }
+			 log("Piece map read.");
+		 } catch (Exception e) {
+			 e.printStackTrace();
+		 }
+
+		 log("Pixel map read.");
+
+		 if (genBiome) {
+
+			 generateBiome();
+
+		 }
+		 
+		 WorldServer.finalizeChunks();
 
 	}
-	
+
 	public void generateBiome() {
 		log("Generating biome...");
 		Random r = new Random();
 
 		for (int y = 0; y < WorldServer.c; y++) {
 			for (int x = 0; x < WorldServer.c; x++) {
-				
+
 				if (WorldServer.getTile(x, y) == 0) {
-				
+
 				if ((x < 20 && x >= 10) && (y > 10 && y < WorldServer.c-11) && r.nextInt(x-9) == 0) {
 					new Piece(x, y, 16, true);
 				} else

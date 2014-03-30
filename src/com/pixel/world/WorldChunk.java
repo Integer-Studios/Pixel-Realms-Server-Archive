@@ -2,6 +2,7 @@ package com.pixel.world;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.pixel.entity.Entity;
 import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
@@ -10,7 +11,7 @@ import com.pixel.tile.Tile;
 public class WorldChunk {
 	
 	public ConcurrentHashMap<Integer, Tile> tiles = new ConcurrentHashMap<Integer,Tile>();
-	public ConcurrentHashMap<Integer, Piece> pieces;
+	public ConcurrentLinkedHashMap<Integer, Piece> pieces;
 	public ConcurrentHashMap<Integer, PieceBuilding> buildings = new ConcurrentHashMap<Integer,PieceBuilding>();
 	public ConcurrentHashMap<Integer, Entity> entities = new ConcurrentHashMap<Integer,Entity>();
 	public WorldServer world; 
@@ -19,7 +20,8 @@ public class WorldChunk {
 	public WorldChunk(WorldServer world) {
 		
 		this.world = world;
-		
+		pieces = new ConcurrentLinkedHashMap.Builder<Integer, Piece>().maximumWeightedCapacity(1000000).build();
+
 	}
 	
 	public WorldChunk(WorldServer world, int x, int y) {
@@ -27,7 +29,7 @@ public class WorldChunk {
 		this.world = world;
 		this.x = x; 
 		this.y = y;
-		pieces = new ConcurrentHashMap<Integer, Piece>();
+		pieces = new ConcurrentLinkedHashMap.Builder<Integer, Piece>().maximumWeightedCapacity(1000000).build();
 
 		WorldServer.propagateChunk(this);
 		
