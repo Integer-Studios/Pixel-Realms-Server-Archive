@@ -124,8 +124,6 @@ public class WorldReader {
 
 		 }
 		 
-		 WorldServer.finalizeChunks();
-
 	}
 
 	public void generateBiome() {
