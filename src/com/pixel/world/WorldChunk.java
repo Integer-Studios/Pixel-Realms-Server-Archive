@@ -1,8 +1,9 @@
 package com.pixel.world;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.pixel.entity.Entity;
 import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
@@ -10,17 +11,21 @@ import com.pixel.tile.Tile;
 
 public class WorldChunk {
 	
-	public ConcurrentHashMap<Integer, Tile> tiles = new ConcurrentHashMap<Integer,Tile>();
-	public ConcurrentLinkedHashMap<Integer, Piece> pieces;
-	public ConcurrentHashMap<Integer, PieceBuilding> buildings = new ConcurrentHashMap<Integer,PieceBuilding>();
-	public ConcurrentHashMap<Integer, Entity> entities = new ConcurrentHashMap<Integer,Entity>();
+	public Map<Integer, Tile> tiles;
+	public Map<Integer, Piece> pieces;
+	public Map<Integer, PieceBuilding> buildings;
+	public Map<Integer, Entity> entities;
 	public WorldServer world; 
 	public int x, y;
 	
 	public WorldChunk(WorldServer world) {
 		
 		this.world = world;
-		pieces = new ConcurrentLinkedHashMap.Builder<Integer, Piece>().maximumWeightedCapacity(1000000).build();
+//		pieces = new ConcurrentLinkedHashMap.Builder<Integer, Piece>().maximumWeightedCapacity(1000000).build();
+		pieces = Collections.synchronizedMap(new LinkedHashMap<Integer, Piece>());
+		tiles = Collections.synchronizedMap(new LinkedHashMap<Integer, Tile>());
+		buildings = Collections.synchronizedMap(new LinkedHashMap<Integer, PieceBuilding>());
+		entities = Collections.synchronizedMap(new LinkedHashMap<Integer, Entity>());
 
 	}
 	
@@ -29,7 +34,10 @@ public class WorldChunk {
 		this.world = world;
 		this.x = x; 
 		this.y = y;
-		pieces = new ConcurrentLinkedHashMap.Builder<Integer, Piece>().maximumWeightedCapacity(1000000).build();
+		pieces = Collections.synchronizedMap(new LinkedHashMap<Integer, Piece>());
+		tiles = Collections.synchronizedMap(new LinkedHashMap<Integer, Tile>());
+		buildings = Collections.synchronizedMap(new LinkedHashMap<Integer, PieceBuilding>());
+		entities = Collections.synchronizedMap(new LinkedHashMap<Integer, Entity>());
 
 		WorldServer.propagateChunk(this);
 		
