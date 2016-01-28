@@ -7,15 +7,13 @@ import java.io.IOException;
 public class PacketLoginStage extends Packet {
 
 	public int stageID;
-	public float completion;
 	
 	public PacketLoginStage() {this.id = 24;}
 	
-	public PacketLoginStage(int stageID, float completion) {
+	public PacketLoginStage(int stageID) {
 		
 		this.id = 24;
 		this.stageID = stageID;
-		this.completion = completion;
 		
 	}
 	
@@ -23,7 +21,6 @@ public class PacketLoginStage extends Packet {
 	public void writeData(DataOutputStream output) throws IOException {
 
 		output.writeInt(stageID);
-		output.writeFloat(completion);
 		
 	}
 

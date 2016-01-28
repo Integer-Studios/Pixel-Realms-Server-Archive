@@ -1,5 +1,7 @@
 package com.pixel.player;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.pixel.communication.CommunicationServer;
@@ -29,27 +31,45 @@ public class PlayerInventory {
 		this.inventoryRight = new Inventory(userID, 3, 6, inventoryRight, 2);
 	}
 	
-	public void sendInventory() {
-				
+	public void sendInventory(DataOutputStream output) throws IOException {
+		
+		output.writeInt(hotbar.content.size());
 		for (InventoryContent c : hotbar.content.values()) {
 			
 			CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID), new PacketUpdateInventoryContent(c.x,c.y,c.itemstack.item.id, c.itemstack.size, 0));
+			output.writeInt(c.x);
+			output.writeInt(c.y);
+			output.writeInt(c.itemstack.item.id);
+			output.writeInt(c.itemstack.size);
+			output.writeInt(0);
 
 		}
 		
+		output.writeInt(inventoryLeft.content.size());
 		for (InventoryContent c : inventoryLeft.content.values()) {
 
 			CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID), new PacketUpdateInventoryContent(c.x,c.y,c.itemstack.item.id, c.itemstack.size, 1));
-
+			output.writeInt(c.x);
+			output.writeInt(c.y);
+			output.writeInt(c.itemstack.item.id);
+			output.writeInt(c.itemstack.size);
+			output.writeInt(0);
+			
 		}
 
+		output.writeInt(inventoryRight.content.size());
 		for (InventoryContent c : inventoryRight.content.values()) {
 
 			CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID), new PacketUpdateInventoryContent(c.x,c.y,c.itemstack.item.id, c.itemstack.size, 2));
-
+			output.writeInt(c.x);
+			output.writeInt(c.y);
+			output.writeInt(c.itemstack.item.id);
+			output.writeInt(c.itemstack.size);
+			output.writeInt(0);
+			
 		}
 		
-		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID), new PacketLoginStage(2, 1F));
+//		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID), new PacketLoginStage(2, 1F));
 		
 	}
 	

@@ -50,8 +50,10 @@ public class GroupPog extends Group {
 		super.tick(w);
 		if (targetUser == -1) {
 			int tempUser = -1, tempDistance = 30000;
-			for (EntityPlayer p : PlayerManager.players.values()) {
+			for (int i : PlayerManager.players.keySet()) {
 
+				EntityPlayer p = PlayerManager.getPlayer(i);
+				
 				int x, y;
 
 				if (BuildingListener.playerInside(p.userID)) {

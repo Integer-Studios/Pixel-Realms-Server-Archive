@@ -79,8 +79,7 @@ public class PacketLoadInterior extends Packet {
 		
 		BuildingListener.setWorld(userID, worldID);
 		
-		PlayerManager.sendPlayers(userID);
-		PlayerManager.broadcastPacket(new PacketUpdatePlayer(userID));
+		PlayerManager.broadcastPacket(new PacketUpdateLivingEntity(PlayerManager.players.get(userID)));
 		PlayerManager.sendPacketToPlayer(userID, this);
 		
 	}

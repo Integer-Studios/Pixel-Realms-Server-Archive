@@ -25,7 +25,7 @@ public class ChatMessage {
 		
 		this.text = text;
 		this.userID = userID;
-		this.username = PlayerManager.players.get(userID).username;
+		this.username = PlayerManager.getPlayer(userID).username;
 		this.color = Color.WHITE;
 		
 	}

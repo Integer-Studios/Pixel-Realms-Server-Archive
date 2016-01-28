@@ -5,12 +5,17 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.pixel.entity.EntityPlayer;
+import com.pixel.player.PlayerInventory;
 
 public class PacketLoadPlayer extends Packet{
 
 	public String username;
 	public float posX, posY, health, satisfaction, energy;
 	public int itemID, itemAmount, worldID;
+	public PlayerInventory inventory;
+	public int serverID;
+	
+	public PacketLoadPlayer() {this.id = 18;}
 	
 	public PacketLoadPlayer(EntityPlayer player) {
 		
@@ -37,6 +42,9 @@ public class PacketLoadPlayer extends Packet{
 		output.writeInt(this.itemID);
 		output.writeInt(this.itemAmount);
 		output.writeInt(this.worldID);
+		output.writeInt(this.serverID);
+		
+		inventory.sendInventory(output);
 
 	}
 
@@ -45,17 +53,7 @@ public class PacketLoadPlayer extends Packet{
 
 		this.username = Packet.readString(16, input);
 		
-		this.posX = input.readFloat();
-		this.posY = input.readFloat();
-
-		this.health = input.readFloat();
-		this.satisfaction = input.readFloat();
-		this.energy = input.readFloat();
-		
-		this.itemID = input.readInt();
-		this.itemAmount = input.readInt();
-		this.worldID = input.readInt();
-		
+		PacketHandler.processLoadPlayer(this);
 		
 	}
 	

@@ -3,6 +3,7 @@ package com.pixel.communication.packet;
 import com.pixel.communication.CommunicationServer;
 import com.pixel.communication.CommunicationServlet;
 import com.pixel.entity.EntityAlive;
+import com.pixel.entity.EntityPlayer;
 import com.pixel.interior.InteriorWorld;
 import com.pixel.interior.InteriorWorldManager;
 import com.pixel.item.Item;
@@ -17,44 +18,28 @@ public class PacketHandler {
 
 	public static void processLoginPacket(PacketLogin packet) {
 		
-		new Thread(new PlayerLoadThread(packet)).start();
-
-	}
-	
-	public static void processUpdatePlayer(PacketUpdatePlayer packet) {
+		PlayerManager.playerLogin(packet);
 		
-		PlayerManager.players.get(packet.userID).setPosX(packet.posX);
-		PlayerManager.players.get(packet.userID).setPosY(packet.posY);
-		PlayerManager.players.get(packet.userID).setSelectedItem(new ItemStack(Item.getItemForId(packet.itemID), packet.itemAmount));
+	}
 
-		for (int x = 0; x < CommunicationServer.userConnections.size(); x ++) {
-			
-			CommunicationServlet servlet = CommunicationServer.userConnections.get(CommunicationServer.userConnections.keySet().toArray()[x]);
-			
-			if (CommunicationServlet.getUserID(servlet) != packet.userID) {
-				CommunicationServlet.addPacket(servlet, new PacketUpdatePlayer(packet.username, packet.posX, packet.posY, packet.satisfaction, packet.health, packet.energy, packet.userID, new ItemStack(new Item(packet.itemID), packet.itemAmount)));
+	public static void processMoveLivingEntity(PacketMoveLivingEntity packet) {
+		PlayerManager.getPlayer(packet.userID).setVelocity(packet.velocityX, packet.velocityY);
+		float xDiff = Math.abs(WorldServer.entities.get(packet.serverID).getX() - packet.posX);
+		float yDiff = Math.abs(WorldServer.entities.get(packet.serverID).getY() - packet.posY);
+		
+		PlayerManager.broadcastPacket(packet);
+
+		if (WorldServer.entities.get(packet.serverID).velocityX == 0 && WorldServer.entities.get(packet.serverID).velocityY == 0) {
+
+			if (xDiff < 1 && yDiff < 1) {
+				
+				WorldServer.entities.get(packet.serverID).setPosition(packet.posX, packet.posY);
 				
 			}
 			
-		}
-		
-	}
+			PlayerManager.broadcastPacket(new PacketUpdateLivingEntity(packet.serverID));
 
-	public static void processMovePlayer(PacketMovePlayer packet) {
-		PlayerManager.getPlayer(packet.userID).setVelocity(packet.velocityX, packet.velocityY);
-//		float xDiff = Math.abs(PlayerManager.players.get(packet.userID).getX() - packet.posX);
-//		float yDiff = Math.abs(PlayerManager.players.get(packet.userID).getY() - packet.posY);
-//
-//				if (xDiff < 0.5 && yDiff < 0.5) {
-
-		PlayerManager.broadcastPacket(packet);
-
-		if (PlayerManager.players.get(packet.userID).velocityX == 0 && PlayerManager.players.get(packet.userID).velocityY == 0) {
-
-			PlayerManager.broadcastPacket(new PacketUpdatePlayer(packet.userID));
-
-		}
-//			}
+		} 
 
 	}
 
@@ -109,11 +94,11 @@ public class PacketHandler {
 	
 	public static void processInfoRequest(PacketInfoRequest packet) {
 		
-		if (packet.request.equals("players")) {
-			
-			PlayerManager.sendPlayers(packet.userID);
-			
-		}
+//		if (packet.request.equals("players")) {
+//			
+//			PlayerManager.sendPlayers(packet.userID);
+//			
+//		}
 		
 	}
 
@@ -145,6 +130,44 @@ public class PacketHandler {
 	public static void processEntityAnimation(PacketEntityAnimation packet) {
 
 		PlayerManager.broadcastPacket(packet);
+		
+	}
+
+	public static void processUpdateLivingEntity(PacketUpdateLivingEntity packet) {
+		
+		
+		((EntityAlive) WorldServer.entities.get(packet.serverID)).setX(packet.posX);
+		((EntityAlive) WorldServer.entities.get(packet.serverID)).setY(packet.posY);
+		
+		if (((EntityAlive) WorldServer.entities.get(packet.serverID)).metadata.objects.containsKey(3)) {
+		
+			((EntityPlayer) WorldServer.entities.get(packet.serverID)).setSelectedItem(new ItemStack(Item.getItemForId(packet.itemID), packet.itemAmount));
+
+		}
+		
+		for (int x = 0; x < CommunicationServer.userConnections.size(); x ++) {
+			
+			CommunicationServlet servlet = CommunicationServer.userConnections.get(CommunicationServer.userConnections.keySet().toArray()[x]);
+			
+			if (CommunicationServlet.getUserID(servlet) != packet.userID) {
+				CommunicationServlet.addPacket(servlet, new PacketUpdateLivingEntity(((EntityAlive) WorldServer.entities.get(packet.serverID)).metadata, packet.posX, packet.posY, packet.health, packet.satisfaction, packet.energy, packet.serverID));
+				
+			}
+			
+		}
+		
+	}
+
+	public static void processLoginRequest(PacketLoginRequest packet) {
+		System.out.println("A");
+
+		new Thread(new PlayerLoadThread(packet)).start();
+		
+	}
+
+	public static void processLoadPlayer(PacketLoadPlayer packet) {
+
+		PlayerManager.requestLoadPlayer(packet);
 		
 	}
 

@@ -13,6 +13,7 @@ import com.pixel.piece.PieceBuilding;
 import com.pixel.player.PlayerManager;
 import com.pixel.start.PixelRealmsServer;
 import com.pixel.tile.Tile;
+import com.pixel.util.Metadata.MetadataObject;
 import com.pixel.world.WorldChunk;
 import com.pixel.world.WorldServer;
 
@@ -30,7 +31,7 @@ public class PacketWorldData extends Packet {
 	@Override
 	public void writeData(DataOutputStream output) throws IOException {
 		
-		ArrayList<WorldChunk> chunks = PixelRealmsServer.world.getChunksToLoad((int)PlayerManager.getPlayer(userID).getX(), (int)PlayerManager.getPlayer(userID).getY(), userID);
+		ArrayList<WorldChunk> chunks = PixelRealmsServer.world.getChunksToLoad((int)PlayerManager.getDataX(userID), (int)PlayerManager.getDataY(userID), userID);
 		
 		output.writeInt(WorldServer.c);
 		output.writeInt(chunks.size());
@@ -74,12 +75,37 @@ public class PacketWorldData extends Packet {
 			
 			output.writeInt(c.entities.size());
 
-			for (Entity e : c.entities.values()) {
+			for (int i : c.entities) {
+				
+				Entity e = WorldServer.entities.get(i);
 				
 				output.writeInt(e.id);
 				output.writeFloat(e.getX());
 				output.writeFloat(e.getY());
 				output.writeInt(e.serverID);
+				
+				output.writeInt(e.metadata.objects.size());
+				for (MetadataObject o : e.metadata.objects.values()) {
+					
+					output.writeInt(o.type);
+					switch (o.type) {
+					
+					case 0:
+						Packet.writeString(o.s, output);
+						break;
+					case 1:
+						output.writeInt(o.i);
+						break;
+					case 2:
+						output.writeFloat(o.f);
+						break;
+					case 3: 
+						output.writeBoolean(o.b);
+						break;
+					
+					}
+					
+				}
 				
 			}
 			

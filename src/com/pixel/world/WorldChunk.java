@@ -1,10 +1,12 @@
 package com.pixel.world;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.pixel.entity.Entity;
+import com.pixel.entity.EntityPlayer;
 import com.pixel.piece.Piece;
 import com.pixel.piece.PieceBuilding;
 import com.pixel.tile.Tile;
@@ -14,7 +16,7 @@ public class WorldChunk {
 	public Map<Integer, Tile> tiles;
 	public Map<Integer, Piece> pieces;
 	public Map<Integer, PieceBuilding> buildings;
-	public Map<Integer, Entity> entities;
+	public ArrayList<Integer> entities;
 	public WorldServer world; 
 	public int x, y;
 	
@@ -25,7 +27,7 @@ public class WorldChunk {
 		pieces = Collections.synchronizedMap(new LinkedHashMap<Integer, Piece>());
 		tiles = Collections.synchronizedMap(new LinkedHashMap<Integer, Tile>());
 		buildings = Collections.synchronizedMap(new LinkedHashMap<Integer, PieceBuilding>());
-		entities = Collections.synchronizedMap(new LinkedHashMap<Integer, Entity>());
+		entities = new ArrayList<Integer>();
 
 	}
 	
@@ -37,22 +39,13 @@ public class WorldChunk {
 		pieces = Collections.synchronizedMap(new LinkedHashMap<Integer, Piece>());
 		tiles = Collections.synchronizedMap(new LinkedHashMap<Integer, Tile>());
 		buildings = Collections.synchronizedMap(new LinkedHashMap<Integer, PieceBuilding>());
-		entities = Collections.synchronizedMap(new LinkedHashMap<Integer, Entity>());
+		entities = new ArrayList<Integer>();
 
 		WorldServer.propagateChunk(this);
 		
 	}
 
 	public void tick() {
-		
-		for (Entity entity : entities.values()) {
-			try {
-				Thread.sleep(2);
-			} catch (Exception e){}
-
-			entity.tick(world);
-
-		}
 		
 		for (Piece piece : pieces.values()) {
 			try {
@@ -75,6 +68,18 @@ public class WorldChunk {
 	public void propagatePiece(Piece piece) {
 
 		pieces.put((piece.posY * (WorldServer.c)) + piece.posX, piece);
+		
+	}
+	
+	public void propagateEntity(Entity entity) {
+		
+		entities.add(entity.serverID);
+		
+	}
+
+	public void removeEntity(Entity entity) {
+		
+		entities.remove(entity.serverID);
 		
 	}
 	
@@ -116,12 +121,7 @@ public class WorldChunk {
 			
 		}
 		
-		for (Entity e : entities.values()) {
-			
-			e.tick(w);
-			
-		}
-		
 	}
+
 	
 }

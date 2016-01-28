@@ -1,7 +1,5 @@
 package com.pixel.tile;
 
-import com.pixel.entity.EntityPlayer;
-import com.pixel.player.PlayerManager;
 import com.pixel.world.WorldServer;
 
 public class Tile {
@@ -27,15 +25,16 @@ public class Tile {
 	
 	public void tick(WorldServer w) {
 		info[id].tick(w, this);
-		
-		for (int x = 0; x < PlayerManager.players.size(); x ++) {
-			
-			EntityPlayer player = PlayerManager.players.get(PlayerManager.players.keySet().toArray()[x]);
-			if ((int)player.getX() == posX && (int)player.getY() == posY) {
-				info[id].onPlayerWalkOver(w, this, player);
-			}
-			
-		}
+
+//		MUST BE REDUCED
+//		IDEA: Index of entities/players in specific chunk
+//		for (EntityPlayer player : PlayerManager.players.values()) {
+//			
+//			if ((int)player.getX() == posX && (int)player.getY() == posY) {
+//				info[id].onPlayerWalkOver(w, this, player);
+//			}
+//			
+//		}
 		
 		
 	}

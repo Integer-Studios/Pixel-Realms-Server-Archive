@@ -14,6 +14,8 @@ public class EntityAlive extends Entity {
 	public ItemStack[] drops;
 	public boolean shouldKill = false;
 	public Entity killerDamageSource;
+	public float satisfaction;
+	public float energy;
 	
 	public EntityAlive(float x, float y, float width, float height, boolean propagate) {
 		super(x, y, width, height, propagate);

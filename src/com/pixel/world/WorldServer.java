@@ -3,6 +3,9 @@ package com.pixel.world;
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,11 +40,11 @@ public class WorldServer {
 	public int worldSaveCount = 0;
 	public static int c = 400;
 	public static int tileConstant = 48;
-	public static ConcurrentHashMap<Integer, WorldChunk> chunks = new ConcurrentHashMap<Integer,WorldChunk>();
-//	public static ConcurrentHashMap<Integer, Tile> tiles = new ConcurrentHashMap<Integer,Tile>();
-//	public static Piece[] pieces;
+	public static Map<Integer, ArrayList<WorldChunk>> playerChunks; 
+	public static Map<Integer, WorldChunk> chunks;
 //	public static ConcurrentHashMap<Integer, PieceBuilding> buildings = new ConcurrentHashMap<Integer,PieceBuilding>();
 	public static ConcurrentHashMap<Integer, Entity> entities = new ConcurrentHashMap<Integer,Entity>();
+	ArrayList<WorldChunk> chunksToTick = new ArrayList<WorldChunk>();
 	public static boolean init = false;
 	public long time = 12000;
 	public long timeSinceStart = 0;
@@ -53,23 +56,20 @@ public class WorldServer {
 	
 	public WorldServer() {
 				
+		chunks = Collections.synchronizedMap(new LinkedHashMap<Integer, WorldChunk>());
+		playerChunks = Collections.synchronizedMap(new LinkedHashMap<Integer, ArrayList<WorldChunk>>());
+		
 		if (!(new FileItem("world/tiles.dat").exists())) {
-//			PixelLogger.print("Generating Flat World...", PixelColor.PURPLE);
-//			generateSquareMap();		
-//			PixelLogger.print("Generation Complete!", PixelColor.PURPLE);
 			PixelLogger.print("Loading Pixel Map...", PixelColor.PURPLE);
 			new WorldReader(this).readWorld();
 			PixelLogger.print("Pixel Map Loaded!", PixelColor.PURPLE);
 		} else {
-//			pieces = new Piece[c * c];
 			PixelLogger.print("Loading World...", PixelColor.PURPLE);
 			load();
 			PixelLogger.print("World Loaded!", PixelColor.PURPLE);
-
 		}
 		
-	//	createMap();
-		
+//		generateRandomMap();
 		PixelLogger.print("Server initialized on port: " + PixelRealmsServer.port, PixelColor.RED);
 		
 		init = true;
@@ -120,8 +120,7 @@ public class WorldServer {
 		
 		java.util.Date date= new java.util.Date();
 		lastTimestamp = new Timestamp(date.getTime()).getTime();		
-		
-		PlayerManager.tick();
+		PlayerManager.tick(this);
 
 //		for (Entity entity : entities.values()) {
 //			try {
@@ -131,21 +130,21 @@ public class WorldServer {
 //			entity.tick(this);
 //
 //		}
-//
-//		for (int i = 0; i < pieces.length; i++) {
-//			pieces[i].tick(this);
-//		}
-		
-		for (WorldChunk chunk : chunks.values()) {
-			
-			try {
-				Thread.sleep(2);
-			} catch (Exception e){}
+		//
+		//		for (int i = 0; i < pieces.length; i++) {
+		//			pieces[i].tick(this);
+		//		}
 
-			chunk.tick(this);
-			
+
+		synchronized(chunksToTick) {
+
+			for (WorldChunk chunk : chunks.values()) {
+				
+				chunk.tick(this);
+
+			}
+
 		}
-		
 	}
 	
 	public ArrayList<WorldChunk> getChunksToLoad(int posX, int posY, int userID) {
@@ -153,15 +152,10 @@ public class WorldServer {
 		int r = 2;
 		int x = posX >> 4;
 		int y = posY >> 4;
-		System.out.println(x + " " + y);
 		int aX = x - r;
 		int bX = x + r;
 		int aY = y - r;
 		int bY = y + r;
-		
-		int a = 0;
-		
-		System.out.println(aX + " " + aY + " " + bX + " " + bY);
 		
 		ArrayList<WorldChunk> chunksToLoad = new ArrayList<WorldChunk>();
 		
@@ -169,13 +163,13 @@ public class WorldServer {
 
 			for (int tX = aX; tX <= bX; tX ++) {
 
-				int id = (tY * (c >> 4)) + tX;
+//				int id = (tY * (c >> 4)) + tX;
 				
-				if (!PlayerManager.getPlayer(userID).loadedChunks.contains(id)) {
-					chunksToLoad.add(getChunk(tX, tY, true));
-					a ++;
-					System.out.println("B: " + a + " " + tX + " " + tY);
-				}
+//				if (!PlayerManager.getPlayer(userID).loadedChunks.contains(id)) {
+					
+					WorldChunk c = getChunk(tX, tY, true);
+					chunksToLoad.add(c);
+//				}
 				
 			}
 			
@@ -552,13 +546,18 @@ public class WorldServer {
 		return getChunk(tile.posX, tile.posY, false);
 
 	}
+	
+	public static WorldChunk getChunk(Entity entity) {
+		// TODO Auto-generated method stub
+		return getChunk((int)entity.getX(), (int)entity.getY(), false);
+	}
 
 	public static WorldChunk getChunk(Piece piece) {
 
 		return getChunk(piece.posX, piece.posY, false);
 
 	}
-
+	
 	public static WorldChunk getChunk(int x, int y, boolean chunk) {
 
 		int id = 0;
@@ -572,7 +571,6 @@ public class WorldServer {
 			return (chunks.get(id));
 
 		} else {
-
 			if (chunk)
 				return new WorldChunk(PixelRealmsServer.world, (x), (y));
 			else
@@ -598,6 +596,12 @@ public class WorldServer {
 		chunks.put((chunk.y * (c >> 4)) + chunk.x, chunk);
 
 	}
-	
+
+	public static void propagateEntityToChunk(Entity entity, int x, int y) {
+		
+		getChunk(entity).propagateEntity(entity);
+		
+	}
+
 }
 

@@ -1,7 +1,4 @@
-
-
 package com.pixel.player;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,120 +16,196 @@ import com.pixel.communication.packet.Packet;
 import com.pixel.communication.packet.PacketChat;
 import com.pixel.communication.packet.PacketLoadPlayer;
 import com.pixel.communication.packet.PacketLogin;
+import com.pixel.communication.packet.PacketLoginRequest;
 import com.pixel.communication.packet.PacketLoginStage;
 import com.pixel.communication.packet.PacketLogout;
 import com.pixel.communication.packet.PacketUpdateInteriorPiece;
 import com.pixel.communication.packet.PacketUpdateLivingEntity;
-import com.pixel.communication.packet.PacketUpdatePlayer;
 import com.pixel.entity.Entity;
 import com.pixel.entity.EntityAlive;
 import com.pixel.entity.EntityPlayer;
 import com.pixel.inventory.InventoryContent;
 import com.pixel.item.Item;
 import com.pixel.item.ItemStack;
-import com.pixel.start.PixelRealmsServer;
 import com.pixel.util.CoordinateKey;
 import com.pixel.util.FileItem;
 import com.pixel.util.Toolkit;
 import com.pixel.world.WorldServer;
+import com.pixel.world.WorldChunk;
 
 public class PlayerManager {
 
-	public static ConcurrentHashMap<Integer, EntityPlayer> players = new ConcurrentHashMap<Integer, EntityPlayer>();
+	public static ConcurrentHashMap<Integer, Integer> playersLoginStage = new ConcurrentHashMap<Integer, Integer>();
+	public static ConcurrentHashMap<Integer, Integer> players = new ConcurrentHashMap<Integer, Integer>();
 	public static HashMap<Integer, PlayerInventory> inventories = new HashMap<Integer, PlayerInventory>();
 	public static ConcurrentHashMap<Integer, Float[]> playersData = new ConcurrentHashMap<Integer, Float[]>();
 	public static ConcurrentHashMap<Integer, Long> playersLoginTime = new ConcurrentHashMap<Integer, Long>();
-
+	
 	public static void playerLogin(PacketLogin packet) {
 		
-		CommunicationServlet.setUserID(packet.servletLogin, packet.userID);
-		EntityPlayer player = new EntityPlayer(packet.username, packet.userID);
-		player.setSession(packet.session);
-		new StatisticsThread(packet.userID, packet.username, 0).start();
-
-		if (!playersData.containsKey(player.userID)) {
-			
-			if (new FileItem("players/" + player.userID + ".dat").exists()) {
-				
-				loadPlayer(player.userID, player);
-				
-			} else {
-				
-				playersData.put(packet.userID, new Float[]{200F, 200F, 100F, 100F, 100F, -1F});
-				inventories.put(packet.userID, new PlayerInventory(player.userID));
-				
-			}
-			
-		}
-		else {
-			
-			inventories.get(packet.userID).sendInventory();
-			
-		}
-
-		player.setPosX(playersData.get(packet.userID)[0]);
-		player.setPosY(playersData.get(packet.userID)[1]);
+		//USER ID
 		
-		try {
+		//???
+		//SPAWN
+		
+		EntityPlayer player = spawnPlayer(packet.username, packet.userID, packet.session);
+
+		if (player == null) {
 			
-			player.setHealth(playersData.get(packet.userID)[2]);
-			player.setSatisfaction(playersData.get(packet.userID)[3]);
-			player.setEnergy(playersData.get(packet.userID)[4]);
-			player.worldID = Math.round(playersData.get(packet.userID)[5]);
-
-		} catch (ArrayIndexOutOfBoundsException e) {
-
-			player.setHealth(100F);
-			player.setSatisfaction(100F);
-			player.setEnergy(100F);
-			player.worldID = -1;
+			players.remove(packet.userID);
+			playersData.remove(packet.userID);
+			inventories.remove(packet.userID);
 			
 		}
-		PlayerManager.inventories.get(player.userID).sendInventory();
-
+		
 		packet.posX = player.getX();
 		packet.posY = player.getY();
 		
-		player.velocityX = 0;
-		player.velocityY = 0;
-		players.put(player.userID, player);
-		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(packet.userID), new PacketLoadPlayer(PlayerManager.getPlayer(packet.userID)));
-		
-		PixelLogger.print(player.username + " has logged in.", PixelColor.BLUE);
-		sendPlayers(player.userID);
-		sendEntities(player.userID);
 		player.loaded = true;
-		broadcastPacket(new PacketLogin(player));
-		broadcastPacket(new PacketChat(new ChatMessage("Server", player.username + " has logged in.", Color.RED, player.userID)));
-		
-	}
-	
-	public static void sendPlayers(int userID) {
-		
-		for (EntityPlayer player: players.values()) {
-			if (userID != player.userID)
-				sendPacketToPlayer(userID, new PacketUpdatePlayer(PlayerManager.getPlayer(player.userID).username, PlayerManager.getPlayer(player.userID).posX, PlayerManager.getPlayer(player.userID).posY, PlayerManager.getPlayer(player.userID).health, PlayerManager.getPlayer(player.userID).satisfaction, PlayerManager.getPlayer(player.userID).energy, player.userID, PlayerManager.getPlayer(player.userID).selectedItem));
-		
-		}
-		
-		sendPacketToPlayer(userID, new PacketLoginStage(3, 1F));
-		
-	}
-	
-	public static void sendEntities(int userID) {
-		
-		for (Entity entity: WorldServer.entities.values()) {
-			sendPacketToPlayer(userID, new PacketUpdateLivingEntity((EntityAlive)entity));
-		
-		}
+		playersLoginStage.put(packet.userID, 420);
+		sendPacketToPlayer(packet.userID, new PacketLoginStage(1));
+		broadcastPacketExcludingPlayer(new PacketLogin(player), packet.userID);
+		broadcastPacketExcludingPlayer(new PacketChat(new ChatMessage("Server", player.username + " has logged in.", Color.RED, player.userID)), packet.userID);
+		PixelLogger.print(player.username + " has logged in.", PixelColor.BLUE);
 
-		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID), new PacketLoginStage(4, 1F));
+	}
+	
+	private static EntityPlayer spawnPlayer(String username, int userID, int session) {
+
+		Float[] data = playersData.get(userID);
+		
+		int serverID = players.get(userID);
+		Entity e = WorldServer.getEntity(serverID);
+		
+		if (e != null && e.id == session) {
+		
+			EntityPlayer player = new EntityPlayer(username, userID, data[0], data[1], data[2], data[3], data[4], Math.round(data[5]), serverID, session);
+			WorldServer.entities.put(serverID, player);
+
+			return player;
+
+		} else {
+			
+			return null;
+			
+		}
+		
+//		inventories.get(userID).sendInventory();
+
+	}
+	
+	public static void requestLoadPlayer(PacketLoadPlayer packet) {
+
+		int userID = packet.userID;
+		
+		if (!playersData.containsKey(userID)) {
+			
+			if (new FileItem("players/" + userID + ".dat").exists()) {
+				
+				loadPlayer(userID);
+				
+			} else {
+				
+				playersData.put(userID, new Float[]{200F, 200F, 100F, 100F, 100F, -1F});
+				inventories.put(userID, new PlayerInventory(userID));
+				
+			}
+			
+		} else {
+			
+			//HAS LOGGED IN CURRENT INSTANCE
+			
+		}
+		
+		Float[] data = playersData.get(userID);
+		
+		float posX = data[0];
+		float posY = data[1];
+		float health = data[2];
+		float satisfaction = data[3];
+		float energy = data[4];
+		int worldID = Math.round(data[5]);
+		
+		packet.posX = posX;
+		packet.posY = posY;
+		packet.health = health;
+		packet.satisfaction = satisfaction;
+		packet.energy = energy;
+		packet.worldID = worldID;
+		packet.serverID = players.get(userID);
+		packet.inventory = inventories.get(userID);
+		
+		packet.itemAmount = -1;
+		packet.itemID = -1;
+		
+		sendPacketToPlayer(userID, packet);
 		
 	}
+	
+	public static void requestLogin(PacketLoginRequest packet) {
+		System.out.println("B");
+
+		if (!players.containsKey(packet.userID)) {
+			System.out.println("C");
+			playersLoginStage.put(packet.userID, 1);
+
+			respond(packet);
+
+			
+		} else {
+			
+			if (WorldServer.entities.containsKey(players.get(packet.userID))) {
+				
+				//DENY
+				
+			} else {
+				
+				playersLoginStage.put(packet.userID, 1);
+				players.remove(packet.userID);
+				respond(packet);
+
+			}
+			
+		}
+		
+	}
+	
+	public static void respond(PacketLoginRequest packet) {
+		
+		CommunicationServlet.setUserID(packet.servletLogin, packet.userID);
+		int serverID = new Entity(true, packet.session).serverID;
+		players.put(packet.userID, serverID);
+		
+		packet.serverID = serverID;
+		System.out.println("D");
+
+		sendPacketToPlayer(packet.userID, packet);
+		
+	}
+	
+//	public static void sendPlayers(int userID) {
+//		
+//		for (int i: players.values()) {
+//			EntityPlayer player = (EntityPlayer) WorldServer.entities.get(i);
+//			if (userID != player.userID)
+//				sendPacketToPlayer(userID, new PacketUpdateLivingEntity(PlayerManager.getPlayer(player.userID).metadata, PlayerManager.getPlayer(player.userID).posX, PlayerManager.getPlayer(player.userID).posY, PlayerManager.getPlayer(player.userID).health, PlayerManager.getPlayer(player.userID).satisfaction, PlayerManager.getPlayer(player.userID).energy, player.serverID));
+//		
+//		}
+//		
+//	}
+//	
+//	public static void sendEntities(int userID) {
+//		
+//		for (Entity entity: WorldServer.entities.values()) {
+//			sendPacketToPlayer(userID, new PacketUpdateLivingEntity((EntityAlive)entity));
+//		
+//		}
+//
+//	}
 	
 	public static void playerLogout(int userID) {
 		
-		EntityPlayer p = players.get(userID);
+		EntityPlayer p = getPlayer(userID);
 
 		try {
 			new StatisticsThread(userID, p.username, 1).start();
@@ -142,7 +215,9 @@ public class PlayerManager {
 
 			Float[] playerData = new Float[]{p.posX, p.posY, p.health, p.satisfaction, p.energy, p.worldID + 0.0F};
 			playersData.put(userID, playerData);
-
+			playersLoginStage.remove(userID);
+			
+			WorldServer.playerChunks.remove(userID);
 			players.remove(userID);
 			PixelLogger.print(p.username + " has disconnected.", PixelColor.BLUE);
 			PlayerManager.broadcastPacket(new PacketLogout(userID));
@@ -154,14 +229,19 @@ public class PlayerManager {
 
 	public static EntityPlayer getPlayer(int userID) {
 
-		return players.get(userID);
+		try {
+			return (EntityPlayer) WorldServer.entities.get(players.get(userID));
+		} catch (NullPointerException e) {
+			
+			return null;
+		}
 		
 	}
 
 	public static void updatePlayer(int userID) {
 		
-		EntityPlayer p = players.get(userID);
-		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID),  new PacketUpdatePlayer(p.username, p.posX, p.posY, p.health, p.satisfaction, p.energy, p.userID, p.selectedItem));
+		EntityPlayer p = getPlayer(userID);
+		CommunicationServlet.addPacket(CommunicationServer.userConnections.get(userID),  new PacketUpdateLivingEntity(p.metadata, p.posX, p.posY, p.health, p.satisfaction, p.energy, p.serverID));
 
 	}
 	
@@ -201,7 +281,7 @@ public class PlayerManager {
 		
 	}
 	
-	public static void loadPlayer(int userID, EntityPlayer player) {
+	public static void loadPlayer(int userID) {
 		
 		Toolkit k = new Toolkit();
 
@@ -235,7 +315,7 @@ public class PlayerManager {
 
 		} else {
 
-			inventories.put(userID, new PlayerInventory(player.userID));
+			inventories.put(userID, new PlayerInventory(userID));
 
 		}
 	}
@@ -280,16 +360,24 @@ public class PlayerManager {
 
 	}
 
-	public static void tick() {
-		
-		for (EntityPlayer p : players.values()) {
-			
-			p.tick(PixelRealmsServer.world);
-			Float[] playerData = new Float[]{p.posX, p.posY, p.health, p.satisfaction, p.energy, p.worldID + 0.0F};
-			playersData.put(p.userID, playerData);
-			
+	public static void tick(WorldServer w) {
+
+		for (int i : players.values()) {
+
+			Entity e =  WorldServer.entities.get(i);
+
+			if (e.id == 3) {
+
+				EntityPlayer p = (EntityPlayer) e;
+				p.tick(w);
+
+				Float[] playerData = new Float[]{p.posX, p.posY, p.health, p.satisfaction, p.energy, p.worldID + 0.0F};
+				playersData.put(p.userID, playerData);
+
+			}
+
 		}
-		
+
 	}
 	
 	public static void sendPacketToPlayer(int userID, Packet packet) {
@@ -300,19 +388,31 @@ public class PlayerManager {
 	
 	public static void broadcastPacket(Packet packet) {
 
-		for (int x = 0; x < players.size(); x ++) {
+		for (int i : players.keySet()) {
 
-			CommunicationServlet servlet = CommunicationServer.userConnections.get(players.keySet().toArray()[x]);
-			CommunicationServlet.addPacket(servlet, packet);
+			if (playerLoaded(i)) {
+				CommunicationServlet servlet = CommunicationServer.userConnections.get(i);
+				CommunicationServlet.addPacket(servlet, packet);
+			}
 
 		}	
 
 	}
 
+	private static boolean playerLoaded(int i) {
+
+		if (WorldServer.getEntity(players.get(i)).id == 3 && playersLoginStage.get(i) == 420) 
+			return true;
+		else
+			return false;
+	}
+
 	public static void broadcastPacketExcludingPlayer(Packet packet, int userID) {
 
-		for (EntityPlayer p : players.values()) {
+		for (int i : players.values()) {
 
+			EntityPlayer p = (EntityPlayer) WorldServer.entities.get(i);
+			
 			if (p.userID != userID) {
 
 				CommunicationServlet servlet = CommunicationServer.userConnections.get(p.userID);
@@ -324,7 +424,7 @@ public class PlayerManager {
 		
 	}
 	
-	public static void broadcastPacketUpdatePlayer(PacketUpdatePlayer packet) {
+	public static void broadcastPacketUpdatePlayer(PacketUpdateLivingEntity packet) {
 
 		for (int x = 0; x < players.size(); x ++) {
 
@@ -339,8 +439,10 @@ public class PlayerManager {
 	
 	public static void broadcastEntity(EntityAlive entity) {
 
-		for (EntityPlayer player : players.values()) {
+		for (int i : players.values()) {
 
+			EntityPlayer player = (EntityPlayer) WorldServer.entities.get(i);
+			
 			if (player.loaded) {
 				CommunicationServlet servlet = CommunicationServer.userConnections.get(player.userID);
 				CommunicationServlet.addPacket(servlet, new PacketUpdateLivingEntity(entity));
@@ -368,8 +470,10 @@ public class PlayerManager {
 
 	public static void broadcastPacketToWorld(int worldID, PacketUpdateInteriorPiece packet) {
 
-		for (EntityPlayer player : players.values()) {
+		for (int i : players.values()) {
 
+			EntityPlayer player = (EntityPlayer) WorldServer.entities.get(i);
+			
 			if (player.worldID == worldID && player.loaded) {
 				CommunicationServlet servlet = CommunicationServer.userConnections.get(player.userID);
 				CommunicationServlet.addPacket(servlet, packet);
@@ -377,5 +481,18 @@ public class PlayerManager {
 
 		}	
 		
-	}	
+	}
+
+	public static int getDataX(int userID) {
+
+		return Math.round(playersData.get(userID)[0]);
+		
+	}
+	
+	public static int getDataY(int userID) {
+
+		return Math.round(playersData.get(userID)[1]);
+		
+	}
+
 }

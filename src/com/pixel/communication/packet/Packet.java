@@ -62,7 +62,7 @@ public abstract class Packet {
 			
 			packet.id = id;
 			packet.userID = userID;
-			if (id == 1) 
+			if (id == 2) 
 				packet.servletLogin = servlet;
 				
 			packet.readAuxiliaryVariables(CommunicationServlet.getInput(servlet));
@@ -280,7 +280,7 @@ public abstract class Packet {
 		
 		packetMap.put(0, PacketBlank.class);
 		packetMap.put(1, PacketLogin.class);
-		packetMap.put(2, PacketUpdatePlayer.class);
+		packetMap.put(2, PacketLoginRequest.class);
 		packetMap.put(3, PacketWorldData.class);
 		packetMap.put(4, PacketUpdateTile.class);
 		packetMap.put(5, PacketChangePiece.class);
@@ -294,7 +294,6 @@ public abstract class Packet {
 		packetMap.put(13, PacketDamagePlayer.class);
 		packetMap.put(14, PacketLoadInterior.class);
 		packetMap.put(15, PacketMoveLivingEntity.class);
-		packetMap.put(16, PacketMovePlayer.class);
 		packetMap.put(17, PacketInfoRequest.class);
 		packetMap.put(18, PacketLoadPlayer.class);
 		packetMap.put(19, PacketUpdateInteriorPiece.class);

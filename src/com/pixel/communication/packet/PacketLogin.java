@@ -10,7 +10,7 @@ public class PacketLogin extends Packet {
 
 	public String username;
 	public float posX, posY, health, satisfaction, energy;
-	public int itemID, itemAmount, worldID, session;
+	public int itemID, itemAmount, worldID, session, serverID;
 	
 	public PacketLogin () {
 		this.id = 1;
@@ -27,6 +27,7 @@ public class PacketLogin extends Packet {
 		this.session = player.session;
 		this.energy = player.energy;
 		this.satisfaction = player.satisfaction;
+		this.serverID = player.serverID;
 		this.worldID = player.worldID;
 		
 	}
@@ -39,6 +40,7 @@ public class PacketLogin extends Packet {
 		output.writeFloat(this.health);
 		output.writeFloat(this.energy);
 		output.writeFloat(this.satisfaction);
+		output.writeInt(this.serverID);
 		output.writeInt(0);
 		output.writeInt(worldID);
 
@@ -46,9 +48,6 @@ public class PacketLogin extends Packet {
 
 	@Override
 	public void readData(DataInputStream input) throws IOException {
-
-		this.username = Packet.readString(16, input);
-		this.session = input.readInt();
 
 		PacketHandler.processLoginPacket(this);
 		

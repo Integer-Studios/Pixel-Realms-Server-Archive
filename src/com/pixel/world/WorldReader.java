@@ -53,9 +53,12 @@ public class WorldReader {
 					 for (int x = 0; x < WorldServer.c; x++) {
 						 id = getTileIDForColor(data[index]);
 						 if (id != -1) {
-							 //		    					if (id != WorldServer.defautTile) {
-							 new Tile(x, y, id, -1);
-							 //		    					}
+							 //		    			
+							 if (id != WorldServer.defautTile) {
+								 new Tile(x, y, id, -1);
+								 //		    
+							 }
+
 							 log("Tile loaded at position: (" + x + ", " + y + ") with id:" + id);
 						 } else {
 							 err("Tile not loaded at (" + x + ", " + y + ")");
@@ -64,6 +67,7 @@ public class WorldReader {
 						 index++;
 					 }
 				 }
+
 			 }
 			 log("Tile map read.");
 		 } catch (Exception e) {

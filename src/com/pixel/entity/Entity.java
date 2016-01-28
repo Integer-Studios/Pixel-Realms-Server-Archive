@@ -10,19 +10,22 @@ import com.pixel.piece.Piece;
 import com.pixel.player.PlayerManager;
 import com.pixel.util.CollisionBox;
 import com.pixel.util.CoordinateKey;
+import com.pixel.util.Metadata;
 import com.pixel.world.WorldServer;
 
 public class Entity {
 	
 	public float posX, posY, prevPosX, prevPosY;
+	public int chunkX, chunkY;
 	public float velocityX, velocityY, prevVelocityX, prevVelocityY;
 	public int id;
 	public float width, height;
 	public int serverID;
+	public int worldID;
 	public boolean updated = true;
 	public boolean shouldCollide = true;
 	public HashMap<CoordinateKey, Integer[]> entityKeys = new HashMap<CoordinateKey, Integer[]>();
-
+	public Metadata metadata;
 	public Rectangle collisionBox;
 
 	@SuppressWarnings("rawtypes")
@@ -30,17 +33,34 @@ public class Entity {
 
 	public Entity(){}
 	
+	public Entity(boolean propagate, int id) {
+		
+		this.id = id;
+		
+		if (propagate) {
+			
+			this.serverID = WorldServer.entities.size() + 1;
+			WorldServer.propagateEntity(this);
+
+		}
+		
+	}
+	
 	public Entity (float x, float y, float width, float height, boolean propagate) {
 		posX = x;
 		posY = y;
 		collisionBox = new Rectangle(posX - (width/2), posY - (height/2), width, height);
 		this.width = width;
 		this.height = height;
-		this.serverID = WorldServer.entities.size() + 1;
+		metadata = new Metadata();
+		this.metadata.addBoolean(0, false);
 		
-		if (!(this instanceof EntityPlayer) && propagate)
+		if (propagate) {
+			
+			this.serverID = WorldServer.entities.size() + 1;
 			WorldServer.propagateEntity(this);
 		
+		}
 	}
 	
 	public float getX() {
@@ -119,6 +139,20 @@ public class Entity {
 		
 		posX += velocityX;
 		posY += velocityY;
+
+//		System.out.println(posX + " " + posY + " " + prevPosX + " " + prevPosY + " " + Math.abs(posX - prevPosX) + " " + Math.abs(posY - prevPosY));
+		
+		int intX = (int) posX;
+		int intY = (int) posY;
+		intX = intX >> 4;
+		intY = intY >> 4;
+		
+		if (intX != chunkX || intY != chunkY) {
+			
+			WorldServer.propagateEntityToChunk(this, intX, intY);
+			
+		}
+		
 		collisionBox = new Rectangle(posX - (width/2), posY - (height/2), width, height);
 
 		if (posX < 0) {
@@ -152,8 +186,6 @@ public class Entity {
 			}
 		}
 		
-//		System.out.println(posX + ", " + posY);
-
 		prevVelocityX = velocityX;
 		prevVelocityY = velocityY;
 			
@@ -220,11 +252,24 @@ public class Entity {
         }
     } 
 	
+	public int getChunkX() {
+		
+		return chunkX;
+		
+	}
+	
+	public int getChunkY() {
+		
+		return chunkY;
+		
+	}
+	
 	static {
 		
 		entityMap.put(1, EntityBunny.class);
 		entityMap.put(2, EntityPog.class);
-		
+		entityMap.put(3, EntityPlayer.class);
+
 	}
 	
 }

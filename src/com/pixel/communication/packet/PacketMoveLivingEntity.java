@@ -5,12 +5,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.pixel.entity.EntityAlive;
+import com.pixel.player.PlayerManager;
 
 public class PacketMoveLivingEntity extends Packet {
 
 	EntityAlive entity;
 	int serverID, entityID;
-	public float velocityX, velocityY;
+	public float velocityX, velocityY, posX, posY;
 	
 	public PacketMoveLivingEntity() {
 		this.id = 15;
@@ -41,6 +42,16 @@ public class PacketMoveLivingEntity extends Packet {
 		serverID = input.readInt();
 		velocityX = input.readFloat();
 		velocityY = input.readFloat();
+		posX = input.readFloat();
+		posY = input.readFloat();
+		
+		if (PlayerManager.players.containsKey(userID)) {
+
+			PacketHandler.processMoveLivingEntity(this);
+			
+		}
+		
+		
 	}
 
 }

@@ -10,7 +10,7 @@ import java.util.Date;
 import com.pixel.admin.PixelLogger;
 import com.pixel.communication.packet.PacketChat;
 import com.pixel.communication.packet.PacketChangePiece;
-import com.pixel.communication.packet.PacketUpdatePlayer;
+import com.pixel.communication.packet.PacketUpdateLivingEntity;
 import com.pixel.entity.EntityPlayer;
 import com.pixel.item.Item;
 import com.pixel.item.ItemStack;
@@ -78,7 +78,7 @@ public class ChatManager {
 
 					PlayerManager.getPlayer(msg.userID).setPosition(x, y);
 					PlayerManager.sendMessage(msg.userID, "Teleported to " + x + ", " + y + "!" , Color.BLUE);
-					PlayerManager.broadcastPacket(new PacketUpdatePlayer(msg.userID));
+					PlayerManager.broadcastPacket(new PacketUpdateLivingEntity(PlayerManager.players.get(msg.userID)));
 
 				} else if (args.length == 2) {
 					
@@ -89,7 +89,7 @@ public class ChatManager {
 						PlayerManager.getPlayer(msg.userID).setPosition(p.getX(), p.getY());
 						PlayerManager.sendMessage(msg.userID, "Teleported to " + args[1] + "!" , Color.BLUE);
 						PlayerManager.sendMessage(p.userID, msg.username + " teleported to you!" , Color.BLUE);
-						PlayerManager.broadcastPacket(new PacketUpdatePlayer(msg.userID));
+						PlayerManager.broadcastPacket(new PacketUpdateLivingEntity(PlayerManager.players.get(msg.userID)));
 						
 					} else {
 						
